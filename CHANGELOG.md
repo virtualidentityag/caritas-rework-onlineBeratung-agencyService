@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.13.0](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/compare/v1.12.0...v1.13.0) (2024-12-20)
+
+
+### Features
+
+* CARITAS-286 ([33b8c1b](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/33b8c1b8d031f185c23a4e86ca7cc33dbd6a7ded))
+* CARITAS-286 ([24b9f47](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/24b9f471ccbc9dd1c807f8909f22c0203e15be6a))
+* CARITAS-286 ([6a89936](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/6a8993682340de050fa1de54cecad5a79a171cc2))
+* CARITAS-286 ([521206a](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/521206a7dd7239dff255ba6fd763b366ffcb30a4))
+* CARITAS-286 ([7f44d8f](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/7f44d8fe6b6a3fc376dce474b7ef8435026a7696))
+* CARITAS-286 ([a81ced7](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/a81ced7658a6819f5a83aa011507b6ac2983f1c4))
+* CARITAS-286 ([2f54ccc](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/2f54ccc3b3a4b1a7bf69cee876c04bc32ae30b4a))
+* CARITAS-286 ([49e7325](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/49e7325b394fe53b5549f677b055a1434b72376e))
+* CARITAS-286 ([5e48c50](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/5e48c5094d42c15b8dc8d09b2083a6838a5f5e87))
+* CARITAS-286 ([aeba3ee](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/aeba3ee8d062e2374560fb343a382aa813a0ca2c))
+* CARITAS-286 ([210dc42](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/210dc42de4014e2015be557f21d97fcb0d14911d))
+* CARITAS-286 ([edbffa1](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/edbffa11e763def7a47345f5b38e1f5f6400caa4))
+* CARITAS-286 ([5c76bcf](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/5c76bcf9a90038109c0748fe7e8418ddb433d173))
+* CARITAS-286 ([6758ae3](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/6758ae35f163a5bd2ebbc223cfc30ffc1800f835))
+* enable micrometer tracing ([4e5eddd](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/4e5eddd23546b3dba47115970360efed32900fa5))
+
+
+### Bug Fixes
+
+* CARITAS-243 ([a5cfd31](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/a5cfd31ea55381494f9096bf5aa2de25cdcfe345))
+* CARITAS-243 ([a0d9651](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/a0d96513cf78604ae34ea5b6284ccfb0db186f43))
+* CARITAS-243 ([a6c0522](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/a6c052233319d97b89bdd29154b6a706b5451f26))
+* CARITAS-243 - fix tests before code removal ([8331da2](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/8331da2b21ce36d6bbe930ebfa9bd2bf0a788016))
+* CARITAS-243 - remove feedback related params from dtos ([778dd64](https://github.com/CaritasDeutschland/caritas-onlineBeratung-agencyService/commit/778dd64dc9cb6bb6156fff1bae66880b59b046b3))
+
 ## 1.12.0 (2024-06-18)
 
 
