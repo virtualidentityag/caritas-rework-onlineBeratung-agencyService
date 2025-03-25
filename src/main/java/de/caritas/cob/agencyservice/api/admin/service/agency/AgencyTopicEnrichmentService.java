@@ -34,14 +34,15 @@ public class AgencyTopicEnrichmentService {
     return agency;
   }
 
-  private void enrichSingleAgencyTopic(Map<Long, TopicDTO> availableTopics,
-      AgencyTopic agencyTopic) {
+  private void enrichSingleAgencyTopic(
+      Map<Long, TopicDTO> availableTopics, AgencyTopic agencyTopic) {
     var topicData = availableTopics.get(agencyTopic.getTopicId());
     if (topicData != null) {
       log.debug("Enriching agency with {} with topicData {}", agencyTopic.getAgency(), topicData);
       agencyTopic.setTopicData(topicData);
     } else {
-      log.warn("Did not find matching topic for id: {} in the available topic list",
+      log.warn(
+          "Did not find matching topic for id: {} in the available topic list",
           agencyTopic.getTopicId());
     }
   }
@@ -54,9 +55,10 @@ public class AgencyTopicEnrichmentService {
   private Map<Long, TopicDTO> getAvailableTopicsMap(
       List<de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO> allTopics) {
     return allTopics.stream()
-        .collect(Collectors.toMap(
-            de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO::getId,
-            this::convertToAgencyServiceTopicViewDTO));
+        .collect(
+            Collectors.toMap(
+                de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO::getId,
+                this::convertToAgencyServiceTopicViewDTO));
   }
 
   private boolean isEmptyOrNull(
@@ -66,7 +68,8 @@ public class AgencyTopicEnrichmentService {
 
   private TopicDTO convertToAgencyServiceTopicViewDTO(
       de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO source) {
-    return new TopicDTO().id(source.getId())
+    return new TopicDTO()
+        .id(source.getId())
         .name(source.getName())
         .description(source.getDescription())
         .internalIdentifier(source.getInternalIdentifier())

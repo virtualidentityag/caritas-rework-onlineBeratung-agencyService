@@ -29,13 +29,20 @@ class AgencyAdminFullResponseDTOBuilderTest {
   public void init() {
     EasyRandom easyRandom = new EasyRandom();
     this.agency = easyRandom.nextObject(Agency.class);
-    this.agency.setDataProtectionResponsibleEntity(DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE);
-    this.agency.setDataProtectionAgencyResponsibleContactData(JsonConverter.convertToJson(new DataProtectionContactDTO()));
-    this.agency.setDataProtectionOfficerContactData(JsonConverter.convertToJson(new DataProtectionContactDTO()));
-    this.agency.setDataProtectionAlternativeContactData(JsonConverter.convertToJson(new DataProtectionContactDTO()));
+    this.agency.setDataProtectionResponsibleEntity(
+        DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE);
+    this.agency.setDataProtectionAgencyResponsibleContactData(
+        JsonConverter.convertToJson(new DataProtectionContactDTO()));
+    this.agency.setDataProtectionOfficerContactData(
+        JsonConverter.convertToJson(new DataProtectionContactDTO()));
+    this.agency.setDataProtectionAlternativeContactData(
+        JsonConverter.convertToJson(new DataProtectionContactDTO()));
     this.agency.setTenantId(TENANT_ID);
     this.agencyAdminFullResponseDTOBuilder = new AgencyAdminFullResponseDTOBuilder(agency);
-    this.agency.setCounsellingRelations(AgencyDTO.CounsellingRelationsEnum.PARENTAL_COUNSELLING.getValue() + "," + AgencyDTO.CounsellingRelationsEnum.RELATIVE_COUNSELLING.getValue());
+    this.agency.setCounsellingRelations(
+        AgencyDTO.CounsellingRelationsEnum.PARENTAL_COUNSELLING.getValue()
+            + ","
+            + AgencyDTO.CounsellingRelationsEnum.RELATIVE_COUNSELLING.getValue());
   }
 
   @Test
@@ -58,14 +65,18 @@ class AgencyAdminFullResponseDTOBuilderTest {
     assertEquals(agency.isExternal(), result.getEmbedded().getExternal());
     assertEquals(agency.getConsultingTypeId(), result.getEmbedded().getConsultingType());
     assertEquals(agency.getAgencyLogo(), result.getEmbedded().getAgencyLogo());
-    assertThat(result.getEmbedded().getCounsellingRelations()).containsOnly(AgencyAdminResponseDTO.CounsellingRelationsEnum.PARENTAL_COUNSELLING, AgencyAdminResponseDTO.CounsellingRelationsEnum.RELATIVE_COUNSELLING);
+    assertThat(result.getEmbedded().getCounsellingRelations())
+        .containsOnly(
+            AgencyAdminResponseDTO.CounsellingRelationsEnum.PARENTAL_COUNSELLING,
+            AgencyAdminResponseDTO.CounsellingRelationsEnum.RELATIVE_COUNSELLING);
     assertEquals(String.valueOf(agency.getCreateDate()), result.getEmbedded().getCreateDate());
     assertEquals(String.valueOf(agency.getUpdateDate()), result.getEmbedded().getUpdateDate());
     assertEquals(String.valueOf(agency.getDeleteDate()), result.getEmbedded().getDeleteDate());
   }
 
   @Test
-  void fromAgency_Should_Return_ValidAgencyWithDemographics_IfAtLeastOneDemographicsAttributeIsAdded() {
+  void
+      fromAgency_Should_Return_ValidAgencyWithDemographics_IfAtLeastOneDemographicsAttributeIsAdded() {
     // given
     agency.setAgeFrom((short) 15);
     agency.setAgeTo(null);
@@ -76,13 +87,15 @@ class AgencyAdminFullResponseDTOBuilderTest {
 
     // then
     assertBaseDTOAttributesAreMapped(result);
-    assertEquals(toInteger(agency.getAgeFrom()), result.getEmbedded().getDemographics().getAgeFrom());
+    assertEquals(
+        toInteger(agency.getAgeFrom()), result.getEmbedded().getDemographics().getAgeFrom());
     assertEquals(toInteger(agency.getAgeTo()), result.getEmbedded().getDemographics().getAgeTo());
     assertTrue(result.getEmbedded().getDemographics().getGenders().contains(agency.getGenders()));
   }
 
   @Test
-  void fromAgency_Should_Return_ValidAgency_WithoutDemographics_IfNoneDemographicsAttributeAreSet() {
+  void
+      fromAgency_Should_Return_ValidAgency_WithoutDemographics_IfNoneDemographicsAttributeAreSet() {
     // given
     agency.setAgeFrom(null);
     agency.setAgeTo(null);
@@ -109,16 +122,19 @@ class AgencyAdminFullResponseDTOBuilderTest {
     assertEquals(TENANT_ID, result.getEmbedded().getTenantId());
     assertThat(agencyLinks.getSelf()).isNotNull();
     assertThat(agencyLinks.getSelf().getMethod()).isEqualTo(MethodEnum.GET);
-    assertThat(agencyLinks.getSelf().getHref()).isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
+    assertThat(agencyLinks.getSelf().getHref())
+        .isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
     assertThat(agencyLinks.getDelete()).isNotNull();
     assertThat(agencyLinks.getDelete().getMethod()).isEqualTo(MethodEnum.DELETE);
-    assertThat(agencyLinks.getDelete().getHref()).isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
+    assertThat(agencyLinks.getDelete().getHref())
+        .isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
     assertThat(agencyLinks.getUpdate()).isNotNull();
     assertThat(agencyLinks.getUpdate().getMethod()).isEqualTo(MethodEnum.PUT);
-    assertThat(agencyLinks.getUpdate().getHref()).isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
+    assertThat(agencyLinks.getUpdate().getHref())
+        .isEqualTo(String.format("/agencyadmin/agencies/%s", agency.getId()));
     assertThat(agencyLinks.getPostcodeRanges()).isNotNull();
     assertThat(agencyLinks.getPostcodeRanges().getMethod()).isEqualTo(MethodEnum.GET);
-    assertThat(agencyLinks.getPostcodeRanges().getHref()).isEqualTo(String.format("/agencyadmin/postcoderanges/%s", this.agency.getId()));
+    assertThat(agencyLinks.getPostcodeRanges().getHref())
+        .isEqualTo(String.format("/agencyadmin/postcoderanges/%s", this.agency.getId()));
   }
-
 }

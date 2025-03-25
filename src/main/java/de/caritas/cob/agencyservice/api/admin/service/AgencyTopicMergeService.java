@@ -20,7 +20,8 @@ public class AgencyTopicMergeService {
     }
   }
 
-  private List<AgencyTopic> getMergedTopicsForNonEmptyTopicList(Agency agency, List<Long> requestTopicIds) {
+  private List<AgencyTopic> getMergedTopicsForNonEmptyTopicList(
+      Agency agency, List<Long> requestTopicIds) {
     List<AgencyTopic> agencyTopics = agency.getAgencyTopics();
     if (agencyTopics != null) {
       return getAgencyTopics(agency, requestTopicIds, agencyTopics);
@@ -29,12 +30,13 @@ public class AgencyTopicMergeService {
     }
   }
 
-  private List<AgencyTopic> getAgencyTopics(Agency agency, List<Long> requestTopicIds,
-      List<AgencyTopic> existingAgencyTopics) {
+  private List<AgencyTopic> getAgencyTopics(
+      Agency agency, List<Long> requestTopicIds, List<AgencyTopic> existingAgencyTopics) {
     var topicsIdsToAdd = getTopicIdsToAdd(requestTopicIds, existingAgencyTopics);
-    var topicsToUpdate = existingAgencyTopics.stream()
-        .filter(topicWithIdExistInTheRequest(requestTopicIds)).collect(
-            Collectors.toList());
+    var topicsToUpdate =
+        existingAgencyTopics.stream()
+            .filter(topicWithIdExistInTheRequest(requestTopicIds))
+            .collect(Collectors.toList());
 
     List<AgencyTopic> resultList = Lists.newArrayList();
     resultList.addAll(topicsToUpdate);
@@ -42,10 +44,11 @@ public class AgencyTopicMergeService {
     return resultList;
   }
 
-  private List<Long> getTopicIdsToAdd(List<Long> requestTopicIds, List<AgencyTopic> existingAgencyTopics) {
+  private List<Long> getTopicIdsToAdd(
+      List<Long> requestTopicIds, List<AgencyTopic> existingAgencyTopics) {
     return requestTopicIds.stream()
-        .filter(topicId -> !extractTopicIds(existingAgencyTopics).contains(topicId)).collect(
-            Collectors.toList());
+        .filter(topicId -> !extractTopicIds(existingAgencyTopics).contains(topicId))
+        .collect(Collectors.toList());
   }
 
   private List<Long> extractTopicIds(List<AgencyTopic> agencyTopics) {
@@ -57,7 +60,8 @@ public class AgencyTopicMergeService {
   }
 
   private List<AgencyTopic> createAgencyTopicList(Agency agency, List<Long> topicsToAdd) {
-    return topicsToAdd.stream().map(topicId -> createNewAgencyTopic(agency, topicId))
+    return topicsToAdd.stream()
+        .map(topicId -> createNewAgencyTopic(agency, topicId))
         .collect(Collectors.toList());
   }
 

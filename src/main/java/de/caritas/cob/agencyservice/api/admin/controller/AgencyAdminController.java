@@ -19,7 +19,6 @@ import de.caritas.cob.agencyservice.generated.api.admin.controller.AgencyadminAp
 import io.swagger.annotations.Api;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +28,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controller to handle all agency admin requests.
- */
+/** Controller to handle all agency admin requests. */
 @RestController
 @Api(tags = "admin-agency-controller")
 @RequiredArgsConstructor
@@ -67,14 +64,16 @@ public class AgencyAdminController implements AgencyadminApi {
   /**
    * Entry point to search for agencies.
    *
-   * @param page    Number of page where to start in the query (1 = first page) (required)
+   * @param page Number of page where to start in the query (1 = first page) (required)
    * @param perPage Number of items which are being returned per page (required)
-   * @param q       The query parameter to search for (optional)
+   * @param q The query parameter to search for (optional)
    * @return an entity containing the search result
    */
   @Override
   public ResponseEntity<AgencyAdminSearchResultDTO> searchAgencies(
-      @NotNull @Valid Integer page, @NotNull @Valid Integer perPage, @Valid String q,
+      @NotNull @Valid Integer page,
+      @NotNull @Valid Integer perPage,
+      @Valid String q,
       @Valid Sort sort) {
 
     var agencyAdminSearchResultDTO =
@@ -93,10 +92,8 @@ public class AgencyAdminController implements AgencyadminApi {
   @PreAuthorize("hasAuthority('AUTHORIZATION_AGENCY_ADMIN')")
   public ResponseEntity<AgencyAdminFullResponseDTO> createAgency(@Valid AgencyDTO agencyDTO) {
 
-
     agencyValidator.validate(agencyDTO);
-    var agencyAdminFullResponseDTO = agencyAdminService
-        .createAgency(agencyDTO);
+    var agencyAdminFullResponseDTO = agencyAdminService.createAgency(agencyDTO);
 
     return new ResponseEntity<>(agencyAdminFullResponseDTO, HttpStatus.CREATED);
   }
@@ -104,17 +101,16 @@ public class AgencyAdminController implements AgencyadminApi {
   /**
    * Entry point to update a specific agency.
    *
-   * @param agencyId        Agency Id (required)
+   * @param agencyId Agency Id (required)
    * @param updateAgencyDTO (required)
    * @return a {@link AgencyAdminFullResponseDTO} entity
    */
   @Override
-  public ResponseEntity<AgencyAdminFullResponseDTO> updateAgency(@PathVariable Long agencyId,
-      @Valid UpdateAgencyDTO updateAgencyDTO) {
+  public ResponseEntity<AgencyAdminFullResponseDTO> updateAgency(
+      @PathVariable Long agencyId, @Valid UpdateAgencyDTO updateAgencyDTO) {
 
     agencyValidator.validate(agencyId, updateAgencyDTO);
-    var agencyAdminFullResponseDTO = agencyAdminService
-        .updateAgency(agencyId, updateAgencyDTO);
+    var agencyAdminFullResponseDTO = agencyAdminService.updateAgency(agencyId, updateAgencyDTO);
 
     return ResponseEntity.ok(agencyAdminFullResponseDTO);
   }
@@ -140,15 +136,15 @@ public class AgencyAdminController implements AgencyadminApi {
   @Override
   public ResponseEntity<AgencyPostcodeRangeResponseDTO> getAgencyPostcodeRanges(
       @PathVariable Long agencyId) {
-    var postcodeRangesForAgency = this.agencyPostcodeRangeAdminService
-        .findPostcodeRangesForAgency(agencyId);
+    var postcodeRangesForAgency =
+        this.agencyPostcodeRangeAdminService.findPostcodeRangesForAgency(agencyId);
     return ResponseEntity.ok(postcodeRangesForAgency);
   }
 
   /**
    * Entry point to create a new postcode range for the given agency.
    *
-   * @param agencyId         Agency Id (required)
+   * @param agencyId Agency Id (required)
    * @param postcodeRangeDTO {@link PostcodeRangeDTO} (required)
    * @return an entity containing the created postcode range
    */
@@ -164,15 +160,15 @@ public class AgencyAdminController implements AgencyadminApi {
   /**
    * Entry point to update a postcode range for the given postcode range Id.
    *
-   * @param agencyId         Postcode range Id (required)
+   * @param agencyId Postcode range Id (required)
    * @param postcodeRangeDTO {@link PostcodeRangeDTO} (required)
    * @return an entity containing the updated postcode range
    */
   @Override
   public ResponseEntity<AgencyPostcodeRangeResponseDTO> updateAgencyPostcodeRange(
       @PathVariable Long agencyId, @Valid PostcodeRangeDTO postcodeRangeDTO) {
-    var rangeResponseDTO = agencyPostcodeRangeAdminService
-        .updatePostcodeRange(agencyId, postcodeRangeDTO);
+    var rangeResponseDTO =
+        agencyPostcodeRangeAdminService.updatePostcodeRange(agencyId, postcodeRangeDTO);
 
     return ResponseEntity.ok(rangeResponseDTO);
   }
@@ -192,27 +188,26 @@ public class AgencyAdminController implements AgencyadminApi {
   /**
    * Entry point to change the tpe of an agency.
    *
-   * @param agencyId             Agency Id (required)
+   * @param agencyId Agency Id (required)
    * @param agencyTypeRequestDTO the dto containing the flag for type change
    * @return a {@link ResponseEntity} with the status code.
    */
   @Override
-  public ResponseEntity<Void> changeAgencyType(Long agencyId,
-      @Valid AgencyTypeRequestDTO agencyTypeRequestDTO) {
+  public ResponseEntity<Void> changeAgencyType(
+      Long agencyId, @Valid AgencyTypeRequestDTO agencyTypeRequestDTO) {
     this.agencyAdminService.changeAgencyType(agencyId, agencyTypeRequestDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @Override
-  public ResponseEntity<List<AgencyAdminFullResponseDTO>> getAgenciesByTenantId(
-      Long tenantId) {
+  public ResponseEntity<List<AgencyAdminFullResponseDTO>> getAgenciesByTenantId(Long tenantId) {
 
     var agencies = this.agencyAdminService.getAgenciesByTenantId(tenantId);
-    var agenciesResponse = agencies.stream()
-        .map(agency -> new AgencyAdminFullResponseDTOBuilder(agency)
-            .fromAgency()).toList();
+    var agenciesResponse =
+        agencies.stream()
+            .map(agency -> new AgencyAdminFullResponseDTOBuilder(agency).fromAgency())
+            .toList();
 
     return new ResponseEntity<>(agenciesResponse, HttpStatus.OK);
   }
-
 }

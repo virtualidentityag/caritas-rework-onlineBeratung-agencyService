@@ -22,11 +22,11 @@ public class UserAdminApiClientTest {
 
   private static final String FILTER_NAME = "filter";
 
-  @InjectMocks
-  UserAdminApiClient userAdminApiClient;
+  @InjectMocks UserAdminApiClient userAdminApiClient;
 
   @Test(expected = InternalServerErrorException.class)
-  public void parameterToMultiValueMap_Should_throwInternalServerErrorException_When_reflectionOfQueryValueObjectFails() {
+  public void
+      parameterToMultiValueMap_Should_throwInternalServerErrorException_When_reflectionOfQueryValueObjectFails() {
     userAdminApiClient.parameterToMultiValueMap(null, FILTER_NAME, new InvalidObject());
   }
 
@@ -44,10 +44,8 @@ public class UserAdminApiClientTest {
 
   @Test
   public void parameterToMultiValueMap_Should_containAllNonNullValuesAsQueryParams() {
-    ConsultantFilter consultantFilter = new ConsultantFilter()
-        .lastname("lastname")
-        .email("email")
-        .agencyId(1L);
+    ConsultantFilter consultantFilter =
+        new ConsultantFilter().lastname("lastname").email("email").agencyId(1L);
 
     MultiValueMap<String, String> result =
         userAdminApiClient.parameterToMultiValueMap(null, FILTER_NAME, consultantFilter);
@@ -59,7 +57,8 @@ public class UserAdminApiClientTest {
   }
 
   @Test
-  public void parameterToMultiValueMap_Should_returnValuesFormattedBySuperClass_When_providedWithInvalidQueryParams() {
+  public void
+      parameterToMultiValueMap_Should_returnValuesFormattedBySuperClass_When_providedWithInvalidQueryParams() {
     List<String> list = asList("lastname", "email");
 
     MultiValueMap<String, String> result =

@@ -14,9 +14,7 @@ import de.caritas.cob.agencyservice.api.model.DemographicsDTO;
 import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agency.AgencyRepository;
-import de.caritas.cob.agencyservice.api.tenant.TenantContext;
 import de.caritas.cob.agencyservice.api.util.AuthenticatedUser;
-import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,7 +29,8 @@ public class AgencyAdminServiceITBase {
 
     AgencyDTO agencyDTO = createAgencyDTO();
     agencyDTO.setTenantId(1L);
-    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO = agencyAdminService.createAgency(agencyDTO);
+    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO =
+        agencyAdminService.createAgency(agencyDTO);
     Optional<Agency> agencyOptional =
         agencyRepository.findById(agencyAdminFullResponseDTO.getEmbedded().getId());
     Agency agency = agencyOptional.get();
@@ -47,7 +46,8 @@ public class AgencyAdminServiceITBase {
 
     AgencyDTO agencyDTO = createAgencyDTO();
 
-    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO = agencyAdminService.createAgency(agencyDTO);
+    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO =
+        agencyAdminService.createAgency(agencyDTO);
 
     Optional<Agency> agencyOptional =
         agencyRepository.findById(agencyAdminFullResponseDTO.getEmbedded().getId());
@@ -59,7 +59,8 @@ public class AgencyAdminServiceITBase {
 
     AgencyDTO agencyDTO = createAgencyDTO();
 
-    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO = agencyAdminService.createAgency(agencyDTO);
+    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO =
+        agencyAdminService.createAgency(agencyDTO);
     assertThat(agencyAdminFullResponseDTO.getLinks().getDelete(), notNullValue());
     assertThat(
         agencyAdminFullResponseDTO.getLinks().getDelete().getHref(),
@@ -83,7 +84,8 @@ public class AgencyAdminServiceITBase {
         agencyAdminFullResponseDTO.getLinks().getPostcodeRanges().getHref(),
         endsWith(
             String.format(
-                "/agencyadmin/postcoderanges/%s", agencyAdminFullResponseDTO.getEmbedded().getId())));
+                "/agencyadmin/postcoderanges/%s",
+                agencyAdminFullResponseDTO.getEmbedded().getId())));
   }
 
   protected AgencyDTO createAgencyDTO() {
@@ -107,8 +109,8 @@ public class AgencyAdminServiceITBase {
   public void updateAgency_Should_PersistsAgencyChanges() {
 
     UpdateAgencyDTO updateAgencyDTO = createUpdateAgencyDtoFromExistingAgency();
-    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO
-        = agencyAdminService.updateAgency(0L, updateAgencyDTO);
+    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO =
+        agencyAdminService.updateAgency(0L, updateAgencyDTO);
 
     Optional<Agency> agencyOptional =
         agencyRepository.findById(agencyAdminFullResponseDTO.getEmbedded().getId());
@@ -117,7 +119,7 @@ public class AgencyAdminServiceITBase {
     assertEquals(updateAgencyDTO.getDescription(), agency.getDescription());
     assertEquals(updateAgencyDTO.getName(), agency.getName());
     assertEquals(updateAgencyDTO.getCity(), agency.getCity());
-    assertEquals(updateAgencyDTO.getOffline(),  agency.isOffline());
+    assertEquals(updateAgencyDTO.getOffline(), agency.isOffline());
   }
 
   protected UpdateAgencyDTO createUpdateAgencyDtoFromExistingAgency() {
@@ -133,14 +135,14 @@ public class AgencyAdminServiceITBase {
     updateAgencyDTO.setUrl("https://www.domain.com");
     updateAgencyDTO.setExternal(true);
     return updateAgencyDTO;
-
   }
 
   public void updateAgency_Should_ProvideValidAgencyLinks() {
 
     UpdateAgencyDTO updateAgencyDTO = createUpdateAgencyDtoFromExistingAgency();
 
-    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO = agencyAdminService.updateAgency(0L, updateAgencyDTO);
+    AgencyAdminFullResponseDTO agencyAdminFullResponseDTO =
+        agencyAdminService.updateAgency(0L, updateAgencyDTO);
     assertThat(agencyAdminFullResponseDTO.getLinks().getDelete(), notNullValue());
     assertThat(
         agencyAdminFullResponseDTO.getLinks().getDelete().getHref(),
@@ -164,7 +166,8 @@ public class AgencyAdminServiceITBase {
         agencyAdminFullResponseDTO.getLinks().getPostcodeRanges().getHref(),
         endsWith(
             String.format(
-                "/agencyadmin/postcoderanges/%s", agencyAdminFullResponseDTO.getEmbedded().getId())));
+                "/agencyadmin/postcoderanges/%s",
+                agencyAdminFullResponseDTO.getEmbedded().getId())));
   }
 
   public void getAgency_Should_returnExpectedAgency_When_agencyWithIdExists() {
@@ -179,5 +182,4 @@ public class AgencyAdminServiceITBase {
     assertThat(result.getEmbedded().getConsultingType(), notNullValue());
     assertThat(result.getEmbedded().getName(), notNullValue());
   }
-
 }

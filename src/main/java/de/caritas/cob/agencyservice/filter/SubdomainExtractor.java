@@ -1,6 +1,5 @@
 package de.caritas.cob.agencyservice.filter;
 
-
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.springframework.web.context.request.RequestContextHolder.currentRequestAttributes;
@@ -35,8 +34,5 @@ public class SubdomainExtractor {
       return Optional.empty();
     }
     return of(domain.parts().get(0));
-
   }
-
 }
-

@@ -20,11 +20,9 @@ import org.springframework.web.client.RestClientException;
 @RunWith(MockitoJUnitRunner.class)
 public class ConsultingTypeManagerTest {
 
-  @InjectMocks
-  ConsultingTypeManager consultingTypeManager;
+  @InjectMocks ConsultingTypeManager consultingTypeManager;
 
-  @Mock
-  private ConsultingTypeService consultingTypeService;
+  @Mock private ConsultingTypeService consultingTypeService;
 
   @Test
   public void getConsultantTypeSettings_Should_ReturnConsultantTypeSettingsForConsultingType()
@@ -39,12 +37,13 @@ public class ConsultingTypeManagerTest {
   }
 
   @Test
-  public void getConsultantTypeSettings_Should_thrownMissingConsultingTypeException_When_consultingTypeForIdDoesNotExist() {
+  public void
+      getConsultantTypeSettings_Should_thrownMissingConsultingTypeException_When_consultingTypeForIdDoesNotExist() {
     when(this.consultingTypeService.getExtendedConsultingTypeResponseDTO(anyInt()))
         .thenThrow(new RestClientException(""));
 
-    assertThrows(MissingConsultingTypeException.class,
+    assertThrows(
+        MissingConsultingTypeException.class,
         () -> consultingTypeManager.getConsultingTypeSettings(CONSULTING_TYPE_SUCHT));
-
   }
 }

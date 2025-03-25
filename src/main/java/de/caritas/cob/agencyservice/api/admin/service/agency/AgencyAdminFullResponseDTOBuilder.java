@@ -12,67 +12,67 @@ import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agencytopic.AgencyTopic;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-/**
- * Builder to build an {@link AgencyAdminFullResponseDTO()} from an {@link Agency} instance.
- */
+/** Builder to build an {@link AgencyAdminFullResponseDTO()} from an {@link Agency} instance. */
 @RequiredArgsConstructor
 public class AgencyAdminFullResponseDTOBuilder {
 
   private final @NonNull Agency agency;
 
-
   /**
-   * Creates an {@link AgencyAdminFullResponseDTO()} with HAL-Links from an {@link Agency}
-   * instance.
+   * Creates an {@link AgencyAdminFullResponseDTO()} with HAL-Links from an {@link Agency} instance.
    *
    * @return an {@link AgencyAdminFullResponseDTO()} instance
    */
   public AgencyAdminFullResponseDTO fromAgency() {
-    return new AgencyAdminFullResponseDTO()
-        .embedded(createAgency())
-        .links(createAgencyLinks());
+    return new AgencyAdminFullResponseDTO().embedded(createAgency()).links(createAgencyLinks());
   }
 
   private AgencyAdminResponseDTO createAgency() {
-    var responseDTO = new AgencyAdminResponseDTO()
-        .id(this.agency.getId())
-        .tenantId(agency.getTenantId())
-        .name(this.agency.getName())
-        .city(this.agency.getCity())
-        .consultingType(this.agency.getConsultingTypeId())
-        .description(this.agency.getDescription())
-        .postcode(this.agency.getPostCode())
-        .teamAgency(this.agency.isTeamAgency())
-        .url(this.agency.getUrl())
-        .external((this.agency.isExternal()))
-        .offline(this.agency.isOffline())
-        .topics(getTopics())
-        .counsellingRelations(splitToList(agency.getCounsellingRelations()))
-        .createDate(String.valueOf(this.agency.getCreateDate()))
-        .updateDate(String.valueOf(this.agency.getUpdateDate()))
-        .deleteDate(String.valueOf(this.agency.getDeleteDate()))
-        .dataProtection(new DataProtectionDTOBuilder(this.agency).fromAgency())
-        .agencyLogo(this.agency.getAgencyLogo());
+    var responseDTO =
+        new AgencyAdminResponseDTO()
+            .id(this.agency.getId())
+            .tenantId(agency.getTenantId())
+            .name(this.agency.getName())
+            .city(this.agency.getCity())
+            .consultingType(this.agency.getConsultingTypeId())
+            .description(this.agency.getDescription())
+            .postcode(this.agency.getPostCode())
+            .teamAgency(this.agency.isTeamAgency())
+            .url(this.agency.getUrl())
+            .external((this.agency.isExternal()))
+            .offline(this.agency.isOffline())
+            .topics(getTopics())
+            .counsellingRelations(splitToList(agency.getCounsellingRelations()))
+            .createDate(String.valueOf(this.agency.getCreateDate()))
+            .updateDate(String.valueOf(this.agency.getUpdateDate()))
+            .deleteDate(String.valueOf(this.agency.getDeleteDate()))
+            .dataProtection(new DataProtectionDTOBuilder(this.agency).fromAgency())
+            .agencyLogo(this.agency.getAgencyLogo());
 
     responseDTO.demographics(getDemographics(this.agency));
     return responseDTO;
   }
 
-  private List<AgencyAdminResponseDTO.CounsellingRelationsEnum> splitToList(String counsellingRelationsAsCommaSeparatedString) {
+  private List<AgencyAdminResponseDTO.CounsellingRelationsEnum> splitToList(
+      String counsellingRelationsAsCommaSeparatedString) {
     if (counsellingRelationsAsCommaSeparatedString == null) {
       return Lists.newArrayList();
     } else {
-      return Splitter.on(",").trimResults()
-          .splitToList(counsellingRelationsAsCommaSeparatedString).stream().map(AgencyAdminResponseDTO.CounsellingRelationsEnum::valueOf).collect(Collectors.toList());
+      return Splitter.on(",")
+          .trimResults()
+          .splitToList(counsellingRelationsAsCommaSeparatedString)
+          .stream()
+          .map(AgencyAdminResponseDTO.CounsellingRelationsEnum::valueOf)
+          .collect(Collectors.toList());
     }
   }
 
   private DemographicsDTO getDemographics(Agency agency) {
-    return agency.hasAnyDemographicsAttributes() ? new DemographicsConverter().convertToDTO(agency)
+    return agency.hasAnyDemographicsAttributes()
+        ? new DemographicsConverter().convertToDTO(agency)
         : null;
   }
 

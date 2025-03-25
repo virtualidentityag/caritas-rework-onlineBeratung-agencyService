@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class PostcodeRangeTransformerTest {
 
-  private final PostcodeRangeTransformer postcodeRangeTransformer =
-      new PostcodeRangeTransformer();
+  private final PostcodeRangeTransformer postcodeRangeTransformer = new PostcodeRangeTransformer();
 
   @ParameterizedTest
   @NullAndEmptySource
@@ -36,20 +35,18 @@ class PostcodeRangeTransformerTest {
     var result = this.postcodeRangeTransformer.extractPostcodeRanges(validInput);
 
     assertThat(result, hasSize(5));
-    assertThat(result, containsInAnyOrder(
-        buildPostcodeRange("01067", "11111"),
-        buildPostcodeRange("22222", "33333"),
-        buildPostcodeRange("44444", "55555"),
-        buildPostcodeRange("66666", "66666"),
-        buildPostcodeRange("77777", "99999")
-    ));
+    assertThat(
+        result,
+        containsInAnyOrder(
+            buildPostcodeRange("01067", "11111"),
+            buildPostcodeRange("22222", "33333"),
+            buildPostcodeRange("44444", "55555"),
+            buildPostcodeRange("66666", "66666"),
+            buildPostcodeRange("77777", "99999")));
   }
 
   private AgencyPostcodeRange buildPostcodeRange(String postcodeFrom, String postcodeTo) {
-    return AgencyPostcodeRange.builder()
-        .postcodeFrom(postcodeFrom)
-        .postcodeTo(postcodeTo)
-        .build();
+    return AgencyPostcodeRange.builder().postcodeFrom(postcodeFrom).postcodeTo(postcodeTo).build();
   }
 
   @ParameterizedTest
@@ -63,15 +60,14 @@ class PostcodeRangeTransformerTest {
 
   @Test
   void buildPostcodeRange_Should_returnExpectedORderedString_When_inputIsValid() {
-    var postcodeRanges = Set.of(
-        AgencyPostcodeRange.builder().postcodeFrom("44444").postcodeTo("55555").build(),
-        AgencyPostcodeRange.builder().postcodeFrom("33333").postcodeTo("33333").build(),
-        AgencyPostcodeRange.builder().postcodeFrom("66666").postcodeTo("66666").build(),
-        AgencyPostcodeRange.builder().postcodeFrom("11111").postcodeTo("22222").build()
-    );
+    var postcodeRanges =
+        Set.of(
+            AgencyPostcodeRange.builder().postcodeFrom("44444").postcodeTo("55555").build(),
+            AgencyPostcodeRange.builder().postcodeFrom("33333").postcodeTo("33333").build(),
+            AgencyPostcodeRange.builder().postcodeFrom("66666").postcodeTo("66666").build(),
+            AgencyPostcodeRange.builder().postcodeFrom("11111").postcodeTo("22222").build());
     var result = this.postcodeRangeTransformer.buildPostcodeRange(postcodeRanges);
 
     assertThat(result, is("11111-22222;33333;44444-55555;66666;"));
   }
-
 }

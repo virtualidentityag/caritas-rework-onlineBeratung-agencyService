@@ -55,21 +55,23 @@ public class AgencyOfflineStatusValidator implements ConcreteAgencyValidator {
 
   private boolean isWhiteSpotAgency(ValidateAgencyDTO validateAgencyDto) {
     int consultingTypeId = obtainConsultingTypeOfAgency(validateAgencyDto);
-    var whiteSpotAgencyIdForConsultingType = getWhiteSpotAgencyIdForConsultingType(
-        consultingTypeId);
-    return nonNull(whiteSpotAgencyIdForConsultingType) && whiteSpotAgencyIdForConsultingType
-        .equals(validateAgencyDto.getId());
+    var whiteSpotAgencyIdForConsultingType =
+        getWhiteSpotAgencyIdForConsultingType(consultingTypeId);
+    return nonNull(whiteSpotAgencyIdForConsultingType)
+        && whiteSpotAgencyIdForConsultingType.equals(validateAgencyDto.getId());
   }
 
   private int obtainConsultingTypeOfAgency(ValidateAgencyDTO validateAgencyDto) {
-    return agencyRepository.findById(validateAgencyDto.getId())
-        .orElseThrow(NotFoundException::new).getConsultingTypeId();
+    return agencyRepository
+        .findById(validateAgencyDto.getId())
+        .orElseThrow(NotFoundException::new)
+        .getConsultingTypeId();
   }
 
   private Long getWhiteSpotAgencyIdForConsultingType(int consultingTypeId) {
     try {
-      var consultingTypeSettings = consultingTypeManager
-          .getConsultingTypeSettings(consultingTypeId);
+      var consultingTypeSettings =
+          consultingTypeManager.getConsultingTypeSettings(consultingTypeId);
       return obtainCheckedWhiteSpotAgencyId(consultingTypeSettings);
     } catch (MissingConsultingTypeException e) {
       throw new NotFoundException();
@@ -78,9 +80,10 @@ public class AgencyOfflineStatusValidator implements ConcreteAgencyValidator {
 
   private Long obtainCheckedWhiteSpotAgencyId(
       ExtendedConsultingTypeResponseDTO consultingTypeResponseDTO) {
-    return nonNull(consultingTypeResponseDTO.getWhiteSpot()) && nonNull(
-        consultingTypeResponseDTO.getWhiteSpot().getWhiteSpotAgencyId())
-        ? consultingTypeResponseDTO.getWhiteSpot().getWhiteSpotAgencyId().longValue() : null;
+    return nonNull(consultingTypeResponseDTO.getWhiteSpot())
+            && nonNull(consultingTypeResponseDTO.getWhiteSpot().getWhiteSpotAgencyId())
+        ? consultingTypeResponseDTO.getWhiteSpot().getWhiteSpotAgencyId().longValue()
+        : null;
   }
 
   private boolean hasPostCodeRanges(ValidateAgencyDTO validateAgencyDto) {
@@ -88,7 +91,6 @@ public class AgencyOfflineStatusValidator implements ConcreteAgencyValidator {
   }
 
   private boolean hasNoConsultant(ValidateAgencyDTO validateAgencyDto) {
-    return this.userAdminService.getConsultantsOfAgency(validateAgencyDto.getId(), 1, 1)
-        .isEmpty();
+    return this.userAdminService.getConsultantsOfAgency(validateAgencyDto.getId(), 1, 1).isEmpty();
   }
 }

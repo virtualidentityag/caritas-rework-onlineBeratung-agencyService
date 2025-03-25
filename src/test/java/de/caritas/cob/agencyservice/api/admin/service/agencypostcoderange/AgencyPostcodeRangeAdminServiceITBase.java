@@ -10,16 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class AgencyPostcodeRangeAdminServiceITBase {
 
-  @Autowired
-  private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
+  @Autowired private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
 
-  @Autowired
-  private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
+  @Autowired private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
 
   public void findPostcodeRangesForAgency_Should_returnExpectedResult_When_postcodeRangesExists() {
-    var postcodeRange = this.agencyPostcodeRangeAdminService
-        .findPostcodeRangesForAgency(0L)
-        .getEmbedded();
+    var postcodeRange =
+        this.agencyPostcodeRangeAdminService.findPostcodeRangesForAgency(0L).getEmbedded();
 
     assertThat(postcodeRange, notNullValue());
     assertThat(postcodeRange.getId(), notNullValue());
@@ -27,18 +24,14 @@ public class AgencyPostcodeRangeAdminServiceITBase {
   }
 
   public void findPostcodeRangesForAgency_Should_haveExpectedLinks_When_postcodeRangesExists() {
-    var links = this.agencyPostcodeRangeAdminService
-        .findPostcodeRangesForAgency(15L).getLinks();
+    var links = this.agencyPostcodeRangeAdminService.findPostcodeRangesForAgency(15L).getLinks();
 
     assertThat(links.getSelf(), notNullValue());
-    assertThat(links.getSelf().getHref(),
-        endsWith("/agencyadmin/postcoderanges/15"));
+    assertThat(links.getSelf().getHref(), endsWith("/agencyadmin/postcoderanges/15"));
     assertThat(links.getDelete(), notNullValue());
-    assertThat(links.getDelete().getHref(),
-        endsWith("/agencyadmin/postcoderanges/15"));
+    assertThat(links.getDelete().getHref(), endsWith("/agencyadmin/postcoderanges/15"));
     assertThat(links.getUpdate(), notNullValue());
-    assertThat(links.getUpdate().getHref(),
-        endsWith("/agencyadmin/postcoderanges/15"));
+    assertThat(links.getUpdate().getHref(), endsWith("/agencyadmin/postcoderanges/15"));
   }
 
   public void deleteAgencyPostcodeRange_Should_deletePostcodeRange_When_agencyIdExists() {
@@ -54,5 +47,4 @@ public class AgencyPostcodeRangeAdminServiceITBase {
 
     this.agencyPostcodeRangeAdminService.deleteAgencyPostcodeRange(agencyId);
   }
-
 }

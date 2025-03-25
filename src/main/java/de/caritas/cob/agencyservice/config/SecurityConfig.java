@@ -24,25 +24,30 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * Provides the Keycloak/Spring Security configuration.
- */
+/** Provides the Keycloak/Spring Security configuration. */
 @KeycloakConfiguration
-@EnableGlobalMethodSecurity(
-    prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig implements WebMvcConfigurer {
 
   public static final String[] WHITE_LIST =
-      new String[]{"/agencies/docs", "/agencies/docs/**", "/v2/api-docs", "/configuration/ui",
-          "/swagger-resources/**", "/configuration/security", "/swagger-ui.html", "/swagger-ui/**", "/webjars/**", "/actuator/health", "/actuator/health/**"};
+      new String[] {
+        "/agencies/docs",
+        "/agencies/docs/**",
+        "/v2/api-docs",
+        "/configuration/ui",
+        "/swagger-resources/**",
+        "/configuration/security",
+        "/swagger-ui.html",
+        "/swagger-ui/**",
+        "/webjars/**",
+        "/actuator/health",
+        "/actuator/health/**"
+      };
 
-  @Autowired
-  AuthorisationService authorisationService;
-  @Autowired
-  JwtAuthConverterProperties jwtAuthConverterProperties;
-
+  @Autowired AuthorisationService authorisationService;
+  @Autowired JwtAuthConverterProperties jwtAuthConverterProperties;
 
   @Value("${csrf.cookie.property}")
   private String csrfCookieProperty;
@@ -50,8 +55,7 @@ public class SecurityConfig implements WebMvcConfigurer {
   @Value("${csrf.header.property}")
   private String csrfHeaderProperty;
 
-  @Autowired
-  private Environment environment;
+  @Autowired private Environment environment;
 
   @Autowired(required = false)
   @Nullable
@@ -68,38 +72,52 @@ public class SecurityConfig implements WebMvcConfigurer {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    var httpSecurity = http.csrf().disable()
-        .addFilterBefore(new StatelessCsrfFilter(csrfCookieProperty, csrfHeaderProperty),
-            CsrfFilter.class);
+    var httpSecurity =
+        http.csrf()
+            .disable()
+            .addFilterBefore(
+                new StatelessCsrfFilter(csrfCookieProperty, csrfHeaderProperty), CsrfFilter.class);
 
     if (multitenancy) {
-      httpSecurity = httpSecurity
-          .addFilterAfter(httpTenantFilter, BearerTokenAuthenticationFilter.class);
+      httpSecurity =
+          httpSecurity.addFilterAfter(httpTenantFilter, BearerTokenAuthenticationFilter.class);
     }
 
-    httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        .and().authorizeRequests()
-        .requestMatchers(WHITE_LIST).permitAll()
-        .requestMatchers("/agencies").permitAll()
+    httpSecurity
+        .sessionManagement()
+        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .and()
+        .authorizeRequests()
+        .requestMatchers(WHITE_LIST)
+        .permitAll()
+        .requestMatchers("/agencies")
+        .permitAll()
         .requestMatchers(HttpMethod.GET, "/agencyadmin/agencies")
         .hasAuthority(AuthorityValue.SEARCH_AGENCIES)
-        .requestMatchers("/agencies/by-tenant").hasAuthority(AuthorityValue.SEARCH_AGENCIES_WITHIN_TENANT)
+        .requestMatchers("/agencies/by-tenant")
+        .hasAuthority(AuthorityValue.SEARCH_AGENCIES_WITHIN_TENANT)
         .requestMatchers("/agencyadmin/agencies/tenant/*")
-        .access("hasAuthority('" + AuthorityValue.AGENCY_ADMIN
-            + "') and hasAuthority('" + AuthorityValue.TENANT_ADMIN + "')")
+        .access(
+            "hasAuthority('"
+                + AuthorityValue.AGENCY_ADMIN
+                + "') and hasAuthority('"
+                + AuthorityValue.TENANT_ADMIN
+                + "')")
         .requestMatchers("/agencyadmin", "/agencyadmin/", "/agencyadmin/**")
         .hasAnyAuthority(AuthorityValue.AGENCY_ADMIN, AuthorityValue.RESTRICTED_AGENCY_ADMIN)
-        .requestMatchers("/agencies/**").permitAll()
-        .anyRequest().denyAll();
-
+        .requestMatchers("/agencies/**")
+        .permitAll()
+        .anyRequest()
+        .denyAll();
 
     httpSecurity.oauth2ResourceServer().jwt().jwtAuthenticationConverter(jwtAuthConverter());
     return httpSecurity.build();
   }
 
   /**
-   * Configure trailing slash match for all endpoints (needed as Spring Boot 3.0.0 changed default behaviour for trailing slash match)
-   * https://www.baeldung.com/spring-boot-3-migration (section 3.1)
+   * Configure trailing slash match for all endpoints (needed as Spring Boot 3.0.0 changed default
+   * behaviour for trailing slash match) https://www.baeldung.com/spring-boot-3-migration (section
+   * 3.1)
    */
   @Override
   public void configurePathMatch(PathMatchConfigurer configurer) {
@@ -110,7 +128,4 @@ public class SecurityConfig implements WebMvcConfigurer {
   public JwtAuthConverter jwtAuthConverter() {
     return new JwtAuthConverter(jwtAuthConverterProperties, authorisationService);
   }
-
-
-
 }

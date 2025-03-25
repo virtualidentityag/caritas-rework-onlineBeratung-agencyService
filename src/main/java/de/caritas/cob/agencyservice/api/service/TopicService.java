@@ -3,14 +3,14 @@ package de.caritas.cob.agencyservice.api.service;
 import de.caritas.cob.agencyservice.api.service.securityheader.SecurityHeaderSupplier;
 import de.caritas.cob.agencyservice.config.CacheManagerConfig;
 import de.caritas.cob.agencyservice.config.apiclient.TopicServiceApiControllerFactory;
+import de.caritas.cob.agencyservice.topicservice.generated.ApiClient;
 import de.caritas.cob.agencyservice.topicservice.generated.web.TopicControllerApi;
+import de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO;
 import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO;
-import de.caritas.cob.agencyservice.topicservice.generated.ApiClient;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +32,4 @@ public class TopicService {
     tenantHeaderSupplier.addTenantHeader(headers);
     headers.forEach((key, value) -> apiClient.addDefaultHeader(key, value.iterator().next()));
   }
-
 }

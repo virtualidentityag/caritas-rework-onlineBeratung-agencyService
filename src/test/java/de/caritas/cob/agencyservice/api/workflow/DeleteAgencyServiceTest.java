@@ -3,7 +3,6 @@ package de.caritas.cob.agencyservice.api.workflow;
 import com.google.common.collect.Lists;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agency.AgencyRepository;
-
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRangeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,14 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class DeleteAgencyServiceTest {
 
-  @Mock
-  AgencyRepository agencyRepository;
+  @Mock AgencyRepository agencyRepository;
 
-  @Mock
-  AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
+  @Mock AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
 
-  @InjectMocks
-  DeleteAgencyService deleteAgencyService;
+  @InjectMocks DeleteAgencyService deleteAgencyService;
 
   @Test
   void deleteAgenciesMarkedForDeletion_Should_callRepositoryToDeleteAllAgenciesMarkedForDeletion() {
@@ -31,8 +27,8 @@ class DeleteAgencyServiceTest {
     agency1.setId(1L);
     Agency agency2 = new Agency();
     agency2.setId(2L);
-    Mockito.when(agencyRepository.findAllByDeleteDateNotNull()).thenReturn(Lists.newArrayList(
-        agency1, agency2));
+    Mockito.when(agencyRepository.findAllByDeleteDateNotNull())
+        .thenReturn(Lists.newArrayList(agency1, agency2));
     // when
     deleteAgencyService.deleteAgenciesMarkedForDeletion();
     // then

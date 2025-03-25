@@ -5,11 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * Settings for white spot agency
- *
- */
-
+/** Settings for white spot agency */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
