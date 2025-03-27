@@ -4,10 +4,7 @@ import de.caritas.cob.agencyservice.api.service.TenantHeaderSupplier;
 import de.caritas.cob.agencyservice.api.service.securityheader.SecurityHeaderSupplier;
 import de.caritas.cob.agencyservice.config.apiclient.UserAdminServiceApiControllerFactory;
 import de.caritas.cob.agencyservice.useradminservice.generated.ApiClient;
-import de.caritas.cob.agencyservice.useradminservice.generated.web.AdminUserControllerApi;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.AdminResponseDTO;
-import de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO;
-import de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO.AgencyTypeEnum;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantAdminResponseDTO;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantFilter;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.Sort;
@@ -26,22 +23,6 @@ public class UserAdminService {
   private final @NonNull UserAdminServiceApiControllerFactory userAdminServiceApiControllerFactory;
   private final @NonNull SecurityHeaderSupplier securityHeaderSupplier;
   private final @NonNull TenantHeaderSupplier tenantHeaderSupplier;
-
-  /**
-   * Change the assigned consultants of an agency when type of agency is changed from team-agency to
-   * default and vice-versa.
-   *
-   * @param agencyId the id of the agency
-   * @param agencyType Type to decide if assigned consultants will be removed from team sessions or
-   *     tagged as team consultants
-   */
-  public void adaptRelatedConsultantsForChange(Long agencyId, String agencyType) {
-    AdminUserControllerApi controllerApi =
-        userAdminServiceApiControllerFactory.createControllerApi();
-    addDefaultHeaders(controllerApi.getApiClient());
-    controllerApi.changeAgencyType(
-        agencyId, new AgencyTypeDTO().agencyType(AgencyTypeEnum.fromValue(agencyType)));
-  }
 
   protected void addDefaultHeaders(ApiClient apiClient) {
     HttpHeaders headers = this.securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders();

@@ -2,7 +2,6 @@ package de.caritas.cob.agencyservice.api.admin.controller;
 
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_POSTCODE_RANGE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_SEARCH_PATH;
-import static de.caritas.cob.agencyservice.testHelper.PathConstants.CHANGE_AGENCY_TYPE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.CREATE_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.GET_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.PAGE_PARAM;
@@ -23,17 +22,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.caritas.cob.agencyservice.api.admin.service.AgencyAdminService;
 import de.caritas.cob.agencyservice.api.admin.service.agency.AgencyAdminSearchService;
 import de.caritas.cob.agencyservice.api.admin.service.agencypostcoderange.AgencyPostcodeRangeAdminService;
 import de.caritas.cob.agencyservice.api.admin.validation.AgencyValidator;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
 import de.caritas.cob.agencyservice.api.model.PostcodeRangeDTO;
 import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
 import jakarta.servlet.http.Cookie;
-import org.jeasy.random.EasyRandom;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -285,38 +281,6 @@ public class AgencyAdminControllerAuthorizationIT {
 
     verify(this.agencyPostCodeRangeAdminService, times(1))
         .updatePostcodeRange(Mockito.anyLong(), Mockito.any(PostcodeRangeDTO.class));
-  }
-
-  @Test
-  public void
-      changeAgencyType_Should_ReturnUnauthorizedAndCallNoMethods_When_noKeycloakAuthorizationIsPresent()
-          throws Exception {
-
-    mvc.perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE))
-        .andExpect(status().isUnauthorized());
-
-    verifyNoMoreInteractions(this.agencyAdminService);
-  }
-
-  @Test
-  @WithMockUser(authorities = {"AUTHORIZATION_AGENCY_ADMIN"})
-  public void changeAgencyType_Should_ReturnOkAndCallAgencyAdminService_When_agencyAdminAuthority()
-      throws Exception {
-    AgencyTypeRequestDTO requestDTO = new EasyRandom().nextObject(AgencyTypeRequestDTO.class);
-
-    mvc.perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(requestDTO))
-                .cookie(CSRF_COOKIE)
-                .header(CSRF_HEADER, CSRF_VALUE))
-        .andExpect(status().isOk());
-
-    verify(this.agencyAdminService, times(1)).changeAgencyType(1L, requestDTO);
   }
 
   @Test

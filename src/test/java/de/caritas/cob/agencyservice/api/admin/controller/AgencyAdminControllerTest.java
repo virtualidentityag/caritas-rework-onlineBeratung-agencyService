@@ -2,7 +2,6 @@ package de.caritas.cob.agencyservice.api.admin.controller;
 
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_POSTCODE_RANGE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_SEARCH_PATH;
-import static de.caritas.cob.agencyservice.testHelper.PathConstants.CHANGE_AGENCY_TYPE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.CREATE_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.GET_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.PAGE_PARAM;
@@ -39,8 +38,6 @@ import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidPostcodeE
 import de.caritas.cob.agencyservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminFullResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO.AgencyTypeEnum;
 import de.caritas.cob.agencyservice.api.model.DemographicsDTO;
 import de.caritas.cob.agencyservice.api.model.PostcodeRangeDTO;
 import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
@@ -321,30 +318,6 @@ public class AgencyAdminControllerTest {
   }
 
   @Test
-  public void changeAgencyType_Should_returnOk_When_AllParamsAreValid() throws Exception {
-    var agencyTypeDTO = new AgencyTypeRequestDTO().agencyType(AgencyTypeEnum.TEAM_AGENCY);
-
-    this.mvc
-        .perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .content(new ObjectMapper().writeValueAsString(agencyTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  public void changeAgencyType_Should_returnBadRequest_When_teamAgencyIsNull() throws Exception {
-    var agencyTypeDTO = new AgencyTypeRequestDTO().agencyType(null);
-
-    this.mvc
-        .perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .content(new ObjectMapper().writeValueAsString(agencyTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
   public void deleteAgency_Should_returnOk_When_AllParamsAreValid() throws Exception {
     this.mvc
         .perform(delete(UPDATE_DELETE_AGENCY_PATH).contentType(MediaType.APPLICATION_JSON))
@@ -352,7 +325,7 @@ public class AgencyAdminControllerTest {
   }
 
   @Test
-  public void deleteAgency_Should_returnBadRequest_When_teamAgencyIsInvalid() throws Exception {
+  public void deleteAgency_Should_returnBadRequest_When_agencyIsInvalid() throws Exception {
     this.mvc
         .perform(
             delete(UPDATE_DELETE_AGENCY_PATH_INVALID_ID).contentType(MediaType.APPLICATION_JSON))

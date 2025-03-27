@@ -40,7 +40,6 @@ public class AgencyAdminFullResponseDTOBuilder {
             .consultingType(this.agency.getConsultingTypeId())
             .description(this.agency.getDescription())
             .postcode(this.agency.getPostCode())
-            .teamAgency(this.agency.isTeamAgency())
             .url(this.agency.getUrl())
             .external((this.agency.isExternal()))
             .offline(this.agency.isOffline())

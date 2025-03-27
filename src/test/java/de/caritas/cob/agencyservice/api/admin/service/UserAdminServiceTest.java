@@ -1,6 +1,5 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
-import static de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO.AgencyTypeEnum.TEAM_AGENCY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -14,7 +13,6 @@ import de.caritas.cob.agencyservice.api.tenant.TenantContext;
 import de.caritas.cob.agencyservice.config.apiclient.UserAdminServiceApiControllerFactory;
 import de.caritas.cob.agencyservice.useradminservice.generated.ApiClient;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.AdminUserControllerApi;
-import de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantFilter;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantSearchResultDTO;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.Sort;
@@ -54,17 +52,6 @@ public class UserAdminServiceTest {
     when(this.securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders()).thenReturn(this.httpHeaders);
     when(userAdminServiceApiControllerFactory.createControllerApi())
         .thenReturn(adminUserControllerApi);
-  }
-
-  @Test
-  public void adaptRelatedConsultantsForChange_Should_callServicesCorrectly() {
-    Long agencyId = 1L;
-
-    this.userAdminService.adaptRelatedConsultantsForChange(agencyId, TEAM_AGENCY.getValue());
-
-    verify(this.adminUserControllerApi, times(1))
-        .changeAgencyType(agencyId, new AgencyTypeDTO().agencyType(TEAM_AGENCY));
-    verify(this.apiClient, times(this.httpHeaders.size())).addDefaultHeader(any(), any());
   }
 
   @Test

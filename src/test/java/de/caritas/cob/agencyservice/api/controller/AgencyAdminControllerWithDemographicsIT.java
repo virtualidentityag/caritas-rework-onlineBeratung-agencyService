@@ -97,7 +97,6 @@ class AgencyAdminControllerWithDemographicsIT {
         new AgencyDTO()
             .name("Test name")
             .description("Test description")
-            .teamAgency(true)
             .consultingType(0)
             .external(true)
             .demographics(

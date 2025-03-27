@@ -120,7 +120,6 @@ class AgencyAdminControllerWithTopicsIT {
             .description("Test description")
             .postcode("12345")
             .city("Test city")
-            .teamAgency(true)
             .consultingType(0)
             .url("https://www.test.de")
             .external(true);

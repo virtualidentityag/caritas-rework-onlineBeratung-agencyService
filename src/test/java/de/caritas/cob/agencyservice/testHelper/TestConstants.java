@@ -166,7 +166,6 @@ public class TestConstants {
           .description(AGENCY_DESCRIPTION)
           .postCode(POSTCODE)
           .city("Test city")
-          .teamAgency(false)
           .consultingTypeId(CONSULTING_TYPE_SUCHT)
           .offline(false)
           .isExternal(false)
@@ -184,7 +183,6 @@ public class TestConstants {
           .description(AGENCY_DESCRIPTION)
           .postCode(POSTCODE)
           .city("Test city")
-          .teamAgency(false)
           .consultingTypeId(CONSULTING_TYPE_SUCHT)
           .offline(false)
           .isExternal(false)
@@ -200,7 +198,6 @@ public class TestConstants {
           AGENCY_DESCRIPTION,
           POSTCODE,
           "Test city",
-          false,
           CONSULTING_TYPE_KREUZBUND,
           false,
           null,
@@ -220,6 +217,7 @@ public class TestConstants {
           null,
           null,
           null);
+
   public static final Agency AGENCY_ONLINE_U25 =
       new Agency(
           AGENCY_ID,
@@ -227,7 +225,6 @@ public class TestConstants {
           AGENCY_DESCRIPTION,
           POSTCODE,
           "Test city",
-          false,
           CONSULTING_TYPE_U25,
           false,
           null,
@@ -254,7 +251,6 @@ public class TestConstants {
           AGENCY_DESCRIPTION,
           POSTCODE,
           "Test city",
-          false,
           CONSULTING_TYPE_SUCHT,
           true,
           null,
@@ -281,7 +277,6 @@ public class TestConstants {
           .postcode(POSTCODE)
           .city(AGENCY_CITY)
           .description(AGENCY_DESCRIPTION)
-          .teamAgency(false)
           .offline(false)
           .consultingType(CONSULTING_TYPE_SUCHT)
           .topicIds(Lists.newArrayList(1L, 2L));
@@ -294,7 +289,6 @@ public class TestConstants {
           .postcode(POSTCODE)
           .city(AGENCY_CITY)
           .description(AGENCY_DESCRIPTION)
-          .teamAgency(false)
           .offline(false)
           .consultingType(CONSULTING_TYPE_SUCHT)
           .url(null)
@@ -340,7 +334,6 @@ public class TestConstants {
           + "  \"description\": \"Description\",\n"
           + "  \"name\": \"Agency\",\n"
           + "  \"postcode\": \"76000\",\n"
-          + "  \"teamAgency\": false,\n"
           + "  \"url\": \"https://www.domain.com\",\n"
           + "  \"external\": true\n"
           + "}";

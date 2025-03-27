@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import de.caritas.cob.agencyservice.api.admin.service.UserAdminService;
 import de.caritas.cob.agencyservice.api.admin.validation.validators.annotation.UpdateAgencyValidator;
@@ -28,8 +27,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.jeasy.random.EasyRandom;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -43,14 +42,14 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AgencyOfflineStatusValidatorTest {
 
-  static boolean IS_OFFLINE = true;
-  static boolean IS_NOT_OFFLINE = false;
-  static boolean IS_WHITE_SPOT_AGENCY = true;
-  static boolean IS_NOT_WHITE_SPOT_AGENCY = false;
-  static long NO_POSTCODE_RANGES = 0L;
-  static long WITH_POSTCODE_RANGES = 5L;
-  static List<ConsultantAdminResponseDTO> NO_CONSULTANT = emptyList();
-  static List<ConsultantAdminResponseDTO> ONE_CONSULTANT =
+  static final boolean IS_OFFLINE = true;
+  static final boolean IS_NOT_OFFLINE = false;
+  static final boolean IS_WHITE_SPOT_AGENCY = true;
+  static final boolean IS_NOT_WHITE_SPOT_AGENCY = false;
+  static final long NO_POSTCODE_RANGES = 0L;
+  static final long WITH_POSTCODE_RANGES = 5L;
+  static final List<ConsultantAdminResponseDTO> NO_CONSULTANT = emptyList();
+  static final List<ConsultantAdminResponseDTO> ONE_CONSULTANT =
       singletonList(new ConsultantAdminResponseDTO());
 
   @Mock AgencyRepository agencyRepository;
@@ -93,7 +92,6 @@ class AgencyOfflineStatusValidatorTest {
 
   @BeforeEach
   void init() {
-    initMocks(this);
     EasyRandom easyRandom = new EasyRandom();
     this.validateAgencyDto = easyRandom.nextObject(ValidateAgencyDTO.class);
     this.consultingTypeSettings = easyRandom.nextObject(ExtendedConsultingTypeResponseDTO.class);
@@ -188,7 +186,7 @@ class AgencyOfflineStatusValidatorTest {
   }
 
   @Test
-  public void agencyOfflineStatusValidator_Should_HaveUpdateAgencyValidatorAnnotation() {
+  void agencyOfflineStatusValidator_Should_HaveUpdateAgencyValidatorAnnotation() {
     assertTrue(AgencyOfflineStatusValidator.class.isAnnotationPresent(UpdateAgencyValidator.class));
   }
 }

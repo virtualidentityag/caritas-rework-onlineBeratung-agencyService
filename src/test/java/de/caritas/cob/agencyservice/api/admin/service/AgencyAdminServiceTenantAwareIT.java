@@ -1,7 +1,6 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
@@ -167,7 +166,6 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
     Optional<Agency> agencyOptional =
         agencyRepository.findById(agencyAdminFullResponseDTO.getEmbedded().getId());
     Agency agency = agencyOptional.get();
-    assertTrue(agency.isTeamAgency());
     assertThat(agency.getConsultingTypeId()).isZero();
     assertThat(agency.getPostCode()).isEqualTo("12345");
     assertThat(agency.getDescription()).isEqualTo("Agency description");

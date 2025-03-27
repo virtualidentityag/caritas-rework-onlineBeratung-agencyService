@@ -10,7 +10,6 @@ import de.caritas.cob.agencyservice.api.model.AgencyAdminFullResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminSearchResultDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyPostcodeRangeResponseDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
 import de.caritas.cob.agencyservice.api.model.PostcodeRangeDTO;
 import de.caritas.cob.agencyservice.api.model.RootDTO;
 import de.caritas.cob.agencyservice.api.model.Sort;
@@ -182,20 +181,6 @@ public class AgencyAdminController implements AgencyadminApi {
   @Override
   public ResponseEntity<Void> deleteAgencyPostcodeRange(Long agencyId) {
     this.agencyPostcodeRangeAdminService.deleteAgencyPostcodeRange(agencyId);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  /**
-   * Entry point to change the tpe of an agency.
-   *
-   * @param agencyId Agency Id (required)
-   * @param agencyTypeRequestDTO the dto containing the flag for type change
-   * @return a {@link ResponseEntity} with the status code.
-   */
-  @Override
-  public ResponseEntity<Void> changeAgencyType(
-      Long agencyId, @Valid AgencyTypeRequestDTO agencyTypeRequestDTO) {
-    this.agencyAdminService.changeAgencyType(agencyId, agencyTypeRequestDTO);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 

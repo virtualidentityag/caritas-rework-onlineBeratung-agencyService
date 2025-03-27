@@ -17,14 +17,15 @@ import de.caritas.cob.agencyservice.api.model.SearchResultLinks;
 import de.caritas.cob.agencyservice.api.model.Sort;
 import de.caritas.cob.agencyservice.api.model.Sort.FieldEnum;
 import de.caritas.cob.agencyservice.api.model.Sort.OrderEnum;
+import de.caritas.cob.agencyservice.api.service.TopicEnrichmentService;
 import de.caritas.cob.agencyservice.api.util.AuthenticatedUser;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -34,28 +35,30 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = AgencyServiceApplication.class)
 @TestPropertySource(properties = "spring.profiles.active=testing")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 @DirtiesContext(classMode = ClassMode.BEFORE_CLASS)
 @Transactional
-public class AgencyAdminSearchServiceIntegrationTests {
+class AgencyAdminSearchServiceIntegrationTest {
 
   @Autowired private AgencyAdminSearchService agencyAdminSearchService;
 
   @MockBean AuthenticatedUser authenticatedUser;
 
+  @MockBean private TopicEnrichmentService topicEnrichmentService;
+
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     Mockito.when(authenticatedUser.hasRestrictedAgencyPriviliges()).thenReturn(false);
   }
 
   @Test
-  public void searchAgencies_Should_returnOneResult_When_perPageIsSetToOne() {
+  void searchAgencies_Should_returnOneResult_When_perPageIsSetToOne() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("", 0, 1, null).getEmbedded();
 
@@ -63,7 +66,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnOneResult_When_perPageIsSetToOneAndPageIsSetToOne() {
+  void searchAgencies_Should_returnOneResult_When_perPageIsSetToOneAndPageIsSetToOne() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("", 1, 1, null).getEmbedded();
 
@@ -71,7 +74,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnEmptyList_When_paginationParamsAreZero() {
+  void searchAgencies_Should_returnEmptyList_When_paginationParamsAreZero() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies(null, 0, 0, null).getEmbedded();
 
@@ -79,7 +82,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnEmptyList_When_paginationParamsAreNegative() {
+  void searchAgencies_Should_returnEmptyList_When_paginationParamsAreNegative() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies(null, -100, -1000, null).getEmbedded();
 
@@ -87,7 +90,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnAllEntities_When_keywordIsNull() {
+  void searchAgencies_Should_returnAllEntities_When_keywordIsNull() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies(null, 0, 1133, null).getEmbedded();
 
@@ -95,7 +98,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnEntitiesSorted_When_SortParameterGiven() {
+  void searchAgencies_Should_returnEntitiesSorted_When_SortParameterGiven() {
     Sort sort = new Sort();
     sort.setField(FieldEnum.NAME);
     sort.setOrder(OrderEnum.ASC);
@@ -125,7 +128,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnAllEntities_When_keywordIsEmpty() {
+  void searchAgencies_Should_returnAllEntities_When_keywordIsEmpty() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("", 0, 1133, null).getEmbedded();
 
@@ -133,7 +136,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnPaginatedEntities_When_paginationParamsAreSplitted() {
+  void searchAgencies_Should_returnPaginatedEntities_When_paginationParamsAreSplitted() {
     List<AgencyAdminFullResponseDTO> firstPage =
         this.agencyAdminSearchService.searchAgencies("", 1, 1000, null).getEmbedded();
     List<AgencyAdminFullResponseDTO> secondPage =
@@ -144,7 +147,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnMatchingAgencies_When_nameContainsDashIndexedValues() {
+  void searchAgencies_Should_returnMatchingAgencies_When_nameContainsDashIndexedValues() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("Oberschwaben", 0, 2, null).getEmbedded();
 
@@ -153,7 +156,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnMatchingAgencies_When_nameContainsUmlautReplacements() {
+  void searchAgencies_Should_returnMatchingAgencies_When_nameContainsUmlautReplacements() {
     agencyAdminSearchService
         .searchAgencies("Uberlingen", 0, 4, null)
         .getEmbedded()
@@ -162,7 +165,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnMatchingAgencies_When_nameContainsUmlauts() {
+  void searchAgencies_Should_returnMatchingAgencies_When_nameContainsUmlauts() {
     agencyAdminSearchService
         .searchAgencies("Überlingen", 0, 2, null)
         .getEmbedded()
@@ -175,7 +178,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnMatchingAgencies_When_keywordIsValidPlz() {
+  void searchAgencies_Should_returnMatchingAgencies_When_keywordIsValidPlz() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("88662", 0, 5, null).getEmbedded();
 
@@ -183,8 +186,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void
-      searchAgencies_Should_returnMatchingAgencies_When_keywordIsContainedInDifferentFields() {
+  void searchAgencies_Should_returnMatchingAgencies_When_keywordIsContainedInDifferentFields() {
     List<AgencyAdminFullResponseDTO> agencies =
         this.agencyAdminSearchService.searchAgencies("1", 0, 500, null).getEmbedded();
 
@@ -199,14 +201,14 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnValidResult_When_keywordContainsOnlySpecialCharacters() {
+  void searchAgencies_Should_returnValidResult_When_keywordContainsOnlySpecialCharacters() {
     var agencies = agencyAdminSearchService.searchAgencies("§$%=#'`><", 0, 5, null).getEmbedded();
 
     assertThat(agencies, notNullValue());
   }
 
   @Test
-  public void searchAgencies_Should_returnValidResult_When_keywordHasSpecialCharacters() {
+  void searchAgencies_Should_returnValidResult_When_keywordHasSpecialCharacters() {
     var specialChars = "halle§$%=#'`><";
 
     var agencies = agencyAdminSearchService.searchAgencies(specialChars, 0, 5, null).getEmbedded();
@@ -215,7 +217,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void searchAgencies_Should_returnValidResult_When_keywordHasLuceneQuerySyntax() {
+  void searchAgencies_Should_returnValidResult_When_keywordHasLuceneQuerySyntax() {
     var specialChars = "halle+-&|!(){}[]^\"~*?:\\/";
 
     var agencies = agencyAdminSearchService.searchAgencies(specialChars, 0, 5, null).getEmbedded();
@@ -224,7 +226,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void
+  void
       buildAgencyAdminSearchResult_Should_returnExpectedMappedResponseDTO_When_searchForSpecialAgency() {
     String keyword = "Schwangerschaftsberatungsstelle Sch";
 
@@ -245,13 +247,12 @@ public class AgencyAdminSearchServiceIntegrationTests {
         firstSearchResult.getEmbedded().getName(), is("Schwangerschaftsberatungsstelle Schwelm"));
     assertThat(firstSearchResult.getEmbedded().getOffline(), is(false));
     assertThat(firstSearchResult.getEmbedded().getPostcode(), is("58332"));
-    assertThat(firstSearchResult.getEmbedded().getTeamAgency(), is(false));
     assertThat(firstSearchResult.getEmbedded().getUrl(), is("https://www.domain.com"));
     assertThat(firstSearchResult.getEmbedded().getExternal(), is(true));
   }
 
   @Test
-  public void buildAgencyAdminSearchResult_Should_haveExpectedLinks_When_search() {
+  void buildAgencyAdminSearchResult_Should_haveExpectedLinks_When_search() {
     AgencyAdminSearchResultDTO agencyAdminSearchResultDTO =
         this.agencyAdminSearchService.searchAgencies("a", 1, 20, null);
 
@@ -272,7 +273,7 @@ public class AgencyAdminSearchServiceIntegrationTests {
   }
 
   @Test
-  public void buildAgencyAdminSearchResult_Should_returnExpectedLinksForAgencies() {
+  void buildAgencyAdminSearchResult_Should_returnExpectedLinksForAgencies() {
     AgencyAdminSearchResultDTO searchResult =
         this.agencyAdminSearchService.searchAgencies("", 0, 2, null);
 

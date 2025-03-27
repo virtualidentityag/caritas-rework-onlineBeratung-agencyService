@@ -1,6 +1,5 @@
 package de.caritas.cob.agencyservice.api;
 
-import static de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason.AGENCY_IS_ALREADY_TEAM_AGENCY;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.PATH_GET_AGENCIES_WITH_IDS;
 import static de.caritas.cob.agencyservice.testHelper.TestConstants.AGENCY_ID;
 import static org.mockito.ArgumentMatchers.any;
@@ -11,15 +10,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import de.caritas.cob.agencyservice.api.authorization.RoleAuthorizationAuthorityMapper;
 import de.caritas.cob.agencyservice.api.controller.AgencyController;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.BadRequestException;
-import de.caritas.cob.agencyservice.api.exception.httpresponses.ConflictException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InternalServerErrorException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidPostcodeException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.agencyservice.api.service.AgencyService;
+import de.caritas.cob.agencyservice.api.service.TopicEnrichmentService;
 import de.caritas.cob.agencyservice.config.security.AuthorisationService;
 import de.caritas.cob.agencyservice.config.security.JwtAuthConverter;
 import de.caritas.cob.agencyservice.config.security.JwtAuthConverterProperties;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -47,6 +45,8 @@ public class ResponseEntityExceptionHandlerIT {
 
   @MockBean private AgencyService agencyService;
 
+  @MockBean private TopicEnrichmentService topicEnrichmentService;
+
   @MockBean private LinkDiscoverers linkDiscoverers;
 
   @MockBean private RoleAuthorizationAuthorityMapper roleAuthorizationAuthorityMapper;
@@ -58,9 +58,6 @@ public class ResponseEntityExceptionHandlerIT {
   @MockBean private AuthorisationService authorisationService;
 
   @MockBean private JwtAuthConverterProperties jwtAuthConverterProperties;
-
-  @Before
-  public void setup() {}
 
   @Test
   public void handleException_Should_ReturnServerErrorAndLogError_When_InternalServerErrorIsThrown()
@@ -131,17 +128,6 @@ public class ResponseEntityExceptionHandlerIT {
 
     mvc.perform(get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNotFound());
-  }
-
-  @Test
-  public void handleException_Should_ReturnConflict_When_ConflictExceptionIsThrown()
-      throws Exception {
-
-    ConflictException exception = new ConflictException(AGENCY_IS_ALREADY_TEAM_AGENCY);
-    when(agencyService.getAgencies(any())).thenThrow(exception);
-
-    mvc.perform(get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID).accept(MediaType.APPLICATION_JSON))
-        .andExpect(status().isConflict());
   }
 
   @Test

@@ -221,9 +221,6 @@ components:
         description:
           type: string
           example: "Our agency provides help for the following topics: Lorem ipsum.."
-        teamAgency:
-          type: boolean
-          example: "false"
         offline:
           type: boolean
           example: "false"

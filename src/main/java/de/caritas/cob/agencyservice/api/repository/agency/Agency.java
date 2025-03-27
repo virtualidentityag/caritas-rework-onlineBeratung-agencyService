@@ -76,10 +76,6 @@ public class Agency implements TenantAware {
   @Column(name = "city")
   private String city;
 
-  @Column(name = "is_team_agency", nullable = false)
-  @Convert(converter = NumericBooleanConverter.class)
-  private boolean teamAgency;
-
   @PositiveOrZero
   @Column(name = "consulting_type", nullable = false)
   @NonNull

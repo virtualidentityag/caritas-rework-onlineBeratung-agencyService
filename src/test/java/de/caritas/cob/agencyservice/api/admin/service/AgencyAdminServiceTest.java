@@ -1,17 +1,11 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
-import static de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason.AGENCY_IS_ALREADY_DEFAULT_AGENCY;
-import static de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason.AGENCY_IS_ALREADY_TEAM_AGENCY;
-import static de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO.AgencyTypeEnum.DEFAULT_AGENCY;
-import static de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO.AgencyTypeEnum.TEAM_AGENCY;
 import static de.caritas.cob.agencyservice.testHelper.TestConstants.AGENCY_ID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -20,11 +14,9 @@ import de.caritas.cob.agencyservice.api.admin.service.agency.AgencyTopicEnrichme
 import de.caritas.cob.agencyservice.api.admin.service.agency.DataProtectionConverter;
 import de.caritas.cob.agencyservice.api.admin.service.agency.DemographicsConverter;
 import de.caritas.cob.agencyservice.api.admin.validation.DeleteAgencyValidator;
-import de.caritas.cob.agencyservice.api.exception.httpresponses.ConflictException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
 import de.caritas.cob.agencyservice.api.model.DataProtectionContactDTO;
 import de.caritas.cob.agencyservice.api.model.DataProtectionDTO;
 import de.caritas.cob.agencyservice.api.model.DemographicsDTO;
@@ -233,60 +225,6 @@ class AgencyAdminServiceTest {
     when(agencyRepository.findById(AGENCY_ID)).thenReturn(Optional.empty());
 
     assertThrows(NotFoundException.class, () -> agencyAdminService.findAgencyById(AGENCY_ID));
-  }
-
-  @Test
-  void changeAgencyType_Should_throwNotFoundException_When_agencyWasNotFound() {
-    when(agencyRepository.findById(AGENCY_ID)).thenReturn(Optional.empty());
-
-    assertThrows(
-        NotFoundException.class,
-        () -> agencyAdminService.changeAgencyType(AGENCY_ID, mock(AgencyTypeRequestDTO.class)));
-  }
-
-  @Test
-  void
-      changeAgencyType_Should_throwConflictExceptionWithCorrectReason_When_agencyHasAlreadyTypeTeamAgency() {
-    var agency = this.easyRandom.nextObject(Agency.class);
-    agency.setTeamAgency(true);
-    when(agencyRepository.findById(AGENCY_ID)).thenReturn(Optional.of(agency));
-    var requestDTO = new AgencyTypeRequestDTO().agencyType(TEAM_AGENCY);
-
-    try {
-      agencyAdminService.changeAgencyType(AGENCY_ID, requestDTO);
-      fail("ConflictException not thrown");
-    } catch (ConflictException exception) {
-      assertThat(AGENCY_IS_ALREADY_TEAM_AGENCY, is(exception.getHttpStatusExceptionReason()));
-    }
-  }
-
-  @Test
-  void
-      changeAgencyType_Should_throwConflictExceptionWithCorrectReason_When_agencyHasAlreadyTypeDefault() {
-    var agency = this.easyRandom.nextObject(Agency.class);
-    agency.setTeamAgency(false);
-    when(agencyRepository.findById(AGENCY_ID)).thenReturn(Optional.of(agency));
-    var requestDTO = new AgencyTypeRequestDTO().agencyType(DEFAULT_AGENCY);
-
-    try {
-      agencyAdminService.changeAgencyType(AGENCY_ID, requestDTO);
-      fail("ConflictException not thrown");
-    } catch (ConflictException exception) {
-      assertThat(AGENCY_IS_ALREADY_DEFAULT_AGENCY, is(exception.getHttpStatusExceptionReason()));
-    }
-  }
-
-  @Test
-  void changeAgencyType_Should_callUserAdminServiceAndSaveChangedAgency_When_agencyCanBeChanged() {
-    var agency = this.easyRandom.nextObject(Agency.class);
-    when(agencyRepository.findById(AGENCY_ID)).thenReturn(Optional.of(agency));
-    var requestDTO = new AgencyTypeRequestDTO().agencyType(DEFAULT_AGENCY);
-
-    agencyAdminService.changeAgencyType(AGENCY_ID, requestDTO);
-
-    verify(this.userAdminService)
-        .adaptRelatedConsultantsForChange(AGENCY_ID, requestDTO.getAgencyType().getValue());
-    verify(this.agencyRepository).save(any());
   }
 
   @Test

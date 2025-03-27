@@ -275,7 +275,6 @@ public class AgencyServiceTest {
     assertEquals(AGENCY_RESPONSE_DTO.getDescription(), result.getDescription());
     assertEquals(AGENCY_RESPONSE_DTO.getName(), result.getName());
     assertEquals(AGENCY_RESPONSE_DTO.getId(), result.getId());
-    assertEquals(AGENCY_RESPONSE_DTO.getTeamAgency(), result.getTeamAgency());
     assertEquals(AGENCY_RESPONSE_DTO.getOffline(), result.getOffline());
     assertEquals(AGENCY_RESPONSE_DTO.getConsultingType(), result.getConsultingType());
     assertThat(

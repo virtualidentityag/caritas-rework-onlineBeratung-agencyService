@@ -1,8 +1,5 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
-import static de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason.AGENCY_IS_ALREADY_DEFAULT_AGENCY;
-import static de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason.AGENCY_IS_ALREADY_TEAM_AGENCY;
-import static de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO.AgencyTypeEnum.TEAM_AGENCY;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -12,11 +9,9 @@ import de.caritas.cob.agencyservice.api.admin.service.agency.AgencyTopicEnrichme
 import de.caritas.cob.agencyservice.api.admin.service.agency.DataProtectionConverter;
 import de.caritas.cob.agencyservice.api.admin.service.agency.DemographicsConverter;
 import de.caritas.cob.agencyservice.api.admin.validation.DeleteAgencyValidator;
-import de.caritas.cob.agencyservice.api.exception.httpresponses.ConflictException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminFullResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
 import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agency.AgencyRepository;
@@ -146,7 +141,6 @@ public class AgencyAdminService {
             .postCode(agencyDTO.getPostcode())
             .city(agencyDTO.getCity())
             .offline(true)
-            .teamAgency(agencyDTO.getTeamAgency())
             .consultingTypeId(agencyDTO.getConsultingType())
             .url(agencyDTO.getUrl())
             .isExternal(agencyDTO.getExternal())
@@ -217,7 +211,6 @@ public class AgencyAdminService {
             .postCode(updateAgencyDTO.getPostcode())
             .city(updateAgencyDTO.getCity())
             .offline(updateAgencyDTO.getOffline())
-            .teamAgency(agency.isTeamAgency())
             .url(updateAgencyDTO.getUrl())
             .isExternal(updateAgencyDTO.getExternal())
             .createDate(agency.getCreateDate())
@@ -253,25 +246,6 @@ public class AgencyAdminService {
 
     agencyToUpdate.setTenantId(agency.getTenantId());
     return agencyToUpdate;
-  }
-
-  /**
-   * Changes the type of the agency.
-   *
-   * @param agencyId the agency id
-   * @param agencyTypeDTO the request dto containing the agency type
-   */
-  public void changeAgencyType(Long agencyId, AgencyTypeRequestDTO agencyTypeDTO) {
-    var agency = findAgencyById(agencyId);
-    boolean isTeamAgency = TEAM_AGENCY.equals(agencyTypeDTO.getAgencyType());
-    if (isTeamAgency == agency.isTeamAgency()) {
-      throw new ConflictException(
-          isTeamAgency ? AGENCY_IS_ALREADY_TEAM_AGENCY : AGENCY_IS_ALREADY_DEFAULT_AGENCY);
-    }
-    this.userAdminService.adaptRelatedConsultantsForChange(
-        agencyId, agencyTypeDTO.getAgencyType().getValue());
-    agency.setTeamAgency(isTeamAgency);
-    this.agencyRepository.save(agency);
   }
 
   /**
