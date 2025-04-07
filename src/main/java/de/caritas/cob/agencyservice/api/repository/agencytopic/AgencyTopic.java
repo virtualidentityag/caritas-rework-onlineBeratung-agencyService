@@ -2,7 +2,6 @@ package de.caritas.cob.agencyservice.api.repository.agencytopic;
 
 import de.caritas.cob.agencyservice.api.model.TopicDTO;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
-import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

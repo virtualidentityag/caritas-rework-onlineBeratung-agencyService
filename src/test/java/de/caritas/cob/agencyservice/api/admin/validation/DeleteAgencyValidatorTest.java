@@ -25,14 +25,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class DeleteAgencyValidatorTest {
 
-  @InjectMocks
-  DeleteAgencyValidator deleteAgencyValidator;
+  @InjectMocks DeleteAgencyValidator deleteAgencyValidator;
 
-  @Mock
-  UserAdminService userAdminService;
+  @Mock UserAdminService userAdminService;
 
-  @Mock
-  ConsultingTypeManager consultingTypeManager;
+  @Mock ConsultingTypeManager consultingTypeManager;
 
   private final EasyRandom easyRandom = new EasyRandom();
 
@@ -57,8 +54,10 @@ public class DeleteAgencyValidatorTest {
     when(this.userAdminService.getConsultantsOfAgency(any(), anyInt(), anyInt()))
         .thenReturn(Collections.emptyList());
 
-    ExtendedConsultingTypeResponseDTO consultingTypeSettings = this.easyRandom.nextObject(ExtendedConsultingTypeResponseDTO.class);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt())).thenReturn(consultingTypeSettings);
+    ExtendedConsultingTypeResponseDTO consultingTypeSettings =
+        this.easyRandom.nextObject(ExtendedConsultingTypeResponseDTO.class);
+    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
+        .thenReturn(consultingTypeSettings);
 
     Agency agency = this.easyRandom.nextObject(Agency.class);
     agency.setConsultingTypeId(CONSULTING_TYPE_SUCHT);

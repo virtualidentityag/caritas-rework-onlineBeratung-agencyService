@@ -19,11 +19,9 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class AgencyPostcodeRangeAdminServiceIT extends AgencyPostcodeRangeAdminServiceITBase {
 
-  @Autowired
-  private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
+  @Autowired private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
 
-  @Autowired
-  private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
+  @Autowired private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
 
   @Test
   public void findPostcodeRangesForAgency_Should_returnExpectedResult_When_postcodeRangesExists() {
@@ -45,5 +43,4 @@ public class AgencyPostcodeRangeAdminServiceIT extends AgencyPostcodeRangeAdminS
   public void deleteAgencyPostcodeRange_Should_throwNotFound_When_agencyIdNotExists() {
     super.deleteAgencyPostcodeRange_Should_throwNotFound_When_agencyIdNotExists();
   }
-
 }

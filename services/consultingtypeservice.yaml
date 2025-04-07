@@ -255,9 +255,6 @@ components:
         furtherInformation:
           allOf:
             - $ref: '#/components/schemas/FurtherInformationDTO'
-        titles:
-          allOf:
-            - $ref: '#/components/schemas/TitlesDTO'
         urls:
           allOf:
             - $ref: '#/components/schemas/UrlsDTO'
@@ -268,12 +265,6 @@ components:
           allOf:
             - $ref: '#/components/schemas/GroupChatDTO'
         isSubsequentRegistrationAllowed:
-          type: boolean
-          example: true
-        isAnonymousConversationAllowed:
-          type: boolean
-          example: false
-        isSetEmailAllowed:
           type: boolean
           example: true
         showAskerProfile:
@@ -295,9 +286,6 @@ components:
             slug:
               type: string
               example: part-of-url
-            excludeNonMainConsultantsFromTeamSessions:
-              type: boolean
-              example: true
             whiteSpot:
               allOf:
                 - $ref: '#/components/schemas/WhiteSpotDTO'
@@ -313,14 +301,8 @@ components:
             sessionDataInitializing:
               allOf:
                 - $ref: '#/components/schemas/SessionDataInitializingDTO'
-            monitoring:
-              allOf:
-                - $ref: '#/components/schemas/MonitoringDTO'
             roles:
               $ref: '#/components/schemas/RolesDTO'
-            notifications:
-              allOf:
-                - $ref: '#/components/schemas/NotificationsDTO'
 
     FullConsultingTypeResponseDTO:
       type: object
@@ -328,14 +310,8 @@ components:
         - $ref: '#/components/schemas/ExtendedConsultingTypeResponseDTO'
         - type: object
           properties:
-            voluntaryComponents:
-              type: array
-              items:
-                type: object
             requiredComponents:
               type: object
-            welcomeScreen:
-              $ref: '#/components/schemas/WelcomeScreenDTO'
 
     ConsultingTypeDTO:
       type: object
@@ -353,16 +329,7 @@ components:
         slug:
           type: string
           example: part-of-url
-        excludeNonMainConsultantsFromTeamSessions:
-          type: boolean
-          example: true
         isSubsequentRegistrationAllowed:
-          type: boolean
-          example: true
-        isAnonymousConversationAllowed:
-          type: boolean
-          example: false
-        isSetEmailAllowed:
           type: boolean
           example: true
         showAskerProfile:
@@ -383,9 +350,6 @@ components:
         furtherInformation:
           allOf:
             - $ref: '#/components/schemas/FurtherInformationDTO'
-        titles:
-          allOf:
-            - $ref: '#/components/schemas/TitlesDTO'
         urls:
           allOf:
             - $ref: '#/components/schemas/UrlsDTO'
@@ -404,23 +368,10 @@ components:
         sessionDataInitializing:
           allOf:
             - $ref: '#/components/schemas/SessionDataInitializingDTO'
-        monitoring:
-          allOf:
-            - $ref: '#/components/schemas/MonitoringDTO'
         roles:
           $ref: '#/components/schemas/RolesDTO'
-        notifications:
-          allOf:
-            - $ref: '#/components/schemas/NotificationsDTO'
-        voluntaryComponents:
-          type: array
-          items:
-            type: object
         requiredComponents:
           $ref: '#/components/schemas/RequiredComponentsDTO'
-        welcomeScreen:
-          $ref: '#/components/schemas/WelcomeScreenDTO'
-
 
     FurtherInformationDTO:
       type: object
@@ -431,26 +382,6 @@ components:
         url:
           type: string
           example: "https://www.domain.com"
-
-    TitlesDTO:
-      type: object
-      properties:
-        default:
-          type: string
-          example: "Beratung xyz"
-        short:
-          type: string
-          example: "xyz"
-        long:
-          type: string
-          example: "Beratung xyz in Ort"
-        welcome:
-          type: string
-          example: "Herzlich Willkommen zu Beratung xyz"
-        registrationDropdown:
-          type: string
-          example: "Beratung xyz"
-
     UrlsDTO:
       type: object
       properties:
@@ -550,16 +481,6 @@ components:
           type: boolean
           example: true
 
-    MonitoringDTO:
-      type: object
-      properties:
-        initializeMonitoring:
-          type: boolean
-          example: true
-        monitoringTemplateFile:
-          type: string
-          example: file.json
-
     RolesDTO:
       type: object
       properties:
@@ -573,43 +494,6 @@ components:
           type: array
           items:
             type: string
-
-    NotificationsDTO:
-      type: object
-      properties:
-        teamSessions:
-          allOf:
-            - $ref: '#/components/schemas/TeamSessionsDTO'
-
-    TeamSessionsDTO:
-      type: object
-      properties:
-        newMessage:
-          allOf:
-            - $ref: '#/components/schemas/NewMessageDTO'
-
-    NewMessageDTO:
-      type: object
-      properties:
-        allTeamConsultants:
-          type: "boolean"
-          example: true
-
-    WelcomeScreenDTO:
-      type: object
-      properties:
-        anonymous:
-          $ref: '#/components/schemas/AnonymousScreenDTO'
-
-    AnonymousScreenDTO:
-      type: object
-      properties:
-        title:
-          type: string
-          example: Lorem ipsum
-        text:
-          type: string
-          example: Lorem ipsum dolor sit amet, consetetur...
 
     RequiredComponentsDTO:
       type: object
@@ -684,6 +568,3 @@ components:
         welcomeMessage:
           allOf:
             - $ref: '#/components/schemas/WelcomeMessageDTO'
-        notifications:
-          allOf:
-            - $ref: '#/components/schemas/NotificationsDTO'

@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Controller for agency API requests
- */
+/** Controller for agency API requests */
 @RestController
 @Api(tags = "agency-controller")
 @RequiredArgsConstructor
@@ -35,22 +33,28 @@ public class AgencyController implements AgenciesApi {
    * Gets a randomly sorted list of AgencyResponseDTOs (from database) and returns the list and a
    * 200 OK on success depending on the post code that is given via query parameter.
    *
-   * @param postcode       the postcode for regarding agencies
+   * @param postcode the postcode for regarding agencies
    * @param consultingType the type used to filter the agencies
-   * @param topicId        the (optional) main topicId to filter the agencies
+   * @param topicId the (optional) main topicId to filter the agencies
    * @return the List of agencies with information
    */
   @Override
   public ResponseEntity<List<FullAgencyResponseDTO>> getAgencies(
-      @RequestParam Integer consultingType, @RequestParam(required = false) String postcode,
+      @RequestParam Integer consultingType,
+      @RequestParam(required = false) String postcode,
       @RequestParam(value = "topicId", required = false) Integer topicId,
       @RequestParam(value = "age", required = false) Integer age,
       @RequestParam(value = "gender", required = false) String gender,
-      @RequestParam(value = "counsellingRelation", required = false) String counsellingRelation
-  ) {
+      @RequestParam(value = "counsellingRelation", required = false) String counsellingRelation) {
 
-    var agencies = agencyService.getAgencies(Optional.ofNullable(postcode), consultingType,
-        ofNullable(topicId), ofNullable(age), ofNullable(gender), ofNullable(counsellingRelation));
+    var agencies =
+        agencyService.getAgencies(
+            Optional.ofNullable(postcode),
+            consultingType,
+            ofNullable(topicId),
+            ofNullable(age),
+            ofNullable(gender),
+            ofNullable(counsellingRelation));
 
     return !CollectionUtils.isEmpty(agencies)
         ? new ResponseEntity<>(agencies, HttpStatus.OK)
@@ -58,8 +62,8 @@ public class AgencyController implements AgenciesApi {
   }
 
   @Override
-  public ResponseEntity<List<FullAgencyResponseDTO>> getTenantAgencies(String postcode,
-      Integer topicId) {
+  public ResponseEntity<List<FullAgencyResponseDTO>> getTenantAgencies(
+      String postcode, Integer topicId) {
 
     var agencies = agencyService.getAgencies(postcode, topicId);
 
@@ -80,7 +84,8 @@ public class AgencyController implements AgenciesApi {
 
     var agencies = agencyService.getAgencies(agencyIds);
 
-    return agencies.isEmpty() ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
+    return agencies.isEmpty()
+        ? new ResponseEntity<>(HttpStatus.NOT_FOUND)
         : new ResponseEntity<>(agencies, HttpStatus.OK);
   }
 
@@ -110,7 +115,8 @@ public class AgencyController implements AgenciesApi {
     var topics = this.agencyService.getAgenciesTopics();
     var enrichedTopics = topicEnrichmentService.enrichTopicIdsWithTopicData(topics);
 
-    return enrichedTopics.isEmpty() ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
+    return enrichedTopics.isEmpty()
+        ? new ResponseEntity<>(HttpStatus.NO_CONTENT)
         : new ResponseEntity<>(enrichedTopics, HttpStatus.OK);
   }
 }

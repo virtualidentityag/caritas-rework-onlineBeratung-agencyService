@@ -22,8 +22,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 @ExtendWith(MockitoExtension.class)
 class AgencyDataProtectionValidatorTest {
 
-  @InjectMocks
-  AgencyDataProtectionValidator agencyDataProtectionValidator;
+  @InjectMocks AgencyDataProtectionValidator agencyDataProtectionValidator;
 
   private @Mock AgencyDataProtectionValidationService agencyDataProtectionValidationService;
 
@@ -32,13 +31,18 @@ class AgencyDataProtectionValidatorTest {
   private @Mock ApplicationSettingsService applicationSettingsService;
 
   @Test
-  void validate_Should_ValidateForAgencyTenant_When_NonSingleDomainMultitenancy_And_CentralDataProtectionFeatureEnabled() {
+  void
+      validate_Should_ValidateForAgencyTenant_When_NonSingleDomainMultitenancy_And_CentralDataProtectionFeatureEnabled() {
     // given
-    ValidateAgencyDTO agencyToValidate = ValidateAgencyDTO.builder()
-        .dataProtectionDTO(new DataProtectionDTO().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER)).build();
-    ReflectionTestUtils.setField(agencyDataProtectionValidator, "multitenancyWithSingleDomain",
-        false);
+    ValidateAgencyDTO agencyToValidate =
+        ValidateAgencyDTO.builder()
+            .dataProtectionDTO(
+                new DataProtectionDTO()
+                    .dataProtectionResponsibleEntity(
+                        DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER))
+            .build();
+    ReflectionTestUtils.setField(
+        agencyDataProtectionValidator, "multitenancyWithSingleDomain", false);
     givenAgencyTenant(agencyToValidate, true);
     // when
     agencyDataProtectionValidator.validate(agencyToValidate);
@@ -48,13 +52,18 @@ class AgencyDataProtectionValidatorTest {
   }
 
   @Test
-  void validate_Should_NotValidateForAgencyTenant_When_NonSingleDomainMultitenancy_And_CentralDataProtectionFeatureDisabled() {
+  void
+      validate_Should_NotValidateForAgencyTenant_When_NonSingleDomainMultitenancy_And_CentralDataProtectionFeatureDisabled() {
     // given
-    ValidateAgencyDTO agencyToValidate = ValidateAgencyDTO.builder()
-        .dataProtectionDTO(new DataProtectionDTO().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER)).build();
-    ReflectionTestUtils.setField(agencyDataProtectionValidator, "multitenancyWithSingleDomain",
-        false);
+    ValidateAgencyDTO agencyToValidate =
+        ValidateAgencyDTO.builder()
+            .dataProtectionDTO(
+                new DataProtectionDTO()
+                    .dataProtectionResponsibleEntity(
+                        DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER))
+            .build();
+    ReflectionTestUtils.setField(
+        agencyDataProtectionValidator, "multitenancyWithSingleDomain", false);
     givenAgencyTenant(agencyToValidate, false);
     // when
     agencyDataProtectionValidator.validate(agencyToValidate);
@@ -65,18 +74,25 @@ class AgencyDataProtectionValidatorTest {
 
   @ParameterizedTest
   @CsvSource({
-      "true,true,2",
-      "true,false,1",
-      "false,true,1",
-      "false,false,0",
+    "true,true,2",
+    "true,false,1",
+    "false,true,1",
+    "false,false,0",
   })
-  void validate_Should_ValidateForAgencyTenantAndMainTenant_When_SingleDomainMultitenancy(boolean isAgencyTenantCentralDataProtectionEnabled, boolean isMainTenantCentralDataProtectionEnabled, int expectedValidationCalls) {
+  void validate_Should_ValidateForAgencyTenantAndMainTenant_When_SingleDomainMultitenancy(
+      boolean isAgencyTenantCentralDataProtectionEnabled,
+      boolean isMainTenantCentralDataProtectionEnabled,
+      int expectedValidationCalls) {
     // given
-    ValidateAgencyDTO agencyToValidate = ValidateAgencyDTO.builder()
-        .dataProtectionDTO(new DataProtectionDTO().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER)).build();
-    ReflectionTestUtils.setField(agencyDataProtectionValidator, "multitenancyWithSingleDomain",
-        true);
+    ValidateAgencyDTO agencyToValidate =
+        ValidateAgencyDTO.builder()
+            .dataProtectionDTO(
+                new DataProtectionDTO()
+                    .dataProtectionResponsibleEntity(
+                        DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER))
+            .build();
+    ReflectionTestUtils.setField(
+        agencyDataProtectionValidator, "multitenancyWithSingleDomain", true);
     givenAgencyTenant(agencyToValidate, isAgencyTenantCentralDataProtectionEnabled);
     givenSingleDomainWithValue("app");
     givenMainTenant("app", isMainTenantCentralDataProtectionEnabled);
@@ -88,22 +104,32 @@ class AgencyDataProtectionValidatorTest {
         .validate(agencyToValidate);
   }
 
-
-
   private void givenAgencyTenant(ValidateAgencyDTO agency, boolean isCentralDataProtectionEnabled) {
     Mockito.when(tenantService.getRestrictedTenantDataByTenantId(agency.getTenantId()))
-        .thenReturn(new RestrictedTenantDTO().settings(new Settings().featureCentralDataProtectionTemplateEnabled(isCentralDataProtectionEnabled)));
+        .thenReturn(
+            new RestrictedTenantDTO()
+                .settings(
+                    new Settings()
+                        .featureCentralDataProtectionTemplateEnabled(
+                            isCentralDataProtectionEnabled)));
   }
 
   private void givenMainTenant(String domain, boolean isCentralDataProtectionEnabled) {
     Mockito.when(tenantService.getRestrictedTenantDataBySubdomain(domain))
-        .thenReturn(new RestrictedTenantDTO().settings(new Settings().featureCentralDataProtectionTemplateEnabled(isCentralDataProtectionEnabled)));
+        .thenReturn(
+            new RestrictedTenantDTO()
+                .settings(
+                    new Settings()
+                        .featureCentralDataProtectionTemplateEnabled(
+                            isCentralDataProtectionEnabled)));
   }
 
   private void givenSingleDomainWithValue(String domain) {
-    Mockito.when(applicationSettingsService.getApplicationSettings()).thenReturn(
-        new ApplicationSettingsDTO().mainTenantSubdomainForSingleDomainMultitenancy(
-            new ApplicationSettingsDTOMainTenantSubdomainForSingleDomainMultitenancy().value(
-                domain)));
+    Mockito.when(applicationSettingsService.getApplicationSettings())
+        .thenReturn(
+            new ApplicationSettingsDTO()
+                .mainTenantSubdomainForSingleDomainMultitenancy(
+                    new ApplicationSettingsDTOMainTenantSubdomainForSingleDomainMultitenancy()
+                        .value(domain)));
   }
 }

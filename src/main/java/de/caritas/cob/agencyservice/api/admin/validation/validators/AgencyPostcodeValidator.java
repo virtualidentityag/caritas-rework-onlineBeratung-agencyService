@@ -8,9 +8,7 @@ import de.caritas.cob.agencyservice.api.admin.validation.validators.model.Valida
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidPostcodeException;
 import org.springframework.stereotype.Component;
 
-/**
- * Postcode validator for an {@link ValidateAgencyDTO}.
- */
+/** Postcode validator for an {@link ValidateAgencyDTO}. */
 @Component
 @CreateAgencyValidator
 @UpdateAgencyValidator
@@ -22,7 +20,8 @@ public class AgencyPostcodeValidator implements ConcreteAgencyValidator {
    * @param validateAgencyDto (required)
    */
   public void validate(ValidateAgencyDTO validateAgencyDto) {
-    if (nonNull(validateAgencyDto.getPostcode()) && !validateAgencyDto.getPostcode().matches("^[0-9]{5}$")) {
+    if (nonNull(validateAgencyDto.getPostcode())
+        && !validateAgencyDto.getPostcode().matches("^[0-9]{5}$")) {
       throw new InvalidPostcodeException();
     }
   }

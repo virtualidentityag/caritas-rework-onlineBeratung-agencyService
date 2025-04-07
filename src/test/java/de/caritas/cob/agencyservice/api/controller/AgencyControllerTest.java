@@ -58,43 +58,45 @@ class AgencyControllerTest {
 
   static final String PATH_GET_AGENCIES_BY_CONSULTINGTYPE = "/agencies/consultingtype/1";
 
-  @Autowired
-  private MockMvc mvc;
+  @Autowired private MockMvc mvc;
 
-  @MockBean
-  private TopicEnrichmentService topicEnrichmentService;
+  @MockBean private TopicEnrichmentService topicEnrichmentService;
 
-  @MockBean
-  private AgencyService agencyService;
+  @MockBean private AgencyService agencyService;
 
-  @MockBean
-  private LinkDiscoverers linkDiscoverers;
+  @MockBean private LinkDiscoverers linkDiscoverers;
 
-  @MockBean
-  private RoleAuthorizationAuthorityMapper roleAuthorizationAuthorityMapper;
+  @MockBean private RoleAuthorizationAuthorityMapper roleAuthorizationAuthorityMapper;
 
-  @MockBean
-  private JwtAuthConverter jwtAuthConverter;
+  @MockBean private JwtAuthConverter jwtAuthConverter;
 
-  @MockBean
-  private AuthorisationService authorisationService;
+  @MockBean private AuthorisationService authorisationService;
 
-  @MockBean
-  private JwtAuthConverterProperties jwtAuthConverterProperties;
+  @MockBean private JwtAuthConverterProperties jwtAuthConverterProperties;
 
-  @Mock
-  private Logger logger;
+  @Mock private Logger logger;
 
   @Test
   void getAgencies_Should_ReturnNoContent_When_ServiceReturnsEmptyList() throws Exception {
 
-    when(agencyService.getAgencies(any(Optional.class), anyInt(), any(Optional.class), any(Optional.class), any(Optional.class), any(Optional.class)))
+    when(agencyService.getAgencies(
+            any(Optional.class),
+            anyInt(),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class)))
         .thenReturn(null);
 
     mvc.perform(
-        get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-            + VALID_CONSULTING_TYPE_QUERY + "&" + VALID_AGE_QUERY)
-            .accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_CONSULTING_TYPE_QUERY
+                    + "&"
+                    + VALID_AGE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
 
@@ -102,20 +104,25 @@ class AgencyControllerTest {
   void getAgencies_Should_ReturnBadRequest_When_PostcodeParamIsInvalid() throws Exception {
 
     mvc.perform(
-        get(PATH_GET_LIST_OF_AGENCIES + "?" + INVALID_POSTCODE_QUERY + "&"
-            + VALID_CONSULTING_TYPE_QUERY)
-            .accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + INVALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  void getAgencies_Should_ReturnBadRequest_When_ConsultingTypeParamIsInvalid()
-      throws Exception {
+  void getAgencies_Should_ReturnBadRequest_When_ConsultingTypeParamIsInvalid() throws Exception {
 
     mvc.perform(
-        get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-            + INVALID_CONSULTING_TYPE_QUERY)
-            .accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + INVALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
@@ -123,16 +130,20 @@ class AgencyControllerTest {
   void getAgencies_Should_ReturnRespondWith2XXResponseCode_When_PostcodeParamIsNotProvided()
       throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_CONSULTING_TYPE_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isNoContent());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNoContent());
   }
 
   @Test
   void getAgencies_Should_ReturnBadRequest_When_ConsultingTypeParamIsNotProvided()
       throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -141,23 +152,37 @@ class AgencyControllerTest {
     List<FullAgencyResponseDTO> agencies = new ArrayList<>();
     agencies.add(FULL_AGENCY_RESPONSE_DTO);
 
-    when(agencyService.getAgencies(any(Optional.class), anyInt(), any(Optional.class), any(Optional.class), any(Optional.class), any(Optional.class)))
+    when(agencyService.getAgencies(
+            any(Optional.class),
+            anyInt(),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class)))
         .thenReturn(agencies);
 
     mvc.perform(
-        get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-            + VALID_CONSULTING_TYPE_QUERY)
-            .accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("[0].name").value(AGENCY_RESPONSE_DTO.getName()));
 
-    verify(agencyService, atLeastOnce()).getAgencies(any(Optional.class),
-        anyInt(), any(Optional.class), any(Optional.class), any(Optional.class), any(Optional.class));
+    verify(agencyService, atLeastOnce())
+        .getAgencies(
+            any(Optional.class),
+            anyInt(),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class));
   }
 
   @Test
-  void getAgencies_With_Ids_Should_ReturnNoContent_When_ServiceReturnsNoAgency()
-      throws Exception {
+  void getAgencies_With_Ids_Should_ReturnNoContent_When_ServiceReturnsNoAgency() throws Exception {
 
     when(agencyService.getAgencies(anyList())).thenReturn(Collections.emptyList());
 
@@ -169,18 +194,20 @@ class AgencyControllerTest {
   void getAgencies_With_Ids_Should_ReturnBadRequest_When_IdInvalid() throws Exception {
 
     mvc.perform(
-        get(PATH_GET_AGENCIES_WITH_IDS + INVALID_AGENCY_ID).contentType(MediaType.APPLICATION_JSON)
-            .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+            get(PATH_GET_AGENCIES_WITH_IDS + INVALID_AGENCY_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
-  void getAgencies_With_Ids_Should_ReturnAgencyAndOk_When_ServiceReturnsAgency()
-      throws Exception {
+  void getAgencies_With_Ids_Should_ReturnAgencyAndOk_When_ServiceReturnsAgency() throws Exception {
 
     when(agencyService.getAgencies(anyList())).thenReturn(AGENCY_RESPONSE_DTO_LIST);
 
-    mvc.perform(get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID + "," + AGENCY_ID)
-        .accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID + "," + AGENCY_ID)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("[0].name").value(AGENCY_RESPONSE_DTO.getName()));
 
@@ -188,53 +215,78 @@ class AgencyControllerTest {
   }
 
   @Test
-  void getListOfAgencies_Should_ReturnServerErrorAndLogDatabaseError_When_AgencyServiceThrowsServerErrorException()
-      throws Exception {
+  void
+      getListOfAgencies_Should_ReturnServerErrorAndLogDatabaseError_When_AgencyServiceThrowsServerErrorException()
+          throws Exception {
 
-    InternalServerErrorException dbEx = new InternalServerErrorException(
-        LogService::logDatabaseError, "message");
-    when(agencyService.getAgencies(any(), anyInt(), any(Optional.class), any(Optional.class), any(Optional.class), any(Optional.class))).thenThrow(dbEx);
+    InternalServerErrorException dbEx =
+        new InternalServerErrorException(LogService::logDatabaseError, "message");
+    when(agencyService.getAgencies(
+            any(),
+            anyInt(),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class)))
+        .thenThrow(dbEx);
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-        + VALID_CONSULTING_TYPE_QUERY)
-        .accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isInternalServerError());
   }
 
   @Test
-  void getAgencies_With_Ids_Should_ReturnServerErrorAndLogDatabaseError_OnAgencyServiceThrowsServerErrorException()
-      throws Exception {
+  void
+      getAgencies_With_Ids_Should_ReturnServerErrorAndLogDatabaseError_OnAgencyServiceThrowsServerErrorException()
+          throws Exception {
 
-    InternalServerErrorException dbEx = new InternalServerErrorException(
-        LogService::logDatabaseError, "message");
+    InternalServerErrorException dbEx =
+        new InternalServerErrorException(LogService::logDatabaseError, "message");
     when(agencyService.getAgencies(any())).thenThrow(dbEx);
 
-    mvc.perform(get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID + "," + AGENCY_ID)
-        .accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(PATH_GET_AGENCIES_WITH_IDS + AGENCY_ID + "," + AGENCY_ID)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isInternalServerError());
   }
 
   @Test
-  void getListOfAgencies_Should_ReturnServerErrorAndLogNumberFormatError_OnAgencyServiceThrowsServerErrorException()
-      throws Exception {
+  void
+      getListOfAgencies_Should_ReturnServerErrorAndLogNumberFormatError_OnAgencyServiceThrowsServerErrorException()
+          throws Exception {
 
-    InternalServerErrorException nfEx = new InternalServerErrorException(
-        LogService::logNumberFormatException, "message");
+    InternalServerErrorException nfEx =
+        new InternalServerErrorException(LogService::logNumberFormatException, "message");
 
-    when(agencyService.getAgencies(any(), anyInt(), any(Optional.class), any(Optional.class), any(Optional.class), any(Optional.class))).thenThrow(nfEx);
+    when(agencyService.getAgencies(
+            any(),
+            anyInt(),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class),
+            any(Optional.class)))
+        .thenThrow(nfEx);
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-        + VALID_CONSULTING_TYPE_QUERY)
-        .accept(MediaType.APPLICATION_JSON))
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_CONSULTING_TYPE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isInternalServerError());
-
   }
 
   @Test
   void getAgencies_Should_ReturnBadRequest_When_ConsultingTypeIsNull() throws Exception {
     mvc.perform(
-        get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&"
-            + "consultingType=").accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_LIST_OF_AGENCIES + "?" + VALID_POSTCODE_QUERY + "&" + "consultingType=")
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
@@ -242,29 +294,23 @@ class AgencyControllerTest {
   void getAgenciesByConsultingType_Should_ReturnBadRequest_When_consultingTypeIsInvalid()
       throws Exception {
     mvc.perform(
-        get(PATH_GET_AGENCIES_BY_CONSULTINGTYPE.replace("1", "invalid"))
-            .accept(MediaType.APPLICATION_JSON))
+            get(PATH_GET_AGENCIES_BY_CONSULTINGTYPE.replace("1", "invalid"))
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  void getAgenciesByConsultingType_Should_ReturnOk_When_consultingTypeIsValid()
-      throws Exception {
-    mvc.perform(
-        get(PATH_GET_AGENCIES_BY_CONSULTINGTYPE)
-            .accept(MediaType.APPLICATION_JSON))
+  void getAgenciesByConsultingType_Should_ReturnOk_When_consultingTypeIsValid() throws Exception {
+    mvc.perform(get(PATH_GET_AGENCIES_BY_CONSULTINGTYPE).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk());
   }
 
   @Test
   void getAgenciesTopics_Should_ReturnNoContent_When_ServiceReturnsEmptyList() throws Exception {
 
-    when(agencyService.getAgenciesTopics())
-        .thenReturn(null);
+    when(agencyService.getAgenciesTopics()).thenReturn(null);
 
-    mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_TOPICS)
-                .accept(MediaType.APPLICATION_JSON))
+    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_TOPICS).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
 
@@ -274,12 +320,9 @@ class AgencyControllerTest {
     List<AgencyTopicsDTO> agenciesTopics = new ArrayList<>();
     agenciesTopics.add(AGENCY_TOPICS_DTO);
 
-    when(topicEnrichmentService.enrichTopicIdsWithTopicData(anyList()))
-        .thenReturn(agenciesTopics);
+    when(topicEnrichmentService.enrichTopicIdsWithTopicData(anyList())).thenReturn(agenciesTopics);
 
-    mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_TOPICS))
-        .andExpect(status().isOk());
+    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_TOPICS)).andExpect(status().isOk());
 
     verify(topicEnrichmentService, atLeastOnce()).enrichTopicIdsWithTopicData(anyList());
   }
@@ -287,12 +330,14 @@ class AgencyControllerTest {
   @Test
   void getTenantAgencies_Should_ReturnNoContent_When_ServiceReturnsEmptyList() throws Exception {
 
-    when(agencyService.getAgencies(anyString(), anyInt()))
-        .thenReturn(null);
+    when(agencyService.getAgencies(anyString(), anyInt())).thenReturn(null);
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
@@ -301,26 +346,32 @@ class AgencyControllerTest {
   void getTenantAgencies_Should_ReturnBadRequest_When_PostcodeParamIsInvalid() throws Exception {
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + INVALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + INVALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
   @Test
-  void getTenantAgencies_Should_ReturnBadRequest_When_topicIdParamIsNotProvided()
-      throws Exception {
+  void getTenantAgencies_Should_ReturnBadRequest_When_topicIdParamIsNotProvided() throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
   void getTenantAgencies_Should_ReturnBadRequest_When_PostCodeParamIsNotProvided()
       throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -329,17 +380,18 @@ class AgencyControllerTest {
     List<FullAgencyResponseDTO> agencies = new ArrayList<>();
     agencies.add(FULL_AGENCY_RESPONSE_DTO);
 
-    when(agencyService.getAgencies(anyString(), anyInt()))
-        .thenReturn(agencies);
+    when(agencyService.getAgencies(anyString(), anyInt())).thenReturn(agencies);
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("[0].name").value(AGENCY_RESPONSE_DTO.getName()));
 
     verify(agencyService, atLeastOnce()).getAgencies(anyString(), anyInt());
   }
-
 }

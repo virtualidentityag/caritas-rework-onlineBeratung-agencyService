@@ -1,15 +1,14 @@
 package de.caritas.cob.agencyservice.api.tenant;
 
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +27,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @ExtendWith(MockitoExtension.class)
 class TechnicalUserTenantResolverTest {
   public static final long TECHNICAL_CONTEXT = 0L;
-  @Mock
-  HttpServletRequest authenticatedRequest;
+  @Mock HttpServletRequest authenticatedRequest;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   KeycloakAuthenticationToken token;
@@ -37,17 +35,13 @@ class TechnicalUserTenantResolverTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   AccessToken accessToken;
 
-  @Mock
-  Access access;
+  @Mock Access access;
 
-  @Mock
-  SecurityContext mockSecurityContext;
+  @Mock SecurityContext mockSecurityContext;
 
-  @Mock
-  Authentication mockAuthentication;
+  @Mock Authentication mockAuthentication;
 
-  @InjectMocks
-  TechnicalUserTenantResolver technicalUserTenantResolver;
+  @InjectMocks TechnicalUserTenantResolver technicalUserTenantResolver;
 
   @AfterEach
   public void tearDown() {
@@ -84,7 +78,11 @@ class TechnicalUserTenantResolverTest {
     headers.put("alg", "HS256"); // Signature algorithm
     headers.put("typ", "JWT"); // Token type
     return new Jwt(
-        "token", Instant.now(), Instant.now().plusSeconds(1), headers, givenClaimMapContainingRole(realmRole));
+        "token",
+        Instant.now(),
+        Instant.now().plusSeconds(1),
+        headers,
+        givenClaimMapContainingRole(realmRole));
   }
 
   private HashMap<String, Object> givenClaimMapContainingRole(String realmRole) {

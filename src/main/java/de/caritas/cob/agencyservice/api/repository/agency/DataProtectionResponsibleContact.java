@@ -16,5 +16,4 @@ public class DataProtectionResponsibleContact {
   private String phoneNumber;
 
   private String email;
-
 }

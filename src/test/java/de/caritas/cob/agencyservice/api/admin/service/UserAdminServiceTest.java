@@ -1,6 +1,5 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
-import static de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO.AgencyTypeEnum.TEAM_AGENCY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -14,7 +13,6 @@ import de.caritas.cob.agencyservice.api.tenant.TenantContext;
 import de.caritas.cob.agencyservice.config.apiclient.UserAdminServiceApiControllerFactory;
 import de.caritas.cob.agencyservice.useradminservice.generated.ApiClient;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.AdminUserControllerApi;
-import de.caritas.cob.agencyservice.useradminservice.generated.web.model.AgencyTypeDTO;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantFilter;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.ConsultantSearchResultDTO;
 import de.caritas.cob.agencyservice.useradminservice.generated.web.model.Sort;
@@ -34,43 +32,26 @@ import org.springframework.test.util.ReflectionTestUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class UserAdminServiceTest {
 
-  @InjectMocks
-  private UserAdminService userAdminService;
+  @InjectMocks private UserAdminService userAdminService;
 
-  @Mock
-  private AdminUserControllerApi adminUserControllerApi;
+  @Mock private AdminUserControllerApi adminUserControllerApi;
 
-  @Mock
-  private SecurityHeaderSupplier securityHeaderSupplier;
+  @Mock private SecurityHeaderSupplier securityHeaderSupplier;
 
-  @Mock
-  private TenantHeaderSupplier tenantHeaderSupplier;
+  @Mock private TenantHeaderSupplier tenantHeaderSupplier;
 
-  @Mock
-  private UserAdminServiceApiControllerFactory userAdminServiceApiControllerFactory;
+  @Mock private UserAdminServiceApiControllerFactory userAdminServiceApiControllerFactory;
 
-  @Mock
-  private ApiClient apiClient;
+  @Mock private ApiClient apiClient;
 
   private final HttpHeaders httpHeaders = new EasyRandom().nextObject(HttpHeaders.class);
 
   @Before
   public void setup() {
     when(this.adminUserControllerApi.getApiClient()).thenReturn(this.apiClient);
-    when(this.securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders())
-        .thenReturn(this.httpHeaders);
-    when(userAdminServiceApiControllerFactory.createControllerApi()).thenReturn(adminUserControllerApi);
-  }
-
-  @Test
-  public void adaptRelatedConsultantsForChange_Should_callServicesCorrectly() {
-    Long agencyId = 1L;
-
-    this.userAdminService.adaptRelatedConsultantsForChange(agencyId, TEAM_AGENCY.getValue());
-
-    verify(this.adminUserControllerApi, times(1)).changeAgencyType(agencyId,
-        new AgencyTypeDTO().agencyType(TEAM_AGENCY));
-    verify(this.apiClient, times(this.httpHeaders.size())).addDefaultHeader(any(), any());
+    when(this.securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders()).thenReturn(this.httpHeaders);
+    when(userAdminServiceApiControllerFactory.createControllerApi())
+        .thenReturn(adminUserControllerApi);
   }
 
   @Test
@@ -83,8 +64,8 @@ public class UserAdminServiceTest {
     this.userAdminService.getConsultantsOfAgency(agencyId, currentPage, perPage);
 
     verify(this.adminUserControllerApi, times(1))
-        .getConsultants(eq(currentPage), eq(perPage),
-            eq(new ConsultantFilter().agencyId(agencyId)), any());
+        .getConsultants(
+            eq(currentPage), eq(perPage), eq(new ConsultantFilter().agencyId(agencyId)), any());
     verify(this.apiClient, times(this.httpHeaders.size())).addDefaultHeader(any(), any());
   }
 
@@ -94,16 +75,15 @@ public class UserAdminServiceTest {
     ApiClient apiClient = new ApiClient();
     TenantHeaderSupplier tenantHeaderSupplier = new TenantHeaderSupplier();
     ReflectionTestUtils.setField(tenantHeaderSupplier, "multitenancy", true);
-    ReflectionTestUtils
-        .setField(this.userAdminService, "tenantHeaderSupplier", tenantHeaderSupplier);
+    ReflectionTestUtils.setField(
+        this.userAdminService, "tenantHeaderSupplier", tenantHeaderSupplier);
     this.userAdminService.addDefaultHeaders(apiClient);
-    HttpHeaders httpHeaders = (HttpHeaders) ReflectionTestUtils
-        .getField(apiClient, "defaultHeaders");
+    HttpHeaders httpHeaders =
+        (HttpHeaders) ReflectionTestUtils.getField(apiClient, "defaultHeaders");
     List<String> tenantId = httpHeaders.get("tenantId");
     assertEquals(tenantId.get(0), TenantContext.getCurrentTenant().toString());
     TenantContext.clear();
   }
-
 
   private Sort getSort() {
     Sort sortBy = new Sort();

@@ -1,11 +1,11 @@
 package de.caritas.cob.agencyservice.api.tenant;
 
 import com.google.common.collect.Lists;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -42,7 +42,6 @@ public class TechnicalUserTenantResolver implements TenantResolver {
     }
     return Lists.newArrayList();
   }
-
 
   @Override
   public boolean canResolve(HttpServletRequest request) {

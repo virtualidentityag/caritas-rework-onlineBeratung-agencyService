@@ -14,7 +14,8 @@ public class AuthorityTest {
   public void getAuthority_Should_returnExpectedAuthority_When_authorityIsAgencyAdmin() {
     List<String> authorities = AGENCY_ADMIN.getAuthorities();
 
-    assertThat(authorities).containsOnly(AuthorityValue.AGENCY_ADMIN, AuthorityValue.SEARCH_AGENCIES);
+    assertThat(authorities)
+        .containsOnly(AuthorityValue.AGENCY_ADMIN, AuthorityValue.SEARCH_AGENCIES);
   }
 
   @Test
@@ -35,7 +36,7 @@ public class AuthorityTest {
   public void fromRoleName_Should_returnAgencyAdmin_When_roleNameIsAgencyAdmin() {
     Authority authority = fromRoleName("agency-admin");
 
-    assertThat(authority.getAuthorities()).containsOnly(AuthorityValue.AGENCY_ADMIN, AuthorityValue.SEARCH_AGENCIES);
+    assertThat(authority.getAuthorities())
+        .containsOnly(AuthorityValue.AGENCY_ADMIN, AuthorityValue.SEARCH_AGENCIES);
   }
-
 }

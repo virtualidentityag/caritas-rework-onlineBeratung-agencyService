@@ -8,31 +8,26 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-/**
- * Repository for the Agency entity
- *
- */
+/** Repository for the Agency entity */
 @Repository("agencyTenantUnawareRepository")
 @TenantUnaware
-public interface AgencyTenantUnawareRepository extends JpaRepository<Agency, Long>, AgencyRepository {
+public interface AgencyTenantUnawareRepository
+    extends JpaRepository<Agency, Long>, AgencyRepository {
 
-  @Query(
-      value = SELECT_WITHOUT_TOPICS
-          + GROUP_BY_ORDER_BY,
-      nativeQuery = true)
-  List<Agency> searchWithoutTopic(@Param(value = "postcode") String postCode,
-      @Param(value = "length") int length, @Param(value = "type") Integer consultingTypeId,
+  @Query(value = SELECT_WITHOUT_TOPICS + GROUP_BY_ORDER_BY, nativeQuery = true)
+  List<Agency> searchWithoutTopic(
+      @Param(value = "postcode") String postCode,
+      @Param(value = "length") int length,
+      @Param(value = "type") Integer consultingTypeId,
       @Param(value = "age") Integer age,
       @Param(value = "gender") String gender,
       Long tenantId);
 
-
-  @Query(
-      value = SELECT_WITH_TOPICS
-          + GROUP_BY_ORDER_BY,
-      nativeQuery = true)
-  List<Agency> searchWithTopic(@Param(value = "postcode") String postCode,
-      @Param(value = "length") int length, @Param(value = "type") Integer consultingTypeId,
+  @Query(value = SELECT_WITH_TOPICS + GROUP_BY_ORDER_BY, nativeQuery = true)
+  List<Agency> searchWithTopic(
+      @Param(value = "postcode") String postCode,
+      @Param(value = "length") int length,
+      @Param(value = "type") Integer consultingTypeId,
       @Param(value = "topicId") int topicId,
       @Param(value = "age") Integer age,
       @Param(value = "gender") String gender,

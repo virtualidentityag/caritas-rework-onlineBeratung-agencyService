@@ -3,14 +3,12 @@ package de.caritas.cob.agencyservice.api.repository.agency;
 import de.caritas.cob.agencyservice.api.repository.TenantAware;
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRange;
 import de.caritas.cob.agencyservice.api.repository.agencytopic.AgencyTopic;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import java.time.LocalDateTime;
-import java.util.List;
-import jakarta.persistence.Convert;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +19,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,8 +31,6 @@ import lombok.Setter;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
-
-
 import org.hibernate.type.NumericBooleanConverter;
 
 @Entity
@@ -78,10 +76,6 @@ public class Agency implements TenantAware {
   @Column(name = "city")
   private String city;
 
-  @Column(name = "is_team_agency", nullable = false)
-  @Convert(converter = NumericBooleanConverter.class)
-  private boolean teamAgency;
-
   @PositiveOrZero
   @Column(name = "consulting_type", nullable = false)
   @NonNull
@@ -89,7 +83,6 @@ public class Agency implements TenantAware {
 
   @Column(name = "is_offline", nullable = false)
   @Convert(converter = NumericBooleanConverter.class)
-
   private boolean offline;
 
   @Size(max = 500)
@@ -124,7 +117,6 @@ public class Agency implements TenantAware {
   @Enumerated(EnumType.STRING)
   private DataProtectionResponsibleEntity dataProtectionResponsibleEntity;
 
-
   @Column(name = "data_protection_officer_contact", nullable = false)
   private String dataProtectionOfficerContactData;
 
@@ -133,8 +125,6 @@ public class Agency implements TenantAware {
 
   @Column(name = "data_protection_agency_contact", nullable = false)
   private String dataProtectionAgencyResponsibleContactData;
-
-
 
   @OneToMany(targetEntity = AgencyPostcodeRange.class, mappedBy = "agency", fetch = FetchType.LAZY)
   private List<AgencyPostcodeRange> agencyPostcodeRanges;

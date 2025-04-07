@@ -10,8 +10,8 @@ import de.caritas.cob.agencyservice.consultingtypeservice.generated.web.model.Ex
 
 public class ExtendedConsultingTypeResponseDTOHelper {
 
-  public static ExtendedConsultingTypeResponseDTO createExtendedConsultingTypeResponseDTO(int id,
-      WhiteSpot whiteSpot, Registration registration) {
+  public static ExtendedConsultingTypeResponseDTO createExtendedConsultingTypeResponseDTO(
+      int id, WhiteSpot whiteSpot, Registration registration) {
 
     var extendedConsultingTypeResponseDTO = new ExtendedConsultingTypeResponseDTO();
 
@@ -33,6 +33,5 @@ public class ExtendedConsultingTypeResponseDTOHelper {
     extendedConsultingTypeResponseDTO.whiteSpot(whiteSpotDTO);
     extendedConsultingTypeResponseDTO.setId(id);
     return extendedConsultingTypeResponseDTO;
-
   }
 }
