@@ -9,9 +9,7 @@ import de.caritas.cob.agencyservice.api.model.HalLink.MethodEnum;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.generated.api.admin.controller.AgencyadminApi;
 
-/**
- * Link builder to create hal links for agency results.
- */
+/** Link builder to create hal links for agency results. */
 public class AgencyLinksBuilder implements HalLinkBuilder {
 
   private final Agency agency;
@@ -61,5 +59,4 @@ public class AgencyLinksBuilder implements HalLinkBuilder {
     return buildHalLink(
         methodOn(AgencyadminApi.class).getAgencyPostcodeRanges(agency.getId()), MethodEnum.GET);
   }
-
 }

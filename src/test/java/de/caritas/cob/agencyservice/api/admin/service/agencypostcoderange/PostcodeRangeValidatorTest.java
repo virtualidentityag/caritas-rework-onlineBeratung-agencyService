@@ -34,13 +34,12 @@ class PostcodeRangeValidatorTest {
   @MethodSource("invalidPostcodeRanges")
   void validatePostcodeRange_Should_ThrowInvalidPostcodeException_When_PostcodeRangeIsInvalid(
       String postcodeFrom, String postcodeTo) {
-    var postcodeRange = AgencyPostcodeRange.builder()
-        .postcodeFrom(postcodeFrom)
-        .postcodeTo(postcodeTo)
-        .build();
+    var postcodeRange =
+        AgencyPostcodeRange.builder().postcodeFrom(postcodeFrom).postcodeTo(postcodeTo).build();
     var postcodeRanges = Set.of(postcodeRange);
 
-    assertThrows(InvalidPostcodeException.class,
+    assertThrows(
+        InvalidPostcodeException.class,
         () -> this.postcodeRangeValidator.validatePostcodeRanges(postcodeRanges));
   }
 
@@ -50,30 +49,34 @@ class PostcodeRangeValidatorTest {
         Arguments.of("1234a", "12345"),
         Arguments.of("12345", "12344"),
         Arguments.of("invalid", "99999"),
-        Arguments.of("88660", "897000")
-    );
+        Arguments.of("88660", "897000"));
   }
 
   @Test
   void validatePostcodeRangeForIntersection_ShouldNot_ThrowException_When_rangesAreNotOverlapped() {
-    var postcodesToSave = Set.of(
-        AgencyPostcodeRange.builder().postcodeFrom("12345").postcodeTo("23456").build());
-    var existingPostcodes = List.of(
-        AgencyPostcodeRange.builder().postcodeFrom("34567").postcodeTo("45678").build());
+    var postcodesToSave =
+        Set.of(AgencyPostcodeRange.builder().postcodeFrom("12345").postcodeTo("23456").build());
+    var existingPostcodes =
+        List.of(AgencyPostcodeRange.builder().postcodeFrom("34567").postcodeTo("45678").build());
 
-    assertDoesNotThrow(() -> this.postcodeRangeValidator
-        .validatePostcodeRangeForIntersection(postcodesToSave, existingPostcodes));
+    assertDoesNotThrow(
+        () ->
+            this.postcodeRangeValidator.validatePostcodeRangeForIntersection(
+                postcodesToSave, existingPostcodes));
   }
 
   @Test
-  void validatePostcodeRangeForIntersection_Should_ThrowInvalidPostcodeException_When_rangesAreOverlapped() {
-    var postcodesToSave = Set.of(
-        AgencyPostcodeRange.builder().postcodeFrom("12345").postcodeTo("23456").build());
-    var existingPostcodes = List.of(
-        AgencyPostcodeRange.builder().postcodeFrom("23455").postcodeTo("45678").build());
+  void
+      validatePostcodeRangeForIntersection_Should_ThrowInvalidPostcodeException_When_rangesAreOverlapped() {
+    var postcodesToSave =
+        Set.of(AgencyPostcodeRange.builder().postcodeFrom("12345").postcodeTo("23456").build());
+    var existingPostcodes =
+        List.of(AgencyPostcodeRange.builder().postcodeFrom("23455").postcodeTo("45678").build());
 
-    assertThrows(InvalidPostcodeException.class, () -> this.postcodeRangeValidator
-        .validatePostcodeRangeForIntersection(postcodesToSave, existingPostcodes));
+    assertThrows(
+        InvalidPostcodeException.class,
+        () ->
+            this.postcodeRangeValidator.validatePostcodeRangeForIntersection(
+                postcodesToSave, existingPostcodes));
   }
-
 }

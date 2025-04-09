@@ -1,17 +1,14 @@
 package de.caritas.cob.agencyservice.api.tenant;
 
-import de.caritas.cob.agencyservice.api.service.TenantService;
-import de.caritas.cob.agencyservice.filter.SubdomainExtractor;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
-
 
 @AllArgsConstructor
 @Component
@@ -54,11 +51,8 @@ public class AccessTokenTenantResolver implements TenantResolver {
     }
   }
 
-
   @Override
   public boolean canResolve(HttpServletRequest request) {
     return resolve(request).isPresent();
   }
-
-
 }

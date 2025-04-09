@@ -12,9 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import joptsimple.internal.Strings;
 
-/**
- * Transformator to represent postcode range strings as entity objects and vice versa.
- */
+/** Transformator to represent postcode range strings as entity objects and vice versa. */
 public class PostcodeRangeTransformer {
 
   /**
@@ -36,10 +34,7 @@ public class PostcodeRangeTransformer {
   private AgencyPostcodeRange toAgencyPostcodeRange(String postcodeRange) {
     if (postcodeRange.contains("-")) {
       var split = postcodeRange.split("-");
-      return AgencyPostcodeRange.builder()
-          .postcodeFrom(split[0])
-          .postcodeTo(split[1])
-          .build();
+      return AgencyPostcodeRange.builder().postcodeFrom(split[0]).postcodeTo(split[1]).build();
     } else {
       return AgencyPostcodeRange.builder()
           .postcodeFrom(postcodeRange)
@@ -60,17 +55,18 @@ public class PostcodeRangeTransformer {
     }
     var orderedRanges = orderPostcodeRanges(postcodeRanges);
     var builder = new StringBuilder();
-    orderedRanges.forEach(postcodeRange -> {
-      if (postcodeRange.getPostcodeTo().equals(postcodeRange.getPostcodeFrom())) {
-        builder.append(postcodeRange.getPostcodeFrom());
-        builder.append(";");
-      } else {
-        builder.append(postcodeRange.getPostcodeFrom());
-        builder.append("-");
-        builder.append(postcodeRange.getPostcodeTo());
-        builder.append(";");
-      }
-    });
+    orderedRanges.forEach(
+        postcodeRange -> {
+          if (postcodeRange.getPostcodeTo().equals(postcodeRange.getPostcodeFrom())) {
+            builder.append(postcodeRange.getPostcodeFrom());
+            builder.append(";");
+          } else {
+            builder.append(postcodeRange.getPostcodeFrom());
+            builder.append("-");
+            builder.append(postcodeRange.getPostcodeTo());
+            builder.append(";");
+          }
+        });
     return builder.toString();
   }
 
@@ -79,5 +75,4 @@ public class PostcodeRangeTransformer {
         .sorted(Comparator.comparingInt(coderange -> Integer.parseInt(coderange.getPostcodeFrom())))
         .collect(Collectors.toCollection(LinkedHashSet::new));
   }
-
 }

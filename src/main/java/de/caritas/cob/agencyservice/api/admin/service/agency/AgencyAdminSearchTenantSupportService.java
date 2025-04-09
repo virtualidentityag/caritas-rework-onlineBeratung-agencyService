@@ -1,9 +1,9 @@
 package de.caritas.cob.agencyservice.api.admin.service.agency;
 
 import de.caritas.cob.agencyservice.api.admin.service.UserAdminService;
-import de.caritas.cob.agencyservice.api.util.AuthenticatedUser;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.tenant.TenantContext;
+import de.caritas.cob.agencyservice.api.util.AuthenticatedUser;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
@@ -20,18 +20,19 @@ public class AgencyAdminSearchTenantSupportService extends AgencyAdminSearchServ
 
   public AgencyAdminSearchTenantSupportService(
       @NonNull EntityManagerFactory entityManagerFactory,
-      @NonNull AuthenticatedUser authenticatedUser, @NonNull UserAdminService userAdminService) {
+      @NonNull AuthenticatedUser authenticatedUser,
+      @NonNull UserAdminService userAdminService) {
     super(entityManagerFactory, authenticatedUser, userAdminService);
   }
 
   @Override
   protected Predicate[] createSearchAgenciesWithKeywordFilterPredicate(
-      AgencyAdminSearch agencyAdminSearch, CriteriaBuilder criteriaBuilder,
-      Root<Agency> root) {
-    return new Predicate[]{
-        tenantPredicate(criteriaBuilder, root),
-        keywordSearchPredicate(agencyAdminSearch.getKeyword(), criteriaBuilder, root),
-        agencyAdminFilterPredicate(criteriaBuilder, root)};
+      AgencyAdminSearch agencyAdminSearch, CriteriaBuilder criteriaBuilder, Root<Agency> root) {
+    return new Predicate[] {
+      tenantPredicate(criteriaBuilder, root),
+      keywordSearchPredicate(agencyAdminSearch.getKeyword(), criteriaBuilder, root),
+      agencyAdminFilterPredicate(criteriaBuilder, root)
+    };
   }
 
   protected Predicate tenantPredicate(CriteriaBuilder criteriaBuilder, Root<Agency> root) {
@@ -45,8 +46,10 @@ public class AgencyAdminSearchTenantSupportService extends AgencyAdminSearchServ
   }
 
   @Override
-  protected Predicate[] agenciesWithoutKeywordFilterPredicates(CriteriaBuilder criteriaBuilder, Root<Agency> root) {
-    return new Predicate[] { agencyAdminFilterPredicate(criteriaBuilder, root), tenantPredicate(criteriaBuilder, root) };
+  protected Predicate[] agenciesWithoutKeywordFilterPredicates(
+      CriteriaBuilder criteriaBuilder, Root<Agency> root) {
+    return new Predicate[] {
+      agencyAdminFilterPredicate(criteriaBuilder, root), tenantPredicate(criteriaBuilder, root)
+    };
   }
-
 }

@@ -26,8 +26,7 @@ public class DataProtectionDTOBuilder {
             convertNullSafe(agency::getDataProtectionAgencyResponsibleContactData))
         .alternativeDataProtectionRepresentativeContact(
             convertNullSafe(agency::getDataProtectionAlternativeContactData))
-        .dataProtectionOfficerContact(
-            convertNullSafe(agency::getDataProtectionOfficerContactData));
+        .dataProtectionOfficerContact(convertNullSafe(agency::getDataProtectionOfficerContactData));
   }
 
   private DataProtectionContactDTO convertNullSafe(Supplier<String> dataProtectionDataSupplier) {
@@ -37,7 +36,6 @@ public class DataProtectionDTOBuilder {
       return JsonConverter.convertFromJson(dataProtectionDataSupplier.get());
     }
   }
-
 
   private static DataProtectionResponsibleEntityEnum convertEnums(
       DataProtectionResponsibleEntity dataProtectionEntity) {
@@ -54,6 +52,4 @@ public class DataProtectionDTOBuilder {
             "DataProtectionResponsibleEntity not supported: " + dataProtectionEntity);
     }
   }
-
-
 }

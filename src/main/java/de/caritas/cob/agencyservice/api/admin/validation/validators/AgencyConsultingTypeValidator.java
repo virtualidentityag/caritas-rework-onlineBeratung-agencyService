@@ -9,9 +9,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Consulting type validator for an {@link ValidateAgencyDTO}.
- */
+/** Consulting type validator for an {@link ValidateAgencyDTO}. */
 @Component
 @RequiredArgsConstructor
 @CreateAgencyValidator

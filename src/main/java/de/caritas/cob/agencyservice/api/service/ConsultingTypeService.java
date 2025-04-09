@@ -11,14 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-/**
- * Service class to communicate with the ConsultingTypeService.
- */
+/** Service class to communicate with the ConsultingTypeService. */
 @Component
 @RequiredArgsConstructor
 public class ConsultingTypeService {
 
-  private final @NonNull ConsultingTypeServiceApiControllerFactory consultingTypeServiceApiControllerFactory;
+  private final @NonNull ConsultingTypeServiceApiControllerFactory
+      consultingTypeServiceApiControllerFactory;
   private final @NonNull SecurityHeaderSupplier securityHeaderSupplier;
   private final @NonNull TenantHeaderSupplier tenantHeaderSupplier;
 
@@ -32,7 +31,8 @@ public class ConsultingTypeService {
   @Cacheable(value = CacheManagerConfig.CONSULTING_TYPE_CACHE, key = "#consultingTypeId")
   public ExtendedConsultingTypeResponseDTO getExtendedConsultingTypeResponseDTO(
       int consultingTypeId) {
-    ConsultingTypeControllerApi controllerApi = consultingTypeServiceApiControllerFactory.createControllerApi();
+    ConsultingTypeControllerApi controllerApi =
+        consultingTypeServiceApiControllerFactory.createControllerApi();
     addDefaultHeaders(controllerApi.getApiClient());
     return controllerApi.getExtendedConsultingTypeById(consultingTypeId);
   }
@@ -42,5 +42,4 @@ public class ConsultingTypeService {
     tenantHeaderSupplier.addTenantHeader(headers);
     headers.forEach((key, value) -> apiClient.addDefaultHeader(key, value.iterator().next()));
   }
-
 }

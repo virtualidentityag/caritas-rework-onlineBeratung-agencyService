@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Maps;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,17 +23,13 @@ import org.springframework.security.oauth2.jwt.Jwt;
 @ExtendWith(MockitoExtension.class)
 class AccessTokenTenantResolverTest {
 
-  @InjectMocks
-  AccessTokenTenantResolver accessTokenTenantResolver;
+  @InjectMocks AccessTokenTenantResolver accessTokenTenantResolver;
 
-  @Mock
-  SecurityContext mockSecurityContext;
+  @Mock SecurityContext mockSecurityContext;
 
-  @Mock
-  Authentication mockAuthentication;
+  @Mock Authentication mockAuthentication;
 
-  @Mock
-  HttpServletRequest authenticatedRequest;
+  @Mock HttpServletRequest authenticatedRequest;
 
   @AfterEach
   public void tearDown() {
@@ -64,7 +60,11 @@ class AccessTokenTenantResolverTest {
     headers.put("alg", "HS256"); // Signature algorithm
     headers.put("typ", "JWT"); // Token type
     return new Jwt(
-        "token", Instant.now(), Instant.now().plusSeconds(1), headers, givenClaimMapContainingTenantId(1));
+        "token",
+        Instant.now(),
+        Instant.now().plusSeconds(1),
+        headers,
+        givenClaimMapContainingTenantId(1));
   }
 
   private HashMap<String, Object> givenClaimMapContainingTenantId(Integer tenantId) {

@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import de.caritas.cob.agencyservice.api.service.TenantHeaderSupplier;
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,13 +14,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class CustomHeaderTenantResolverTest {
-  @Mock
-  HttpServletRequest request;
-  @Mock
-  TenantHeaderSupplier tenantHeaderSupplier;
+  @Mock HttpServletRequest request;
+  @Mock TenantHeaderSupplier tenantHeaderSupplier;
 
-  @InjectMocks
-  CustomHeaderTenantResolver customHeaderTenantResolver;
+  @InjectMocks CustomHeaderTenantResolver customHeaderTenantResolver;
 
   @Test
   void resolve_Should_ResolveTenantId_When_SupplierCanResolveTenantId() {

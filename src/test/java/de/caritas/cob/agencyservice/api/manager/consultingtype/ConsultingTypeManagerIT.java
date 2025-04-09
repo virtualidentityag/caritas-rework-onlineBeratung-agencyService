@@ -1,6 +1,5 @@
 package de.caritas.cob.agencyservice.api.manager.consultingtype;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -27,31 +26,31 @@ import org.springframework.web.client.RestClientException;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class ConsultingTypeManagerIT {
 
-  @Autowired
-  private ConsultingTypeManager consultingTypeManager;
+  @Autowired private ConsultingTypeManager consultingTypeManager;
 
-  @MockBean
-  private ConsultingTypeService consultingTypeService;
+  @MockBean private ConsultingTypeService consultingTypeService;
 
   @Test
-  public void getConsultantTypeSettings_Should_Throw_MissingConsultingTypeException_When_RestClientException() {
+  public void
+      getConsultantTypeSettings_Should_Throw_MissingConsultingTypeException_When_RestClientException() {
     when(consultingTypeService.getExtendedConsultingTypeResponseDTO(anyInt()))
         .thenThrow(new RestClientException(""));
 
-    assertThrows(MissingConsultingTypeException.class,
+    assertThrows(
+        MissingConsultingTypeException.class,
         () -> consultingTypeManager.getConsultingTypeSettings(anyInt()));
   }
 
   @Test
   public void getConsultantTypeSettings_Should_Return_ExtendedConsultingTypeResponseDTO()
       throws MissingConsultingTypeException {
-    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO = new ExtendedConsultingTypeResponseDTO();
+    ExtendedConsultingTypeResponseDTO extendedConsultingTypeResponseDTO =
+        new ExtendedConsultingTypeResponseDTO();
     when(consultingTypeService.getExtendedConsultingTypeResponseDTO(anyInt()))
         .thenReturn(extendedConsultingTypeResponseDTO);
 
-    assertEquals(extendedConsultingTypeResponseDTO,
+    assertEquals(
+        extendedConsultingTypeResponseDTO,
         consultingTypeManager.getConsultingTypeSettings(anyInt()));
-
   }
-
 }

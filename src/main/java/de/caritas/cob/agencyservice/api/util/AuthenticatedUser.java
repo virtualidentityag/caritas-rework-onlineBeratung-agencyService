@@ -1,34 +1,28 @@
 package de.caritas.cob.agencyservice.api.util;
 
+import static java.util.Objects.nonNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.caritas.cob.agencyservice.api.authorization.Authority;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
-import java.util.Set;
-
-import static java.util.Objects.nonNull;
-
-/**
- * Representation of the via Keyclcoak authentificated user
- */
+/** Representation of the via Keyclcoak authentificated user */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class AuthenticatedUser {
 
-  @NonNull
-  private String userId;
+  @NonNull private String userId;
 
-  @NonNull
-  private String username;
+  @NonNull private String username;
 
-  @NonNull
-  private String accessToken;
+  @NonNull private String accessToken;
 
   private Set<String> roles;
 
@@ -51,6 +45,4 @@ public class AuthenticatedUser {
   public boolean hasRestrictedAgencyPriviliges() {
     return isRestrictedAgencyAdmin() && !isAgencyAdmin();
   }
-
-
 }

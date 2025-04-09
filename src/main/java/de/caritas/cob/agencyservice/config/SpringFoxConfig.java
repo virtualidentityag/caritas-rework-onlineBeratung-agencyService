@@ -27,47 +27,60 @@ import springfox.documentation.service.SecurityScheme;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-/**
- * Provides the SpringFox (API documentation generation) configuration.
- *
- */
+/** Provides the SpringFox (API documentation generation) configuration. */
 @Configuration
 @Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig {
 
   @Value("${springfox.docuTitle}")
   private String docuTitle;
+
   @Value("${springfox.docuDescription}")
   private String docuDescription;
+
   @Value("${springfox.docuVersion}")
   private String docuVersion;
+
   @Value("${springfox.docuTermsUrl}")
   private String docuTermsUrl;
+
   @Value("${springfox.docuContactName}")
   private String docuContactName;
+
   @Value("${springfox.docuContactUrl}")
   private String docuContactUrl;
+
   @Value("${springfox.docuContactEmail}")
   private String docuContactEmail;
+
   @Value("${springfox.docuLicense}")
   private String docuLicense;
+
   @Value("${springfox.docuLicenseUrl}")
   private String docuLicenseUrl;
 
   @Bean
   public Docket apiDocket() {
-    return new Docket(DocumentationType.SWAGGER_2).select()
-        .apis(RequestHandlerSelectors.basePackage("de.caritas.cob.agencyservice.api")).build()
-        .consumes(getContentTypes()).produces(getContentTypes()).apiInfo(getApiInfo())
-        .useDefaultResponseMessages(false).protocols(protocols()).securitySchemes(securitySchemes())
+    return new Docket(DocumentationType.SWAGGER_2)
+        .select()
+        .apis(RequestHandlerSelectors.basePackage("de.caritas.cob.agencyservice.api"))
+        .build()
+        .consumes(getContentTypes())
+        .produces(getContentTypes())
+        .apiInfo(getApiInfo())
+        .useDefaultResponseMessages(false)
+        .protocols(protocols())
+        .securitySchemes(securitySchemes())
         .securityContexts(securityContexts());
   }
 
   private List<SecurityContext> securityContexts() {
-    return singletonList(SecurityContext.builder()
-        .forPaths(PathSelectors.any()).securityReferences(securityReferences()).build());
+    return singletonList(
+        SecurityContext.builder()
+            .forPaths(PathSelectors.any())
+            .securityReferences(securityReferences())
+            .build());
   }
 
   private List<SecurityReference> securityReferences() {
@@ -107,8 +120,14 @@ public class SpringFoxConfig {
    * @return api information
    */
   private ApiInfo getApiInfo() {
-    return new ApiInfo(docuTitle, docuDescription, docuVersion, docuTermsUrl,
-        new Contact(docuContactName, docuContactUrl, docuContactEmail), docuLicense, docuLicenseUrl,
+    return new ApiInfo(
+        docuTitle,
+        docuDescription,
+        docuVersion,
+        docuTermsUrl,
+        new Contact(docuContactName, docuContactUrl, docuContactEmail),
+        docuLicense,
+        docuLicenseUrl,
         Collections.emptyList());
   }
 

@@ -1,7 +1,7 @@
 package de.caritas.cob.agencyservice.api.tenant;
 
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 public interface TenantResolver {
 
