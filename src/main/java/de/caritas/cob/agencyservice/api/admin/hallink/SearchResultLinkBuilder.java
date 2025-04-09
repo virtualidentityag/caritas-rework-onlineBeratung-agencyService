@@ -10,9 +10,7 @@ import de.caritas.cob.agencyservice.api.model.HalLink.MethodEnum;
 import de.caritas.cob.agencyservice.api.model.SearchResultLinks;
 import de.caritas.cob.agencyservice.generated.api.admin.controller.AgencyadminApi;
 
-/**
- * Link builder to create hal links for search results.
- */
+/** Link builder to create hal links for search results. */
 public class SearchResultLinkBuilder implements HalLinkBuilder {
 
   private Integer page;
@@ -20,8 +18,7 @@ public class SearchResultLinkBuilder implements HalLinkBuilder {
   private Integer totalResults;
   private String keyword;
 
-  private SearchResultLinkBuilder() {
-  }
+  private SearchResultLinkBuilder() {}
 
   /**
    * Creates an {@link SearchResultLinkBuilder} instance.
@@ -100,13 +97,13 @@ public class SearchResultLinkBuilder implements HalLinkBuilder {
   }
 
   private HalLink buildHalLinkForParams(Integer page, Integer perPage, String keyword) {
-    return buildHalLink(methodOn(AgencyadminApi.class).searchAgencies(page, perPage, keyword, null),
+    return buildHalLink(
+        methodOn(AgencyadminApi.class).searchAgencies(page, perPage, keyword, null),
         MethodEnum.GET);
   }
 
   private HalLink buildNextLink() {
-    return hasNextPage() ? buildHalLinkForParams(this.page + 1, this.perPage, this.keyword)
-        : null;
+    return hasNextPage() ? buildHalLinkForParams(this.page + 1, this.perPage, this.keyword) : null;
   }
 
   private boolean hasNextPage() {
@@ -114,7 +111,8 @@ public class SearchResultLinkBuilder implements HalLinkBuilder {
   }
 
   private HalLink buildPreviousLink() {
-    return hasPreviousPage() ? buildHalLinkForParams(this.page - 1, this.perPage, this.keyword)
+    return hasPreviousPage()
+        ? buildHalLinkForParams(this.page - 1, this.perPage, this.keyword)
         : null;
   }
 
@@ -125,5 +123,4 @@ public class SearchResultLinkBuilder implements HalLinkBuilder {
   private HalLink buildSearchLink() {
     return buildHalLinkForParams(this.page, this.perPage, null);
   }
-
 }

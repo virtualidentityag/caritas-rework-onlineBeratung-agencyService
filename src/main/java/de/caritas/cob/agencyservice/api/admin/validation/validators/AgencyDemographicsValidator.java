@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
-/**
- * Postcode validator for an {@link ValidateAgencyDTO}.
- */
+/** Postcode validator for an {@link ValidateAgencyDTO}. */
 @Component
 @CreateAgencyValidator
 @UpdateAgencyValidator
@@ -26,15 +24,22 @@ public class AgencyDemographicsValidator implements ConcreteAgencyValidator {
    * @param validateAgencyDto (required)
    */
   public void validate(ValidateAgencyDTO validateAgencyDto) {
-    assertIsNotNull(validateAgencyDto.getDemographicsDTO(), HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_NULL_OBJECT);
-    assertIsNotNull(validateAgencyDto.getDemographicsDTO().getAgeFrom(), HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_AGE_FROM);
-    assertIsNotNull(validateAgencyDto.getDemographicsDTO().getGenders(), HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS);
+    assertIsNotNull(
+        validateAgencyDto.getDemographicsDTO(),
+        HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_NULL_OBJECT);
+    assertIsNotNull(
+        validateAgencyDto.getDemographicsDTO().getAgeFrom(),
+        HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_AGE_FROM);
+    assertIsNotNull(
+        validateAgencyDto.getDemographicsDTO().getGenders(),
+        HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS);
     assertNotEmpty(validateAgencyDto.getDemographicsDTO().getGenders());
   }
 
   private void assertNotEmpty(List<String> genders) {
     if (genders.isEmpty()) {
-      throw new InvalidDemographicsException(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS);
+      throw new InvalidDemographicsException(
+          HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS);
     }
   }
 

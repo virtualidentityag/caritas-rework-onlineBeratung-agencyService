@@ -6,9 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-/**
- * Repository for {@link AgencyPostcodeRange}.
- */
+/** Repository for {@link AgencyPostcodeRange}. */
 public interface AgencyPostcodeRangeRepository extends CrudRepository<AgencyPostcodeRange, Long> {
 
   /**
@@ -33,7 +31,6 @@ public interface AgencyPostcodeRangeRepository extends CrudRepository<AgencyPost
    * @param agencyId the agency id
    */
   void deleteAllByAgencyId(Long agencyId);
-
 
   @Query("select a from AgencyPostcodeRange as a where a.id = :var ")
   Optional<AgencyPostcodeRange> findById(Long var);

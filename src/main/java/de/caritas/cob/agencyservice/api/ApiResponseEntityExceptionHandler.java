@@ -12,8 +12,8 @@ import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidOfflineSt
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidPostcodeException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.agencyservice.api.service.LogService;
-import java.net.UnknownHostException;
 import jakarta.validation.ConstraintViolationException;
+import java.net.UnknownHostException;
 import lombok.NoArgsConstructor;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,7 +42,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * Custom BadRequest exception.
    *
-   * @param ex      the thrown exception
+   * @param ex the thrown exception
    * @param request web request
    * @return response entity
    */
@@ -57,7 +57,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * Constraint violations.
    *
-   * @param ex      the thrown exception
+   * @param ex the thrown exception
    * @param request web request
    * @return response entity
    */
@@ -72,7 +72,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * 409 - Conflict.
    *
-   * @param ex      the thrown exception
+   * @param ex the thrown exception
    * @param request web request
    * @return response entity
    */
@@ -87,13 +87,18 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * 500 - Internal Server Error.
    *
-   * @param ex      the thrown exception
+   * @param ex the thrown exception
    * @param request web request
    * @return response entity
    */
-  @ExceptionHandler({NullPointerException.class, IllegalArgumentException.class,
-      IllegalStateException.class, KeycloakException.class,
-      UnknownHostException.class, DataAccessException.class})
+  @ExceptionHandler({
+    NullPointerException.class,
+    IllegalArgumentException.class,
+    IllegalStateException.class,
+    KeycloakException.class,
+    UnknownHostException.class,
+    DataAccessException.class
+  })
   public ResponseEntity<Object> handleInternal(
       final RuntimeException ex, final WebRequest request) {
     LogService.logInternalServerError(ex);
@@ -105,7 +110,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * 500 - Internal Server Error with custom logging method.
    *
-   * @param ex      the thrown exception
+   * @param ex the thrown exception
    * @param request web request
    * @return response entity
    */
@@ -121,12 +126,15 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * 400 - Bad Request.
    *
-   * @param ex      CustomValidationHttpStatusException
+   * @param ex CustomValidationHttpStatusException
    * @param request WebRequest
    * @return a ResponseEntity instance
    */
-  @ExceptionHandler({InvalidPostcodeException.class, InvalidConsultingTypeException.class, InvalidOfflineStatusException.class,
-      InvalidDemographicsException.class
+  @ExceptionHandler({
+    InvalidPostcodeException.class,
+    InvalidConsultingTypeException.class,
+    InvalidOfflineStatusException.class,
+    InvalidDemographicsException.class
   })
   public ResponseEntity<Object> handleInternal(
       final CustomValidationHttpStatusException ex, final WebRequest request) {
@@ -143,7 +151,7 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * 404 - Not found.
    *
-   * @param ex      {@link NotFoundException}
+   * @param ex {@link NotFoundException}
    * @param request WebRequest
    * @return a ResponseEntity instance
    */
@@ -151,18 +159,13 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   public ResponseEntity<Object> handleInternal(
       final NotFoundException ex, final WebRequest request) {
 
-    return handleExceptionInternal(
-        ex,
-        null,
-        new HttpHeaders(),
-        HttpStatus.NOT_FOUND,
-        request);
+    return handleExceptionInternal(ex, null, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
   }
 
   /**
    * 409 - Conflict.
    *
-   * @param ex      {@link NotFoundException}
+   * @param ex {@link NotFoundException}
    * @param request WebRequest
    * @return a ResponseEntity instance
    */
@@ -181,17 +184,16 @@ public class ApiResponseEntityExceptionHandler extends ResponseEntityExceptionHa
   /**
    * Handles generic HTTP client error status for generated apis.
    *
-   * @param ex      {@link HttpClientErrorException}
+   * @param ex {@link HttpClientErrorException}
    * @param request {@link WebRequest}
    * @return response entity
    */
   @ExceptionHandler({HttpClientErrorException.class})
-  public ResponseEntity<Object> handleInternal(final HttpClientErrorException ex,
-      final WebRequest request) {
+  public ResponseEntity<Object> handleInternal(
+      final HttpClientErrorException ex, final WebRequest request) {
     LogService.logError(ex);
 
-    return handleExceptionInternal(EMPTY_EXCEPTION, null, new HttpHeaders(), ex.getStatusCode(),
-        request);
+    return handleExceptionInternal(
+        EMPTY_EXCEPTION, null, new HttpHeaders(), ex.getStatusCode(), request);
   }
-
 }

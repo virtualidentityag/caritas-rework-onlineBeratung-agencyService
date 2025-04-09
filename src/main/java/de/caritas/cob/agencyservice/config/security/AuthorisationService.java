@@ -2,18 +2,15 @@ package de.caritas.cob.agencyservice.config.security;
 
 import com.google.common.collect.Lists;
 import de.caritas.cob.agencyservice.api.authorization.RoleAuthorizationAuthorityMapper;
-import org.springframework.security.access.AccessDeniedException;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class AuthorisationService {

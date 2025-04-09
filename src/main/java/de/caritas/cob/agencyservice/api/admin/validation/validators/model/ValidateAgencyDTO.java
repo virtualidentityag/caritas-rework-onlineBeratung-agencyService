@@ -1,15 +1,13 @@
 package de.caritas.cob.agencyservice.api.admin.validation.validators.model;
 
+import de.caritas.cob.agencyservice.api.admin.validation.AgencyValidator;
 import de.caritas.cob.agencyservice.api.model.DataProtectionDTO;
 import de.caritas.cob.agencyservice.api.model.DemographicsDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import de.caritas.cob.agencyservice.api.admin.validation.AgencyValidator;
 
-/**
- * Validation dto for {@link AgencyValidator}.
- */
+/** Validation dto for {@link AgencyValidator}. */
 @Builder
 @Getter
 @Setter
@@ -23,5 +21,4 @@ public class ValidateAgencyDTO {
   private DemographicsDTO demographicsDTO;
 
   private DataProtectionDTO dataProtectionDTO;
-
 }

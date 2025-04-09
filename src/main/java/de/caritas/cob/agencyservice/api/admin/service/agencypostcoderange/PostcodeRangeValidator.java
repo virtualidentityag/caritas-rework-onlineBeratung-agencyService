@@ -7,9 +7,7 @@ import java.util.Set;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.math.NumberUtils;
 
-/**
- * Postcode range validation class.
- */
+/** Postcode range validation class. */
 public class PostcodeRangeValidator {
 
   /**
@@ -26,8 +24,10 @@ public class PostcodeRangeValidator {
 
   private boolean havePostcodesExpectedDigits(Set<AgencyPostcodeRange> postcodeRanges) {
     return postcodeRanges.stream()
-        .anyMatch(range -> doesNotMatchExpectedFormat(range.getPostcodeFrom())
-            || doesNotMatchExpectedFormat(range.getPostcodeTo()));
+        .anyMatch(
+            range ->
+                doesNotMatchExpectedFormat(range.getPostcodeFrom())
+                    || doesNotMatchExpectedFormat(range.getPostcodeTo()));
   }
 
   private boolean doesNotMatchExpectedFormat(String postcode) {
@@ -35,8 +35,7 @@ public class PostcodeRangeValidator {
   }
 
   private boolean arePostcodesFromBiggerThanPostcodesTo(Set<AgencyPostcodeRange> postcodeRanges) {
-    return postcodeRanges.stream()
-        .anyMatch(this::arePostcodesFromBiggerThanPostcodesTo);
+    return postcodeRanges.stream().anyMatch(this::arePostcodesFromBiggerThanPostcodesTo);
   }
 
   private boolean arePostcodesFromBiggerThanPostcodesTo(AgencyPostcodeRange range) {
@@ -47,29 +46,31 @@ public class PostcodeRangeValidator {
    * validates if the given postcode range intersects with the given {@link AgencyPostcodeRange} 's
    * of agency.
    *
-   * @param postcodeRangesToSave         the postcoderanges to be saved
+   * @param postcodeRangesToSave the postcoderanges to be saved
    * @param existingAgencyPostcodeRanges the currently persisted postcoderanges
    */
-  public void validatePostcodeRangeForIntersection(Set<AgencyPostcodeRange> postcodeRangesToSave,
+  public void validatePostcodeRangeForIntersection(
+      Set<AgencyPostcodeRange> postcodeRangesToSave,
       List<AgencyPostcodeRange> existingAgencyPostcodeRanges) {
-    var rangeOverlapsExistingRange = postcodeRangesToSave.stream()
-        .map(this::fromAgencyPostCodeRange)
-        .anyMatch(range -> rangeOverlapsRangeList(existingAgencyPostcodeRanges, range));
+    var rangeOverlapsExistingRange =
+        postcodeRangesToSave.stream()
+            .map(this::fromAgencyPostCodeRange)
+            .anyMatch(range -> rangeOverlapsRangeList(existingAgencyPostcodeRanges, range));
 
     if (rangeOverlapsExistingRange) {
       throw new InvalidPostcodeException();
     }
   }
 
-  private boolean rangeOverlapsRangeList(List<AgencyPostcodeRange> postCodeRangeList,
-      Range<Integer> providedRange) {
+  private boolean rangeOverlapsRangeList(
+      List<AgencyPostcodeRange> postCodeRangeList, Range<Integer> providedRange) {
     return postCodeRangeList.stream()
         .map(this::fromAgencyPostCodeRange)
         .anyMatch(range -> range.isOverlappedBy(providedRange));
   }
 
   private Range<Integer> fromAgencyPostCodeRange(AgencyPostcodeRange range) {
-    return Range.between(Integer.parseInt(range.getPostcodeFrom()),
-        Integer.parseInt(range.getPostcodeTo()));
+    return Range.between(
+        Integer.parseInt(range.getPostcodeFrom()), Integer.parseInt(range.getPostcodeTo()));
   }
 }

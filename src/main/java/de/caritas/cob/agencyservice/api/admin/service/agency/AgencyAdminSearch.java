@@ -12,6 +12,4 @@ public class AgencyAdminSearch {
   private int pageSize;
   private String sortField;
   private boolean ascending;
-
-
 }

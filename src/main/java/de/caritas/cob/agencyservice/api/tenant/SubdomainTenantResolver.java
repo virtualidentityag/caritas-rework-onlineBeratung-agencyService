@@ -5,12 +5,11 @@ import static java.util.Optional.of;
 
 import de.caritas.cob.agencyservice.api.service.TenantService;
 import de.caritas.cob.agencyservice.filter.SubdomainExtractor;
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.stereotype.Component;
-
 
 @AllArgsConstructor
 @Component

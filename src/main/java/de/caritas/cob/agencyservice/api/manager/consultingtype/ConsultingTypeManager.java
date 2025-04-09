@@ -20,7 +20,7 @@ public class ConsultingTypeManager {
    * @param consultingTypeId The consulting ID for which the seetings are searched
    * @return {@link ExtendedConsultingTypeResponseDTO} for the provided consulting ID
    * @throws MissingConsultingTypeException when no settings for provided consulting type where
-   * found
+   *     found
    */
   public ExtendedConsultingTypeResponseDTO getConsultingTypeSettings(int consultingTypeId)
       throws MissingConsultingTypeException {
@@ -31,5 +31,4 @@ public class ConsultingTypeManager {
           String.format("No settings for consulting type %s found.", consultingTypeId));
     }
   }
-
 }

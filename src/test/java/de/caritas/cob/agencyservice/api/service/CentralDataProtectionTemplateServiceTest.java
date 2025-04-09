@@ -33,207 +33,232 @@ import org.springframework.test.util.ReflectionTestUtils;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 class CentralDataProtectionTemplateServiceTest {
 
-  public static final String DATA_PROTECTION_OFFICER_CONTACT_TEMPLATE = "Data protection officer contact name: <#if name?exists>${name},</#if><#if city?exists> city: ${city}, </#if><#if postCode?exists>postcode: ${postCode}, </#if><#if phoneNumber?exists>phoneNumber: ${phoneNumber}</#if>";
-  public static final String RESPONSIBLE_CONTACT_TEMPLATE = "Data protection responsible contact name: <#if name?exists>${name},</#if><#if city?exists> city: ${city}, </#if><#if postCode?exists>postcode: ${postCode}, </#if><#if phoneNumber?exists>phoneNumber: ${phoneNumber}</#if>";
-  @Autowired
-  CentralDataProtectionTemplateService centralDataProtectionTemplateService;
+  public static final String DATA_PROTECTION_OFFICER_CONTACT_TEMPLATE =
+      "Data protection officer contact name: <#if name?exists>${name},</#if><#if city?exists> city: ${city}, </#if><#if postCode?exists>postcode: ${postCode}, </#if><#if phoneNumber?exists>phoneNumber: ${phoneNumber}</#if>";
+  public static final String RESPONSIBLE_CONTACT_TEMPLATE =
+      "Data protection responsible contact name: <#if name?exists>${name},</#if><#if city?exists> city: ${city}, </#if><#if postCode?exists>postcode: ${postCode}, </#if><#if phoneNumber?exists>phoneNumber: ${phoneNumber}</#if>";
+  @Autowired CentralDataProtectionTemplateService centralDataProtectionTemplateService;
 
-  @MockBean
-  private TopicEnrichmentService topicEnrichmentService;
+  @MockBean private TopicEnrichmentService topicEnrichmentService;
 
-  @MockBean
-  TenantService tenantService;
+  @MockBean TenantService tenantService;
 
-  @MockBean
-  ApplicationSettingsService applicationSettingsService;
+  @MockBean ApplicationSettingsService applicationSettingsService;
 
   @BeforeEach
   void setup() {
-    ReflectionTestUtils.setField(centralDataProtectionTemplateService,
-        "multitenancyWithSingleDomain", false);
-    when(applicationSettingsService.getApplicationSettings()).thenReturn(
-        new ApplicationSettingsDTO().legalContentChangesBySingleTenantAdminsAllowed(
-            new ApplicationSettingsDTOMultitenancyWithSingleDomainEnabled().value(true)));
+    ReflectionTestUtils.setField(
+        centralDataProtectionTemplateService, "multitenancyWithSingleDomain", false);
+    when(applicationSettingsService.getApplicationSettings())
+        .thenReturn(
+            new ApplicationSettingsDTO()
+                .legalContentChangesBySingleTenantAdminsAllowed(
+                    new ApplicationSettingsDTOMultitenancyWithSingleDomainEnabled().value(true)));
   }
 
   @Test
   void renderDataProtectionPrivacy_shouldProperlyRenderPrivacy_When_PlaceholdersAreRendered() {
 
     // given
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        new RestrictedTenantDTO()
-            .content(
-                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate())
-                    .privacy(
-                        "Privacy template with placeholders: ${dataProtectionOfficer} ${responsible}")));
-    DataProtectionContactDTO dataProtectionContactDTO = new DataProtectionContactDTO()
-        .nameAndLegalForm("Max Mustermann");
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong()))
+        .thenReturn(
+            new RestrictedTenantDTO()
+                .content(
+                    new Content()
+                        .dataProtectionContactTemplate(getDataProtectionContactTemplate())
+                        .privacy(
+                            "Privacy template with placeholders: ${dataProtectionOfficer} ${responsible}")));
+    DataProtectionContactDTO dataProtectionContactDTO =
+        new DataProtectionContactDTO().nameAndLegalForm("Max Mustermann");
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
-        .dataProtectionAgencyResponsibleContactData(
-            JsonConverter.convertToJson(dataProtectionContactDTO))
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
+            .dataProtectionAgencyResponsibleContactData(
+                JsonConverter.convertToJson(dataProtectionContactDTO))
+            .build();
 
     // when
-    var renderedPrivacy = centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
-        agency);
+    var renderedPrivacy =
+        centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
+            agency);
 
     // then
-    assertThat(
-        renderedPrivacy).isEqualTo(
-        "Privacy template with placeholders: Data protection officer contact name: Max Mustermann, Data protection responsible contact name: Max Mustermann,");
+    assertThat(renderedPrivacy)
+        .isEqualTo(
+            "Privacy template with placeholders: Data protection officer contact name: Max Mustermann, Data protection responsible contact name: Max Mustermann,");
   }
 
   @Test
-  void renderDataProtectionPrivacy_shouldProperlyRenderPrivacyTakingTemplateFromMainTenant_When_MultitenancySingleDomainAndTenantLevelPrivacyOverrideNotAllowed() {
+  void
+      renderDataProtectionPrivacy_shouldProperlyRenderPrivacyTakingTemplateFromMainTenant_When_MultitenancySingleDomainAndTenantLevelPrivacyOverrideNotAllowed() {
     // given
-    ReflectionTestUtils.setField(centralDataProtectionTemplateService,
-        "multitenancyWithSingleDomain", true);
-    when(applicationSettingsService.getApplicationSettings()).thenReturn(
-        new ApplicationSettingsDTO().legalContentChangesBySingleTenantAdminsAllowed(
-            new ApplicationSettingsDTOMultitenancyWithSingleDomainEnabled().value(false)));
+    ReflectionTestUtils.setField(
+        centralDataProtectionTemplateService, "multitenancyWithSingleDomain", true);
+    when(applicationSettingsService.getApplicationSettings())
+        .thenReturn(
+            new ApplicationSettingsDTO()
+                .legalContentChangesBySingleTenantAdminsAllowed(
+                    new ApplicationSettingsDTOMultitenancyWithSingleDomainEnabled().value(false)));
 
-    when(tenantService.getMainTenant()).thenReturn(
-        new RestrictedTenantDTO()
-            .content(
-                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate())
-                    .privacy(
-                        "Privacy template with placeholders from main tenant: ${dataProtectionOfficer} ${responsible}")));
-    DataProtectionContactDTO dataProtectionContactDTO = new DataProtectionContactDTO()
-        .nameAndLegalForm("Max Mustermann");
+    when(tenantService.getMainTenant())
+        .thenReturn(
+            new RestrictedTenantDTO()
+                .content(
+                    new Content()
+                        .dataProtectionContactTemplate(getDataProtectionContactTemplate())
+                        .privacy(
+                            "Privacy template with placeholders from main tenant: ${dataProtectionOfficer} ${responsible}")));
+    DataProtectionContactDTO dataProtectionContactDTO =
+        new DataProtectionContactDTO().nameAndLegalForm("Max Mustermann");
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
-        .dataProtectionAgencyResponsibleContactData(
-            JsonConverter.convertToJson(dataProtectionContactDTO))
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
+            .dataProtectionAgencyResponsibleContactData(
+                JsonConverter.convertToJson(dataProtectionContactDTO))
+            .build();
 
     // when
-    var renderedPrivacy = centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
-        agency);
+    var renderedPrivacy =
+        centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
+            agency);
 
     // then
-    assertThat(
-        renderedPrivacy).isEqualTo(
-        "Privacy template with placeholders from main tenant: Data protection officer contact name: Max Mustermann, Data protection responsible contact name: Max Mustermann,");
-
-  }
-
-
-  @Test
-  void renderDataProtectionPrivacy_shouldReturnPrivacyAsItIs_When_PlaceholdersAreNotIncludedInPrivacy() {
-
-    // given
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        new RestrictedTenantDTO()
-            .content(
-                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate())
-                    .privacy(
-                        "Privacy template without placeholders")));
-    DataProtectionContactDTO dataProtectionContactDTO = new DataProtectionContactDTO()
-        .nameAndLegalForm("Max Mustermann");
-
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
-        .dataProtectionAgencyResponsibleContactData(
-            JsonConverter.convertToJson(dataProtectionContactDTO))
-        .build();
-
-    // when
-    var renderedPrivacy = centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
-        agency);
-
-    // then
-    assertThat(
-        renderedPrivacy).isEqualTo(
-        "Privacy template without placeholders");
+    assertThat(renderedPrivacy)
+        .isEqualTo(
+            "Privacy template with placeholders from main tenant: Data protection officer contact name: Max Mustermann, Data protection responsible contact name: Max Mustermann,");
   }
 
   @Test
-  void renderDataProtectionTemplatePlaceholders_shouldProperlyRenderPlaceholders_If_SomeVariableDataIsMissing() {
+  void
+      renderDataProtectionPrivacy_shouldReturnPrivacyAsItIs_When_PlaceholdersAreNotIncludedInPrivacy() {
 
     // given
-    RestrictedTenantDTO tenantDTO = new RestrictedTenantDTO()
-        .content(
-            new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        tenantDTO);
-    DataProtectionContactDTO dataProtectionContactDTO = new DataProtectionContactDTO()
-        .nameAndLegalForm("Max Mustermann");
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong()))
+        .thenReturn(
+            new RestrictedTenantDTO()
+                .content(
+                    new Content()
+                        .dataProtectionContactTemplate(getDataProtectionContactTemplate())
+                        .privacy("Privacy template without placeholders")));
+    DataProtectionContactDTO dataProtectionContactDTO =
+        new DataProtectionContactDTO().nameAndLegalForm("Max Mustermann");
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
-        .dataProtectionAgencyResponsibleContactData(
-            JsonConverter.convertToJson(dataProtectionContactDTO))
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
+            .dataProtectionAgencyResponsibleContactData(
+                JsonConverter.convertToJson(dataProtectionContactDTO))
+            .build();
 
     // when
-    var renderedPlaceholders = centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
-        agency, tenantDTO);
+    var renderedPrivacy =
+        centralDataProtectionTemplateService.renderPrivacyTemplateWithRenderedPlaceholderValues(
+            agency);
 
     // then
-    assertThat(
-        renderedPlaceholders).containsEntry(DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
-        "Data protection officer contact name: Max Mustermann,").containsEntry(
-        DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
-        "Data protection responsible contact name: Max Mustermann,");
+    assertThat(renderedPrivacy).isEqualTo("Privacy template without placeholders");
+  }
+
+  @Test
+  void
+      renderDataProtectionTemplatePlaceholders_shouldProperlyRenderPlaceholders_If_SomeVariableDataIsMissing() {
+
+    // given
+    RestrictedTenantDTO tenantDTO =
+        new RestrictedTenantDTO()
+            .content(
+                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(tenantDTO);
+    DataProtectionContactDTO dataProtectionContactDTO =
+        new DataProtectionContactDTO().nameAndLegalForm("Max Mustermann");
+
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
+            .dataProtectionAgencyResponsibleContactData(
+                JsonConverter.convertToJson(dataProtectionContactDTO))
+            .build();
+
+    // when
+    var renderedPlaceholders =
+        centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
+            agency, tenantDTO);
+
+    // then
+    assertThat(renderedPlaceholders)
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
+            "Data protection officer contact name: Max Mustermann,")
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
+            "Data protection responsible contact name: Max Mustermann,");
   }
 
   @Test
   void renderDataProtectionTemplatePlaceholders_shouldProperlyRenderPlaceholders() {
 
     // given
-    RestrictedTenantDTO tenantDTO = new RestrictedTenantDTO()
-        .content(
-            new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        tenantDTO);
-    DataProtectionContactDTO dataProtectionContactDTO = new DataProtectionContactDTO()
-        .nameAndLegalForm("Max Mustermann")
-        .street("Musterstraße 1")
-        .postcode("12345")
-        .city("Freiburg")
-        .phoneNumber("0123456789");
+    RestrictedTenantDTO tenantDTO =
+        new RestrictedTenantDTO()
+            .content(
+                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(tenantDTO);
+    DataProtectionContactDTO dataProtectionContactDTO =
+        new DataProtectionContactDTO()
+            .nameAndLegalForm("Max Mustermann")
+            .street("Musterstraße 1")
+            .postcode("12345")
+            .city("Freiburg")
+            .phoneNumber("0123456789");
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
-        .dataProtectionAgencyResponsibleContactData(
-            JsonConverter.convertToJson(dataProtectionContactDTO))
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContactData(JsonConverter.convertToJson(dataProtectionContactDTO))
+            .dataProtectionAgencyResponsibleContactData(
+                JsonConverter.convertToJson(dataProtectionContactDTO))
+            .build();
 
     // when
-    var renderedPlaceholders = centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
-        agency, tenantDTO);
+    var renderedPlaceholders =
+        centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
+            agency, tenantDTO);
 
     // then
-    assertThat(
-        renderedPlaceholders).containsEntry(DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
+    assertThat(renderedPlaceholders)
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
             "Data protection officer contact name: Max Mustermann, city: Freiburg, postcode: 12345, phoneNumber: 0123456789")
         .containsEntry(
             DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
@@ -241,79 +266,87 @@ class CentralDataProtectionTemplateServiceTest {
   }
 
   @Test
-  void renderDataProtectionTemplatePlaceholders_shouldReturnPlaceholderTemplate_IfDataProtectionAgencyContactDataIsNotSet() {
+  void
+      renderDataProtectionTemplatePlaceholders_shouldReturnPlaceholderTemplate_IfDataProtectionAgencyContactDataIsNotSet() {
 
     // given
-    RestrictedTenantDTO tenantDTO = new RestrictedTenantDTO()
-        .content(
-            new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        tenantDTO);
+    RestrictedTenantDTO tenantDTO =
+        new RestrictedTenantDTO()
+            .content(
+                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(tenantDTO);
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .build();
 
     // when
-    var renderedPlaceholders = centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
-        agency, tenantDTO);
+    var renderedPlaceholders =
+        centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
+            agency, tenantDTO);
 
     // then
-    assertThat(
-        renderedPlaceholders).containsEntry(DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
-        "Data protection officer contact name: ").containsEntry(
-        DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
-        "Data protection responsible contact name: ").hasSize(2);
+    assertThat(renderedPlaceholders)
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
+            "Data protection officer contact name: ")
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
+            "Data protection responsible contact name: ")
+        .hasSize(2);
   }
-
 
   @Test
   void renderDataProtectionTemplatePlaceholders_shouldReturnPlaceholderTemplate_IfNoDataOnAgency() {
 
     // given
-    RestrictedTenantDTO tenantDTO = new RestrictedTenantDTO()
-        .content(
-            new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
-    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(
-        tenantDTO);
+    RestrictedTenantDTO tenantDTO =
+        new RestrictedTenantDTO()
+            .content(
+                new Content().dataProtectionContactTemplate(getDataProtectionContactTemplate()));
+    when(tenantService.getRestrictedTenantDataByTenantId(anyLong())).thenReturn(tenantDTO);
 
-    Agency agency = Agency.builder()
-        .id(1000L)
-        .tenantId(1L)
-        .consultingTypeId(1)
-        .name("agencyName")
-        .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .build();
+    Agency agency =
+        Agency.builder()
+            .id(1000L)
+            .tenantId(1L)
+            .consultingTypeId(1)
+            .name("agencyName")
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .build();
 
     // when
-    var renderedPlaceholders = centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
-        agency, tenantDTO);
+    var renderedPlaceholders =
+        centralDataProtectionTemplateService.renderDataProtectionPlaceholdersFromTemplates(
+            agency, tenantDTO);
 
     // then
-    assertThat(
-        renderedPlaceholders).containsEntry(DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
-        "Data protection officer contact name: ").containsEntry(
-        DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
-        "Data protection responsible contact name: ").hasSize(2);
+    assertThat(renderedPlaceholders)
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_OFFICER,
+            "Data protection officer contact name: ")
+        .containsEntry(
+            DataProtectionPlaceHolderType.DATA_PROTECTION_RESPONSIBLE,
+            "Data protection responsible contact name: ")
+        .hasSize(2);
   }
 
-
   private DataProtectionContactTemplateDTO getDataProtectionContactTemplate() {
-    return new DataProtectionContactTemplateDTO().agencyContext(
-        getAgencyContext());
+    return new DataProtectionContactTemplateDTO().agencyContext(getAgencyContext());
   }
 
   private AgencyContextDTO getAgencyContext() {
-    return new AgencyContextDTO().dataProtectionOfficer(
-            new DataProtectionOfficerDTO().dataProtectionOfficerContact(
-                DATA_PROTECTION_OFFICER_CONTACT_TEMPLATE))
-        .responsibleContact(
-            RESPONSIBLE_CONTACT_TEMPLATE);
+    return new AgencyContextDTO()
+        .dataProtectionOfficer(
+            new DataProtectionOfficerDTO()
+                .dataProtectionOfficerContact(DATA_PROTECTION_OFFICER_CONTACT_TEMPLATE))
+        .responsibleContact(RESPONSIBLE_CONTACT_TEMPLATE);
   }
-
-
 }

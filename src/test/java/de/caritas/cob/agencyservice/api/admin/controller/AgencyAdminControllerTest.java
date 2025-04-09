@@ -2,7 +2,6 @@ package de.caritas.cob.agencyservice.api.admin.controller;
 
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_POSTCODE_RANGE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.AGENCY_SEARCH_PATH;
-import static de.caritas.cob.agencyservice.testHelper.PathConstants.CHANGE_AGENCY_TYPE_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.CREATE_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.GET_AGENCY_PATH;
 import static de.caritas.cob.agencyservice.testHelper.PathConstants.PAGE_PARAM;
@@ -39,8 +38,6 @@ import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidPostcodeE
 import de.caritas.cob.agencyservice.api.manager.consultingtype.ConsultingTypeManager;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminFullResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO;
-import de.caritas.cob.agencyservice.api.model.AgencyTypeRequestDTO.AgencyTypeEnum;
 import de.caritas.cob.agencyservice.api.model.DemographicsDTO;
 import de.caritas.cob.agencyservice.api.model.PostcodeRangeDTO;
 import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
@@ -71,52 +68,34 @@ import org.springframework.test.web.servlet.MockMvc;
     webEnvironment = SpringBootTest.WebEnvironment.MOCK,
     classes = AgencyServiceApplication.class)
 @AutoConfigureMockMvc(addFilters = false)
-@TestPropertySource(
-    locations = "classpath:application-testing.properties")
+@TestPropertySource(locations = "classpath:application-testing.properties")
 public class AgencyAdminControllerTest {
 
   public static final int AGE_FROM = 25;
   public static final int AGE_TO = 100;
-  @Autowired
-  private MockMvc mvc;
-  @MockBean
-  private AgencyAdminService agencyAdminService;
-  @MockBean
-  private AgencyValidator agencyValidator;
-  @MockBean
-  private AgencyAdminSearchService agencyAdminFullResponseDTO;
-  @MockBean
-  private AgencyPostcodeRangeAdminService agencyPostCodeRangeAdminService;
-  @MockBean
-  private LinkDiscoverers linkDiscoverers;
-  @MockBean
-  private RoleAuthorizationAuthorityMapper roleAuthorizationAuthorityMapper;
+  @Autowired private MockMvc mvc;
+  @MockBean private AgencyAdminService agencyAdminService;
+  @MockBean private AgencyValidator agencyValidator;
+  @MockBean private AgencyAdminSearchService agencyAdminFullResponseDTO;
+  @MockBean private AgencyPostcodeRangeAdminService agencyPostCodeRangeAdminService;
+  @MockBean private LinkDiscoverers linkDiscoverers;
+  @MockBean private RoleAuthorizationAuthorityMapper roleAuthorizationAuthorityMapper;
 
-  @MockBean
-  private JwtAuthConverter jwtAuthConverter;
+  @MockBean private JwtAuthConverter jwtAuthConverter;
 
-  @MockBean
-  private AuthorisationService authorisationService;
+  @MockBean private AuthorisationService authorisationService;
 
-  @MockBean
-  private JwtAuthConverterProperties jwtAuthConverterProperties;
+  @MockBean private JwtAuthConverterProperties jwtAuthConverterProperties;
 
-  @MockBean
-  private UserAdminServiceApiControllerFactory adminServiceApiControllerFactory;
+  @MockBean private UserAdminServiceApiControllerFactory adminServiceApiControllerFactory;
 
-  @MockBean
-  private SecurityHeaderSupplier securityHeaderSupplier;
+  @MockBean private SecurityHeaderSupplier securityHeaderSupplier;
 
-  @MockBean
-  private TenantHeaderSupplier tenantHeaderSupplier;
+  @MockBean private TenantHeaderSupplier tenantHeaderSupplier;
 
-  @MockBean
-  private ConsultingTypeManager consultingTypeManager;
+  @MockBean private ConsultingTypeManager consultingTypeManager;
 
-
-  @MockBean
-  private AgencyRepository agencyRepository;
-
+  @MockBean private AgencyRepository agencyRepository;
 
   @Test
   public void searchAgencies_Should_returnBadRequest_When_requiredPaginationParamsAreMissing()
@@ -223,21 +202,16 @@ public class AgencyAdminControllerTest {
   }
 
   @Test
-  public void getAgencyPostCodeRanges_Should_returnOk()
-      throws Exception {
-    this.mvc
-        .perform(get(AGENCY_POSTCODE_RANGE_PATH))
-        .andExpect(status().isOk());
+  public void getAgencyPostCodeRanges_Should_returnOk() throws Exception {
+    this.mvc.perform(get(AGENCY_POSTCODE_RANGE_PATH)).andExpect(status().isOk());
 
     Mockito.verify(this.agencyPostCodeRangeAdminService, Mockito.times(1))
         .findPostcodeRangesForAgency(1L);
   }
 
   @Test
-  public void deleteAgencyPostCodeRange_Should_returnOk()
-      throws Exception {
-    this.mvc.perform(delete(AGENCY_POSTCODE_RANGE_PATH))
-        .andExpect(status().isOk());
+  public void deleteAgencyPostCodeRange_Should_returnOk() throws Exception {
+    this.mvc.perform(delete(AGENCY_POSTCODE_RANGE_PATH)).andExpect(status().isOk());
 
     Mockito.verify(this.agencyPostCodeRangeAdminService, Mockito.times(1))
         .deleteAgencyPostcodeRange(1L);
@@ -246,9 +220,7 @@ public class AgencyAdminControllerTest {
   @Test
   public void deleteAgencyPostCodeRange_Should_returnBadRequest_When_requiredParamIsWrong()
       throws Exception {
-    this.mvc
-        .perform(delete(AGENCY_POSTCODE_RANGE_PATH + "aaa"))
-        .andExpect(status().isBadRequest());
+    this.mvc.perform(delete(AGENCY_POSTCODE_RANGE_PATH + "aaa")).andExpect(status().isBadRequest());
   }
 
   @Test
@@ -346,30 +318,6 @@ public class AgencyAdminControllerTest {
   }
 
   @Test
-  public void changeAgencyType_Should_returnOk_When_AllParamsAreValid() throws Exception {
-    var agencyTypeDTO = new AgencyTypeRequestDTO().agencyType(AgencyTypeEnum.TEAM_AGENCY);
-
-    this.mvc
-        .perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .content(new ObjectMapper().writeValueAsString(agencyTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
-  }
-
-  @Test
-  public void changeAgencyType_Should_returnBadRequest_When_teamAgencyIsNull() throws Exception {
-    var agencyTypeDTO = new AgencyTypeRequestDTO().agencyType(null);
-
-    this.mvc
-        .perform(
-            post(CHANGE_AGENCY_TYPE_PATH)
-                .content(new ObjectMapper().writeValueAsString(agencyTypeDTO))
-                .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
   public void deleteAgency_Should_returnOk_When_AllParamsAreValid() throws Exception {
     this.mvc
         .perform(delete(UPDATE_DELETE_AGENCY_PATH).contentType(MediaType.APPLICATION_JSON))
@@ -377,7 +325,7 @@ public class AgencyAdminControllerTest {
   }
 
   @Test
-  public void deleteAgency_Should_returnBadRequest_When_teamAgencyIsInvalid() throws Exception {
+  public void deleteAgency_Should_returnBadRequest_When_agencyIsInvalid() throws Exception {
     this.mvc
         .perform(
             delete(UPDATE_DELETE_AGENCY_PATH_INVALID_ID).contentType(MediaType.APPLICATION_JSON))

@@ -9,7 +9,6 @@ import de.caritas.cob.agencyservice.api.admin.validation.validators.model.Valida
 import de.caritas.cob.agencyservice.api.exception.httpresponses.HttpStatusExceptionReason;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidOfflineStatusException;
 import de.caritas.cob.agencyservice.api.model.DataProtectionContactDTO;
-import de.caritas.cob.agencyservice.api.repository.agency.DataProtectionPlaceHolderType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -36,9 +35,9 @@ public class AgencyDataProtectionValidationService {
 
   private void validateIfDataProtectionOfficer(ValidateAgencyDTO validateAgencyDto) {
     if (DATA_PROTECTION_OFFICER.equals(
-        validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
+            validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
         && areFieldsEmpty(
-        validateAgencyDto.getDataProtectionDTO().getDataProtectionOfficerContact())) {
+            validateAgencyDto.getDataProtectionDTO().getDataProtectionOfficerContact())) {
       log.warn(
           "Could not save agency with id {}. Required fields for data protection officer is empty.",
           validateAgencyDto.getId());
@@ -49,9 +48,9 @@ public class AgencyDataProtectionValidationService {
 
   private void validateIfAgencyResponsible(ValidateAgencyDTO validateAgencyDto) {
     if (AGENCY_RESPONSIBLE.equals(
-        validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
+            validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
         && areFieldsEmpty(
-        validateAgencyDto.getDataProtectionDTO().getAgencyDataProtectionResponsibleContact())) {
+            validateAgencyDto.getDataProtectionDTO().getAgencyDataProtectionResponsibleContact())) {
       log.warn(
           "Could not save agency with id {} status. Required fields for agency responsible is empty.",
           validateAgencyDto.getId());
@@ -62,9 +61,11 @@ public class AgencyDataProtectionValidationService {
 
   private void validateIfAlternativeRepresentative(ValidateAgencyDTO validateAgencyDto) {
     if (ALTERNATIVE_REPRESENTATIVE.equals(
-        validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
-        && areFieldsEmpty(validateAgencyDto.getDataProtectionDTO()
-        .getAlternativeDataProtectionRepresentativeContact())) {
+            validateAgencyDto.getDataProtectionDTO().getDataProtectionResponsibleEntity())
+        && areFieldsEmpty(
+            validateAgencyDto
+                .getDataProtectionDTO()
+                .getAlternativeDataProtectionRepresentativeContact())) {
       log.warn(
           "Could not save agency with id {} status. Required fields for alternative responsible is empty.",
           validateAgencyDto.getId());

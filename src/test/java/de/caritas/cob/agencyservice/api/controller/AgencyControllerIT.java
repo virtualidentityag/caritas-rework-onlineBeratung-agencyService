@@ -35,25 +35,24 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureTestDatabase
 class AgencyControllerIT {
 
-  @Autowired
-  private MockMvc mvc;
+  @Autowired private MockMvc mvc;
 
-  @MockBean
-  private TopicEnrichmentService topicEnrichmentService;
+  @MockBean private TopicEnrichmentService topicEnrichmentService;
 
-  @MockBean
-  private AgencyService agencyService;
+  @MockBean private AgencyService agencyService;
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.SEARCH_AGENCIES_WITHIN_TENANT})
   void getTenantAgencies_Should_ReturnNoContent_When_ServiceReturnsEmptyList() throws Exception {
 
-    when(agencyService.getAgencies(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(null);
+    when(agencyService.getAgencies(Mockito.anyString(), Mockito.anyInt())).thenReturn(null);
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isNoContent());
   }
@@ -63,19 +62,23 @@ class AgencyControllerIT {
   void getTenantAgencies_Should_ReturnBadRequest_When_PostcodeParamIsInvalid() throws Exception {
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + INVALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + INVALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isBadRequest());
   }
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.SEARCH_AGENCIES_WITHIN_TENANT})
-  void getTenantAgencies_Should_ReturnBadRequest_When_topicIdParamIsNotProvided()
-      throws Exception {
+  void getTenantAgencies_Should_ReturnBadRequest_When_topicIdParamIsNotProvided() throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -83,8 +86,10 @@ class AgencyControllerIT {
   void getTenantAgencies_Should_ReturnBadRequest_When_PostCodeParamIsNotProvided()
       throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -94,12 +99,14 @@ class AgencyControllerIT {
     List<FullAgencyResponseDTO> agencies = new ArrayList<>();
     agencies.add(FULL_AGENCY_RESPONSE_DTO);
 
-    when(agencyService.getAgencies(Mockito.anyString(), Mockito.anyInt()))
-        .thenReturn(agencies);
+    when(agencyService.getAgencies(Mockito.anyString(), Mockito.anyInt())).thenReturn(agencies);
 
     mvc.perform(
-            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_POSTCODE_QUERY + "&"
-                + VALID_TOPIC_ID_QUERY)
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT
+                    + "?"
+                    + VALID_POSTCODE_QUERY
+                    + "&"
+                    + VALID_TOPIC_ID_QUERY)
                 .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(jsonPath("[0].name").value(AGENCY_RESPONSE_DTO.getName()));
@@ -110,15 +117,19 @@ class AgencyControllerIT {
   @Test
   void getTenantAgencies_Should_ReturnUnauthorized_When_UserHasNoAuthority() throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isUnauthorized());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isUnauthorized());
   }
 
   @Test
   @WithMockUser(authorities = {AuthorityValue.SEARCH_AGENCIES})
   void getTenantAgencies_Should_ReturnForbidden_When_UserHasWrongAuthority() throws Exception {
 
-    mvc.perform(get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
-        .accept(MediaType.APPLICATION_JSON)).andExpect(status().isForbidden());
+    mvc.perform(
+            get(PATH_GET_LIST_OF_AGENCIES_BY_TENANT + "?" + VALID_TOPIC_ID_QUERY)
+                .accept(MediaType.APPLICATION_JSON))
+        .andExpect(status().isForbidden());
   }
 }

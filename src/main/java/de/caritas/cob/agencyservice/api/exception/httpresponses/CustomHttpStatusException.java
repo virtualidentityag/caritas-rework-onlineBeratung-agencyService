@@ -4,9 +4,7 @@ import static java.util.Objects.nonNull;
 
 import java.util.function.Consumer;
 
-/**
- * Custom HTTP status exception.
- */
+/** Custom HTTP status exception. */
 public abstract class CustomHttpStatusException extends RuntimeException {
 
   private static final long serialVersionUID = -3545035432045919306L;
@@ -22,9 +20,7 @@ public abstract class CustomHttpStatusException extends RuntimeException {
     this.loggingMethod = loggingMethod;
   }
 
-  /**
-   * Executes the non null logging method.
-   */
+  /** Executes the non null logging method. */
   public void executeLogging() {
     if (nonNull(this.loggingMethod)) {
       this.loggingMethod.accept(this);

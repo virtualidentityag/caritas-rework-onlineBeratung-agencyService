@@ -24,7 +24,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AgencyServiceApplication.class)
 @TestPropertySource(properties = "spring.profiles.active=testing")
@@ -35,16 +34,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.NEVER)
 public class AgencyServiceTenantAwareIT extends AgencyServiceITBase {
 
-  @Autowired
-  private PlatformTransactionManager transactionManager;
+  @Autowired private PlatformTransactionManager transactionManager;
 
-  @MockBean
-  TenantService tenantService;
+  @MockBean TenantService tenantService;
 
   @Before
   public void beforeEach() {
     TenantContext.setCurrentTenant(1L);
-    Mockito.when(tenantService.getRestrictedTenantDataByTenantId(Mockito.anyLong())).thenReturn(new RestrictedTenantDTO());
+    Mockito.when(tenantService.getRestrictedTenantDataByTenantId(Mockito.anyLong()))
+        .thenReturn(new RestrictedTenantDTO());
   }
 
   @After
@@ -67,5 +65,4 @@ public class AgencyServiceTenantAwareIT extends AgencyServiceITBase {
   public void getAgenciesByConsultingType_Should_returnResults_When_ConsultingTypeIsValid() {
     super.getAgenciesByConsultingType_Should_returnResults_When_ConsultingTypeIsValid();
   }
-
 }

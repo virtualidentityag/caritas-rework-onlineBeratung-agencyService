@@ -11,9 +11,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Validator for agencies before deletion.
- */
+/** Validator for agencies before deletion. */
 @Component
 @RequiredArgsConstructor
 public class DeleteAgencyValidator {

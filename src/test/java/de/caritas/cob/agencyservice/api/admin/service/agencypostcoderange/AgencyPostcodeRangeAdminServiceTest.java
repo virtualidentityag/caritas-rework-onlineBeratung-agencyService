@@ -15,13 +15,11 @@ import static org.springframework.test.util.ReflectionTestUtils.setField;
 
 import de.caritas.cob.agencyservice.api.admin.service.AgencyAdminService;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
-import de.caritas.cob.agencyservice.api.model.AgencyPostcodeRangeResponseDTO;
 import de.caritas.cob.agencyservice.api.model.PostcodeRangeDTO;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRange;
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRangeRepository;
 import de.caritas.cob.agencyservice.api.service.AgencyService;
-import de.caritas.cob.agencyservice.api.service.LogService;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -38,23 +36,17 @@ import org.slf4j.Logger;
 @ExtendWith(MockitoExtension.class)
 class AgencyPostcodeRangeAdminServiceTest {
 
-  @InjectMocks
-  AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
+  @InjectMocks AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
 
-  @Mock
-  AgencyAdminService agencyAdminService;
+  @Mock AgencyAdminService agencyAdminService;
 
-  @Mock
-  AgencyService agencyService;
+  @Mock AgencyService agencyService;
 
-  @Mock
-  PostcodeRangeValidator postcodeRangeValidator;
+  @Mock PostcodeRangeValidator postcodeRangeValidator;
 
-  @Mock
-  AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
+  @Mock AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
 
-  @Mock
-  Logger logger;
+  @Mock Logger logger;
 
   private PostcodeRangeDTO postcodeRangeDTO;
   private EasyRandom easyRandom;
@@ -84,11 +76,10 @@ class AgencyPostcodeRangeAdminServiceTest {
   void createPostcodeRange_Should_ValidatePostcodeRanges() {
     when(agencyAdminService.findAgencyById(anyLong()))
         .thenReturn(easyRandom.nextObject(Agency.class));
-    when(agencyPostcodeRangeRepository.save(any())).thenReturn(easyRandom.nextObject(
-        AgencyPostcodeRange.class));
+    when(agencyPostcodeRangeRepository.save(any()))
+        .thenReturn(easyRandom.nextObject(AgencyPostcodeRange.class));
 
-    agencyPostcodeRangeAdminService.createPostcodeRanges(
-        AGENCY_ID, postcodeRangeDTO);
+    agencyPostcodeRangeAdminService.createPostcodeRanges(AGENCY_ID, postcodeRangeDTO);
 
     ArgumentCaptor<AgencyPostcodeRange> captor = ArgumentCaptor.forClass(AgencyPostcodeRange.class);
     verify(agencyPostcodeRangeRepository).save(captor.capture());
@@ -101,21 +92,20 @@ class AgencyPostcodeRangeAdminServiceTest {
   void createPostcodeRange_Should_SavePostcodeRange_WhenEveryParameterIsValid() {
     when(agencyAdminService.findAgencyById(anyLong()))
         .thenReturn(easyRandom.nextObject(Agency.class));
-    when(agencyPostcodeRangeRepository.save(any())).thenReturn(easyRandom.nextObject(
-        AgencyPostcodeRange.class));
+    when(agencyPostcodeRangeRepository.save(any()))
+        .thenReturn(easyRandom.nextObject(AgencyPostcodeRange.class));
 
     agencyPostcodeRangeAdminService.createPostcodeRanges(AGENCY_ID, postcodeRangeDTO);
 
-    verify(agencyPostcodeRangeRepository, times(1))
-        .save(any());
+    verify(agencyPostcodeRangeRepository, times(1)).save(any());
   }
 
   @Test
   void updatePostcodeRange_Should_ValidatePostcodeRanges() {
     when(agencyPostcodeRangeRepository.findAllByAgencyId(anyLong()))
         .thenReturn((Set.of(easyRandom.nextObject(AgencyPostcodeRange.class))));
-    when(agencyPostcodeRangeRepository.save(any())).thenReturn(easyRandom.nextObject(
-        AgencyPostcodeRange.class));
+    when(agencyPostcodeRangeRepository.save(any()))
+        .thenReturn(easyRandom.nextObject(AgencyPostcodeRange.class));
 
     agencyPostcodeRangeAdminService.updatePostcodeRange(AGENCY_ID, postcodeRangeDTO);
 
@@ -126,8 +116,8 @@ class AgencyPostcodeRangeAdminServiceTest {
   void updatePostcodeRange_Should_SavePostcodeRange_WhenEveryParameterIsValid() {
     when(agencyPostcodeRangeRepository.findAllByAgencyId(anyLong()))
         .thenReturn((Set.of(easyRandom.nextObject(AgencyPostcodeRange.class))));
-    when(agencyPostcodeRangeRepository.save(any())).thenReturn(easyRandom.nextObject(
-        AgencyPostcodeRange.class));
+    when(agencyPostcodeRangeRepository.save(any()))
+        .thenReturn(easyRandom.nextObject(AgencyPostcodeRange.class));
 
     agencyPostcodeRangeAdminService.updatePostcodeRange(AGENCY_ID, postcodeRangeDTO);
 
@@ -141,8 +131,8 @@ class AgencyPostcodeRangeAdminServiceTest {
 
     when(agencyPostcodeRangeRepository.findAllByAgencyId(anyLong()))
         .thenReturn(Set.of(agencyPostCodeRange));
-    when(agencyPostcodeRangeRepository.save(any())).thenReturn(easyRandom.nextObject(
-        AgencyPostcodeRange.class));
+    when(agencyPostcodeRangeRepository.save(any()))
+        .thenReturn(easyRandom.nextObject(AgencyPostcodeRange.class));
 
     agencyPostcodeRangeAdminService.updatePostcodeRange(AGENCY_ID, postcodeRangeDTO);
     ArgumentCaptor<Set<AgencyPostcodeRange>> captor = ArgumentCaptor.forClass((Class) List.class);
@@ -152,7 +142,8 @@ class AgencyPostcodeRangeAdminServiceTest {
 
   @Test
   void updatePostcodeRange_Should_Throw_NotFoundException_When_noPostcodeRangeExistsForAgency() {
-    assertThrows(NotFoundException.class,
+    assertThrows(
+        NotFoundException.class,
         () -> agencyPostcodeRangeAdminService.updatePostcodeRange(AGENCY_ID, postcodeRangeDTO));
   }
 }

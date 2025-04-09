@@ -27,75 +27,81 @@ class DataProtectionDTOBuilderTest {
   @Test
   void should_ReturnJsonString_When_DataProtectionResponsibleEntityIsSetToAgencyResponsible() {
     // given
-    Agency agency = Agency.builder().dataProtectionResponsibleEntity(
-        DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE)
-        .name("agency name")
-        .consultingTypeId(1)
-        .dataProtectionAgencyResponsibleContactData("{\"nameAndLegalForm\":\"name of legal entity\"}")
-        .build();
+    Agency agency =
+        Agency.builder()
+            .dataProtectionResponsibleEntity(DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE)
+            .name("agency name")
+            .consultingTypeId(1)
+            .dataProtectionAgencyResponsibleContactData(
+                "{\"nameAndLegalForm\":\"name of legal entity\"}")
+            .build();
     DataProtectionDTOBuilder dataProtectionDTOBuilder = new DataProtectionDTOBuilder(agency);
 
     // when
     DataProtectionDTO dataProtectionDTO = dataProtectionDTOBuilder.fromAgency();
 
     // then
-    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionDTO.DataProtectionResponsibleEntityEnum.AGENCY_RESPONSIBLE);
+    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionDTO.DataProtectionResponsibleEntityEnum.AGENCY_RESPONSIBLE);
 
-    DataProtectionContactDTO agencyDataProtectionResponsibleContact = dataProtectionDTO
-        .getAgencyDataProtectionResponsibleContact();
+    DataProtectionContactDTO agencyDataProtectionResponsibleContact =
+        dataProtectionDTO.getAgencyDataProtectionResponsibleContact();
     assertThat(agencyDataProtectionResponsibleContact).isNotNull();
-    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm()).isEqualTo("name of legal entity");
+    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm())
+        .isEqualTo("name of legal entity");
   }
 
   @Test
   void should_ReturnJsonString_When_DataProtectionResponsibleEntityIsSetToDataProtectionOfficer() {
     // given
-    Agency agency = Agency.builder().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
-        .name("agency name")
-        .consultingTypeId(1)
-        .dataProtectionOfficerContactData("{\"nameAndLegalForm\":\"name of legal entity\"}")
-        .build();
+    Agency agency =
+        Agency.builder()
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER)
+            .name("agency name")
+            .consultingTypeId(1)
+            .dataProtectionOfficerContactData("{\"nameAndLegalForm\":\"name of legal entity\"}")
+            .build();
     DataProtectionDTOBuilder dataProtectionDTOBuilder = new DataProtectionDTOBuilder(agency);
 
     // when
     DataProtectionDTO dataProtectionDTO = dataProtectionDTOBuilder.fromAgency();
 
     // then
-    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER);
+    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER);
 
-    DataProtectionContactDTO agencyDataProtectionResponsibleContact = dataProtectionDTO
-        .getDataProtectionOfficerContact();
+    DataProtectionContactDTO agencyDataProtectionResponsibleContact =
+        dataProtectionDTO.getDataProtectionOfficerContact();
     assertThat(agencyDataProtectionResponsibleContact).isNotNull();
-    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm()).isEqualTo("name of legal entity");
+    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm())
+        .isEqualTo("name of legal entity");
   }
-
 
   @Test
   void should_ReturnJsonString_When_DataProtectionResponsibleEntityIsSetToAlternativeData() {
     // given
-    Agency agency = Agency.builder().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntity.ALTERNATIVE_REPRESENTATIVE)
-        .name("agency name")
-        .consultingTypeId(1)
-        .dataProtectionAlternativeContactData("{\"nameAndLegalForm\":\"name of legal entity\"}")
-        .build();
+    Agency agency =
+        Agency.builder()
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntity.ALTERNATIVE_REPRESENTATIVE)
+            .name("agency name")
+            .consultingTypeId(1)
+            .dataProtectionAlternativeContactData("{\"nameAndLegalForm\":\"name of legal entity\"}")
+            .build();
     DataProtectionDTOBuilder dataProtectionDTOBuilder = new DataProtectionDTOBuilder(agency);
 
     // when
     DataProtectionDTO dataProtectionDTO = dataProtectionDTOBuilder.fromAgency();
 
     // then
-    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionResponsibleEntityEnum.ALTERNATIVE_REPRESENTATIVE);
+    assertThat(dataProtectionDTO.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionResponsibleEntityEnum.ALTERNATIVE_REPRESENTATIVE);
 
-    DataProtectionContactDTO agencyDataProtectionResponsibleContact = dataProtectionDTO
-        .getAlternativeDataProtectionRepresentativeContact();
+    DataProtectionContactDTO agencyDataProtectionResponsibleContact =
+        dataProtectionDTO.getAlternativeDataProtectionRepresentativeContact();
     assertThat(agencyDataProtectionResponsibleContact).isNotNull();
-    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm()).isEqualTo("name of legal entity");
+    assertThat(agencyDataProtectionResponsibleContact.getNameAndLegalForm())
+        .isEqualTo("name of legal entity");
   }
-
-
 }

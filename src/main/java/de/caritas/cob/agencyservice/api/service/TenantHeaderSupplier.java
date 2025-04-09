@@ -1,8 +1,8 @@
 package de.caritas.cob.agencyservice.api.service;
 
 import de.caritas.cob.agencyservice.api.tenant.TenantContext;
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +27,7 @@ public class TenantHeaderSupplier {
 
   public Optional<Long> getTenantFromHeader() {
     HttpServletRequest request =
-        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-            .getRequest();
+        ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     try {
       return Optional.of(Long.parseLong(request.getHeader("tenantId")));
     } catch (NumberFormatException exception) {

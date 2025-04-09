@@ -1,8 +1,6 @@
 package de.caritas.cob.agencyservice.api.exception.httpresponses;
 
-/**
- * Exception, when the offline status of an agency is invalid.
- */
+/** Exception, when the offline status of an agency is invalid. */
 public class InvalidOfflineStatusException extends CustomValidationHttpStatusException {
 
   /*
@@ -20,5 +18,4 @@ public class InvalidOfflineStatusException extends CustomValidationHttpStatusExc
   public InvalidOfflineStatusException(HttpStatusExceptionReason reason) {
     super(reason);
   }
-
 }
