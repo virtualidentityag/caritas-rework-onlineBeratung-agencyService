@@ -15,14 +15,11 @@ import org.springframework.http.HttpStatus;
 @RunWith(MockitoJUnitRunner.class)
 public class LogServiceTest {
 
-  @Mock
-  Exception exception;
+  @Mock Exception exception;
 
-  @Mock
-  BadRequestException badRequestException;
+  @Mock BadRequestException badRequestException;
 
-  @Mock
-  NumberFormatException numberFormatException;
+  @Mock NumberFormatException numberFormatException;
 
   @Test
   public void logDatabaseError_Should_LogExceptionStackTrace() {
@@ -71,5 +68,4 @@ public class LogServiceTest {
     LogService.logError(exception);
     verify(exception, atLeastOnce()).printStackTrace(any(PrintWriter.class));
   }
-
 }

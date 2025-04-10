@@ -7,15 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 
-/**
- * Service for logging.
- */
+/** Service for logging. */
 public class LogService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(LogService.class);
 
-  private LogService() {
-  }
+  private LogService() {}
 
   /**
    * Logs a database error.
@@ -66,11 +63,11 @@ public class LogService {
    * Logs a warning.
    *
    * @param httpStatus status to be logged
-   * @param exception  the exception to be logged
+   * @param exception the exception to be logged
    */
   public static void logWarning(HttpStatus httpStatus, Exception exception) {
-    LOGGER.warn("AgencyService API: {}: {}", httpStatus.getReasonPhrase(),
-        getStackTrace(exception));
+    LOGGER.warn(
+        "AgencyService API: {}: {}", httpStatus.getReasonPhrase(), getStackTrace(exception));
   }
 
   /**
@@ -85,7 +82,7 @@ public class LogService {
   /**
    * Logs a error.
    *
-   * @param exception  the exception to be logged
+   * @param exception the exception to be logged
    */
   public static void logError(Exception exception) {
     LOGGER.error("AgencyService API: {}", getStackTrace(exception));

@@ -1,9 +1,9 @@
 package de.caritas.cob.agencyservice.api.tenant;
 
 import de.caritas.cob.agencyservice.api.repository.TenantUnaware;
-import java.lang.annotation.Annotation;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.lang.annotation.Annotation;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,13 +21,12 @@ public class TenantAspect {
 
   private static final Long TECHNICAL_TENANT_ID = 0L;
 
-  @PersistenceContext
-  public EntityManager entityManager;
+  @PersistenceContext public EntityManager entityManager;
 
   @Before("execution(* de.caritas.cob.agencyservice.api.repository..*(..)))")
   public void beforeQueryAspect(JoinPoint joinPoint) {
-    Annotation annotation = joinPoint.getSignature().getDeclaringType()
-        .getAnnotation(TenantUnaware.class);
+    Annotation annotation =
+        joinPoint.getSignature().getDeclaringType().getAnnotation(TenantUnaware.class);
     if (annotation != null) {
       return;
     }
@@ -36,8 +35,7 @@ public class TenantAspect {
       return;
     }
 
-    Filter filter = entityManager.unwrap(Session.class)
-        .enableFilter("tenantFilter");
+    Filter filter = entityManager.unwrap(Session.class).enableFilter("tenantFilter");
     filter.setParameter("tenantId", TenantContext.getCurrentTenant());
     filter.validate();
   }

@@ -28,12 +28,16 @@ class AgencyPostcodeRangeResponseDTOBuilderTest {
   @Test
   void build_Should_Return_ValidAgencyPostcodeRangeResponseDTO() {
 
-    var result = AgencyPostcodeRangeResponseDTOBuilder
-        .getInstance(Set.of(agencyPostCodeRange), agencyPostCodeRange.getAgency().getId())
-        .build();
+    var result =
+        AgencyPostcodeRangeResponseDTOBuilder.getInstance(
+                Set.of(agencyPostCodeRange), agencyPostCodeRange.getAgency().getId())
+            .build();
 
     assertEquals(
-        this.agencyPostCodeRange.getPostcodeFrom() + "-" + this.agencyPostCodeRange.getPostcodeTo() + ";",
+        this.agencyPostCodeRange.getPostcodeFrom()
+            + "-"
+            + this.agencyPostCodeRange.getPostcodeTo()
+            + ";",
         result.getEmbedded().getPostcodeRanges());
     assertEquals(this.agencyPostCodeRange.getAgency().getId(), result.getEmbedded().getId());
   }
@@ -41,22 +45,23 @@ class AgencyPostcodeRangeResponseDTOBuilderTest {
   @Test
   void build_Should_Return_ValidHalLinks() {
 
-    var result = AgencyPostcodeRangeResponseDTOBuilder
-        .getInstance(Set.of(this.agencyPostCodeRange), this.agencyPostCodeRange.getAgency().getId())
-        .build();
+    var result =
+        AgencyPostcodeRangeResponseDTOBuilder.getInstance(
+                Set.of(this.agencyPostCodeRange), this.agencyPostCodeRange.getAgency().getId())
+            .build();
     var defaultLinks = result.getLinks();
     var generatedId = result.getEmbedded().getId();
 
-    assertThat(defaultLinks.getSelf().getHref(),
-        endsWith("/agencyadmin/postcoderanges/" + generatedId));
+    assertThat(
+        defaultLinks.getSelf().getHref(), endsWith("/agencyadmin/postcoderanges/" + generatedId));
     assertEquals(defaultLinks.getSelf().getMethod().getValue(), MethodEnum.GET.getValue());
     assertThat(defaultLinks.getDelete(), notNullValue());
-    assertThat(defaultLinks.getDelete().getHref(),
-        endsWith("/agencyadmin/postcoderanges/" + generatedId));
+    assertThat(
+        defaultLinks.getDelete().getHref(), endsWith("/agencyadmin/postcoderanges/" + generatedId));
     assertEquals(defaultLinks.getDelete().getMethod().getValue(), MethodEnum.DELETE.getValue());
     assertThat(defaultLinks.getUpdate(), notNullValue());
-    assertThat(defaultLinks.getUpdate().getHref(),
-        endsWith("/agencyadmin/postcoderanges/" + generatedId));
+    assertThat(
+        defaultLinks.getUpdate().getHref(), endsWith("/agencyadmin/postcoderanges/" + generatedId));
     assertEquals(defaultLinks.getUpdate().getMethod().getValue(), MethodEnum.PUT.getValue());
   }
 }

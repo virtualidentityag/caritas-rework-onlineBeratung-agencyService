@@ -16,8 +16,7 @@ import org.springframework.security.access.AccessDeniedException;
 @ExtendWith(MockitoExtension.class)
 class AgencyTenantValidatorTest {
 
-  @Mock
-  AuthenticatedUser authenticatedUser;
+  @Mock AuthenticatedUser authenticatedUser;
   AgencyTenantValidator agencyTenantValidator;
 
   @BeforeEach
@@ -37,7 +36,8 @@ class AgencyTenantValidatorTest {
   }
 
   @Test
-  void validate_shouldNotThrowException_When_AuthenticatedUserIsNotSuperAdminAndTenantIdMatchesTenantContext() {
+  void
+      validate_shouldNotThrowException_When_AuthenticatedUserIsNotSuperAdminAndTenantIdMatchesTenantContext() {
     TenantContext.setCurrentTenant(1L);
     var validateAgencyDTO = ValidateAgencyDTO.builder().tenantId(1L).build();
     try {
@@ -48,20 +48,23 @@ class AgencyTenantValidatorTest {
   }
 
   @Test
-  void validate_shouldThrowAccessDeniedException_When_AuthenticatedUserIsNotSuperAdminAndTenantIdDoesNotMatchTenantContext() {
+  void
+      validate_shouldThrowAccessDeniedException_When_AuthenticatedUserIsNotSuperAdminAndTenantIdDoesNotMatchTenantContext() {
     TenantContext.setCurrentTenant(2L);
     var validateAgencyDTO = ValidateAgencyDTO.builder().tenantId(1L).build();
     try {
       agencyTenantValidator.validate(validateAgencyDTO);
     } catch (AccessDeniedException e) {
-      assert e.getMessage().equals("Access denied. Tenant id in the request does not match current tenant.");
+      assert e.getMessage()
+          .equals("Access denied. Tenant id in the request does not match current tenant.");
     } catch (Exception ex) {
       Fail.fail("Unexpected exception: " + ex.getMessage());
     }
   }
 
   @Test
-  void validate_shouldNotThrowException_When_AuthenticatedUserIsSuperAdminAndTenantIdNotMatchingTenantContext() {
+  void
+      validate_shouldNotThrowException_When_AuthenticatedUserIsSuperAdminAndTenantIdNotMatchingTenantContext() {
     TenantContext.setCurrentTenant(0L);
     when(authenticatedUser.isTenantSuperAdmin()).thenReturn(true);
     var validateAgencyDTO = ValidateAgencyDTO.builder().tenantId(1L).build();
@@ -71,7 +74,4 @@ class AgencyTenantValidatorTest {
       Fail.fail("Should not throw exception");
     }
   }
-
-
-
 }

@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AppointmentService {
 
-  private final @NonNull AppointmentServiceAgencyApiControllerFactory appointmentServiceAgencyApiControllerFactory;
+  private final @NonNull AppointmentServiceAgencyApiControllerFactory
+      appointmentServiceAgencyApiControllerFactory;
   private final @NonNull SecurityHeaderSupplier securityHeaderSupplier;
   private final @NonNull TenantHeaderSupplier tenantHeaderSupplier;
 
@@ -44,11 +45,9 @@ public class AppointmentService {
     controllerApi.deleteAgency(agency.getId());
   }
 
-
   protected void addDefaultHeaders(ApiClient apiClient) {
     HttpHeaders headers = this.securityHeaderSupplier.getKeycloakAndCsrfHttpHeaders();
     tenantHeaderSupplier.addTenantHeader(headers);
     headers.forEach((key, value) -> apiClient.addDefaultHeader(key, value.iterator().next()));
   }
-
 }

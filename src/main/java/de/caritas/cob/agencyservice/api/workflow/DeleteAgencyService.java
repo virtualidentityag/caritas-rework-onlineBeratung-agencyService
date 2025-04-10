@@ -2,15 +2,13 @@ package de.caritas.cob.agencyservice.api.workflow;
 
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agency.AgencyRepository;
-import java.util.List;
-
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRangeRepository;
+import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import jakarta.transaction.Transactional;
 
 @Component
 @RequiredArgsConstructor

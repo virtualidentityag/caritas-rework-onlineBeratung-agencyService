@@ -21,7 +21,6 @@ public class TenantService {
   @Value("${multitenancy.enabled}")
   private boolean multitenancy;
 
-
   @Value("${feature.multitenancy.with.single.domain.enabled}")
   private boolean multitenancyWithSingleDomain;
 
@@ -45,12 +44,14 @@ public class TenantService {
     if (multitenancyWithSingleDomain) {
       return getRestrictedTenantDataBySubdomain(getMainTenantSubdomain());
     }
-    throw new IllegalStateException("Main tenant can only be retrieved if multitenancy with single domain is enabled.");
+    throw new IllegalStateException(
+        "Main tenant can only be retrieved if multitenancy with single domain is enabled.");
   }
 
   private String getMainTenantSubdomain() {
     return applicationSettingsService
         .getApplicationSettings()
-        .getMainTenantSubdomainForSingleDomainMultitenancy().getValue();
+        .getMainTenantSubdomainForSingleDomainMultitenancy()
+        .getValue();
   }
 }

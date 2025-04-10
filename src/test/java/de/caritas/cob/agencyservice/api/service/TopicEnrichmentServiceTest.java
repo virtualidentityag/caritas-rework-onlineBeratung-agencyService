@@ -5,29 +5,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 import de.caritas.cob.agencyservice.api.model.AgencyTopicsDTO;
+import de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import de.caritas.cob.agencyservice.topicservice.generated.web.model.TopicDTO;
 
 @ExtendWith(MockitoExtension.class)
 class TopicEnrichmentServiceTest {
 
-  @InjectMocks
-  TopicEnrichmentService topicEnrichmentService;
+  @InjectMocks TopicEnrichmentService topicEnrichmentService;
 
-  @Mock
-  TopicService topicService;
+  @Mock TopicService topicService;
 
   @Test
   void enrichTopicIdsWithTopicData_Should_EnrichAgencyWithTopicDataFromTopicService() {
     // given
-    when(topicService.getAllTopics()).thenReturn(
-        newArrayList(new TopicDTO().id(1L).name("first topic").description("desc"),
-            new TopicDTO().id(2L).name("second topic").description("desc")));
+    when(topicService.getAllTopics())
+        .thenReturn(
+            newArrayList(
+                new TopicDTO().id(1L).name("first topic").description("desc"),
+                new TopicDTO().id(2L).name("second topic").description("desc")));
     List<Integer> topicIds = newArrayList(1, 2);
 
     // when
@@ -35,17 +35,13 @@ class TopicEnrichmentServiceTest {
 
     // then
     assertThat(result).isNotEmpty();
-    assertThat(result)
-        .extracting(AgencyTopicsDTO::getName)
-        .contains("first topic", "second topic");
+    assertThat(result).extracting(AgencyTopicsDTO::getName).contains("first topic", "second topic");
   }
-
 
   @Test
   void enrichTopicIdsWithTopicData_Should_ReturnEmptyListIfNoTopicsAreDefined() {
     // given
-    when(topicService.getAllTopics()).thenReturn(
-        newArrayList());
+    when(topicService.getAllTopics()).thenReturn(newArrayList());
     List<Integer> topicIds = newArrayList(1, 2);
 
     // when
@@ -55,12 +51,10 @@ class TopicEnrichmentServiceTest {
     assertThat(result).isEmpty();
   }
 
-
   @Test
   void enrichTopicIdsWithTopicData_Should_ReturnEmptyListIfTopicsListIsNull() {
     // given
-    when(topicService.getAllTopics()).thenReturn(
-        null);
+    when(topicService.getAllTopics()).thenReturn(null);
     List<Integer> topicIds = newArrayList(1, 2);
 
     // when
@@ -73,9 +67,11 @@ class TopicEnrichmentServiceTest {
   @Test
   void enrichTopicIdsWithTopicData_Should_ReturnEmptyListIfTopicIdDoNotMatch() {
     // given
-    when(topicService.getAllTopics()).thenReturn(
-        newArrayList(new TopicDTO().id(3L).name("third topic").description("desc"),
-            new TopicDTO().id(4L).name("fourth topic").description("desc")));
+    when(topicService.getAllTopics())
+        .thenReturn(
+            newArrayList(
+                new TopicDTO().id(3L).name("third topic").description("desc"),
+                new TopicDTO().id(4L).name("fourth topic").description("desc")));
     List<Integer> topicIds = newArrayList(1, 2);
 
     // when

@@ -21,13 +21,13 @@ public class ApiDefaultResponseEntityExceptionHandler {
    * retained by {@link ApiResponseEntityExceptionHandler}. For the caller side does not need to
    * know the exact error stack trace, this method catches the trace and logs it.
    *
-   * @param ex      the thrown {@link RuntimeException}
+   * @param ex the thrown {@link RuntimeException}
    * @param request the {@link WebRequest}
    * @return a {@link ResponseEntity}
    */
   @ExceptionHandler({RuntimeException.class})
-  public ResponseEntity<Object> handleInternal(final RuntimeException ex,
-                                               final WebRequest request) {
+  public ResponseEntity<Object> handleInternal(
+      final RuntimeException ex, final WebRequest request) {
     LogService.logInternalServerError(ex);
 
     return new ResponseEntity<>(EMPTY_HEADERS, HttpStatus.INTERNAL_SERVER_ERROR);

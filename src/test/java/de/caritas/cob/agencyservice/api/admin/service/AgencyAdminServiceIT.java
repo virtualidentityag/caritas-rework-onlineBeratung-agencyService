@@ -50,5 +50,4 @@ public class AgencyAdminServiceIT extends AgencyAdminServiceITBase {
   public void getAgency_Should_returnExpectedAgency_When_agencyWithIdExists() {
     super.getAgency_Should_returnExpectedAgency_When_agencyWithIdExists();
   }
-
 }

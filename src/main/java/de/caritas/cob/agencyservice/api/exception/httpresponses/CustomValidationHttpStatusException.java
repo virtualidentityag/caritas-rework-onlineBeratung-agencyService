@@ -8,9 +8,7 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * Custom validation exception for http status with reason.
- */
+/** Custom validation exception for http status with reason. */
 @Getter
 public abstract class CustomValidationHttpStatusException extends RuntimeException {
 
@@ -25,17 +23,15 @@ public abstract class CustomValidationHttpStatusException extends RuntimeExcepti
     this.httpStatus = BAD_REQUEST;
   }
 
-  CustomValidationHttpStatusException(HttpStatusExceptionReason httpStatusExceptionReason,
-      HttpStatus httpStatus) {
+  CustomValidationHttpStatusException(
+      HttpStatusExceptionReason httpStatusExceptionReason, HttpStatus httpStatus) {
     super();
     this.loggingMethod = LogService::logWarning;
     this.httpStatusExceptionReason = httpStatusExceptionReason;
     this.httpStatus = httpStatus;
   }
 
-  /**
-   * Executes the non null logging method.
-   */
+  /** Executes the non null logging method. */
   public void executeLogging() {
     if (nonNull(this.loggingMethod)) {
       this.loggingMethod.accept(this);

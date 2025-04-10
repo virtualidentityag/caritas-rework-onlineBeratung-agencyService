@@ -39,29 +39,29 @@ public class TopicEnrichmentService {
     }
   }
 
-  private List<AgencyTopicsDTO> enrichTopicIds(List<TopicDTO> availableTopics, List<Integer> topicIds) {
+  private List<AgencyTopicsDTO> enrichTopicIds(
+      List<TopicDTO> availableTopics, List<Integer> topicIds) {
 
     if (availableTopics == null) {
       return Collections.emptyList();
     }
     // Create a map of availableTopics to quickly access TopicDTO by id
-    Map<Long, String> topicMap = availableTopics.stream()
-        .collect(Collectors.toMap(TopicDTO::getId, TopicDTO::getName));
+    Map<Long, String> topicMap =
+        availableTopics.stream().collect(Collectors.toMap(TopicDTO::getId, TopicDTO::getName));
 
     // Filter and map the topicIds to AgencyTopicsDTOs, using the topicMap for fast lookup
     return topicIds.stream()
-        .map(id -> {
-          Long topicId = Long.valueOf(id);
-          String topicName = topicMap.get(topicId);
+        .map(
+            id -> {
+              Long topicId = Long.valueOf(id);
+              String topicName = topicMap.get(topicId);
 
-          // Only create an AgencyTopicsDTO if the topicName exists
-          if (topicName != null) {
-            return new AgencyTopicsDTO()
-                .id(topicId)
-                .name(topicName);
-          }
-          return null;
-        })
+              // Only create an AgencyTopicsDTO if the topicName exists
+              if (topicName != null) {
+                return new AgencyTopicsDTO().id(topicId).name(topicName);
+              }
+              return null;
+            })
         .filter(Objects::nonNull)
         .toList();
   }

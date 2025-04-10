@@ -20,28 +20,30 @@ class AgencyDemographicsValidatorTest {
   @Test
   void validate_Should_ThrowValidationException_When_DemographicsDTOIsNull() {
     // given, when
-    InvalidDemographicsException exception = assertThrows(InvalidDemographicsException.class,
-        executeValidation(ValidateAgencyDTO.builder()));
+    InvalidDemographicsException exception =
+        assertThrows(
+            InvalidDemographicsException.class, executeValidation(ValidateAgencyDTO.builder()));
 
     // then
-    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_NULL_OBJECT).isEqualTo(
-        exception.getHttpStatusExceptionReason());
+    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_NULL_OBJECT)
+        .isEqualTo(exception.getHttpStatusExceptionReason());
   }
 
   @Test
   void validate_Should_ThrowValidationException_When_DemographicsDTOIsEmpty() {
     // given, when
-    InvalidDemographicsException exception = assertThrows(InvalidDemographicsException.class,
-        executeValidation(ValidateAgencyDTO.builder().demographicsDTO(new DemographicsDTO())));
+    InvalidDemographicsException exception =
+        assertThrows(
+            InvalidDemographicsException.class,
+            executeValidation(ValidateAgencyDTO.builder().demographicsDTO(new DemographicsDTO())));
 
     // then
-    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_AGE_FROM).isEqualTo(
-        exception.getHttpStatusExceptionReason());
+    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_AGE_FROM)
+        .isEqualTo(exception.getHttpStatusExceptionReason());
   }
 
   private Executable executeValidation(ValidateAgencyDTOBuilder demographicsDTOBuilder) {
-    return () -> validator.validate(demographicsDTOBuilder
-        .build());
+    return () -> validator.validate(demographicsDTOBuilder.build());
   }
 
   @Test
@@ -50,22 +52,25 @@ class AgencyDemographicsValidatorTest {
     DemographicsDTO demographicsDTO = new DemographicsDTO().ageFrom(10);
 
     // when
-    InvalidDemographicsException exception = assertThrows(InvalidDemographicsException.class,
-        executeValidation(ValidateAgencyDTO.builder().demographicsDTO(demographicsDTO)));
+    InvalidDemographicsException exception =
+        assertThrows(
+            InvalidDemographicsException.class,
+            executeValidation(ValidateAgencyDTO.builder().demographicsDTO(demographicsDTO)));
 
     // then
-    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS).isEqualTo(
-        exception.getHttpStatusExceptionReason());
+    assertThat(HttpStatusExceptionReason.INVALID_DEMOGRAPHICS_EMPTY_GENDERS)
+        .isEqualTo(exception.getHttpStatusExceptionReason());
   }
 
   @Test
   void validate_Should_PassValidation_When_AgeFromAndGendersAreProvided() {
     // given
-    DemographicsDTO demographicsDTO = new DemographicsDTO().ageFrom(10).genders(Lists.newArrayList(
-        Gender.NOT_PROVIDED.toString()));
+    DemographicsDTO demographicsDTO =
+        new DemographicsDTO()
+            .ageFrom(10)
+            .genders(Lists.newArrayList(Gender.NOT_PROVIDED.toString()));
 
     // when
     validator.validate(ValidateAgencyDTO.builder().demographicsDTO(demographicsDTO).build());
   }
-
 }
