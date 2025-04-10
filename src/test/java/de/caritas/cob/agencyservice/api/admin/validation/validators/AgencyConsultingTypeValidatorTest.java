@@ -6,12 +6,12 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import de.caritas.cob.agencyservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import de.caritas.cob.agencyservice.api.admin.validation.validators.annotation.CreateAgencyValidator;
 import de.caritas.cob.agencyservice.api.admin.validation.validators.model.ValidateAgencyDTO;
 import de.caritas.cob.agencyservice.api.exception.MissingConsultingTypeException;
 import de.caritas.cob.agencyservice.api.exception.httpresponses.InvalidConsultingTypeException;
 import de.caritas.cob.agencyservice.api.manager.consultingtype.ConsultingTypeManager;
+import de.caritas.cob.agencyservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTO;
 import org.jeasy.random.EasyRandom;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +19,7 @@ import org.mockito.Mock;
 
 public class AgencyConsultingTypeValidatorTest {
 
-  @Mock
-  private ConsultingTypeManager consultingTypeManager;
+  @Mock private ConsultingTypeManager consultingTypeManager;
 
   private ValidateAgencyDTO validateAgencyDto;
 
@@ -39,7 +38,8 @@ public class AgencyConsultingTypeValidatorTest {
       throws MissingConsultingTypeException {
     this.validateAgencyDto.setConsultingType(-1);
 
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt())).thenThrow(new MissingConsultingTypeException(""));
+    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
+        .thenThrow(new MissingConsultingTypeException(""));
 
     new AgencyConsultingTypeValidator(consultingTypeManager).validate(validateAgencyDto);
   }
@@ -49,7 +49,8 @@ public class AgencyConsultingTypeValidatorTest {
       throws MissingConsultingTypeException {
     this.validateAgencyDto.setConsultingType(CONSULTING_TYPE_AIDS);
 
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt())).thenReturn(consultingTypeSettings);
+    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
+        .thenReturn(consultingTypeSettings);
 
     new AgencyConsultingTypeValidator(consultingTypeManager).validate(validateAgencyDto);
   }
@@ -59,5 +60,4 @@ public class AgencyConsultingTypeValidatorTest {
     assertTrue(
         AgencyConsultingTypeValidator.class.isAnnotationPresent(CreateAgencyValidator.class));
   }
-
 }

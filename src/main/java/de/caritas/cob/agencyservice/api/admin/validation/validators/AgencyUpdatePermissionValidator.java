@@ -14,17 +14,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class AgencyUpdatePermissionValidator implements ConcreteAgencyValidator {
 
-  @Autowired
-  AuthenticatedUser authenticatedUser;
+  @Autowired AuthenticatedUser authenticatedUser;
 
-  @Autowired
-  UserAdminService userAdminService;
+  @Autowired UserAdminService userAdminService;
 
   public void validate(ValidateAgencyDTO validateAgencyDto) {
     if (authenticatedUser.hasRestrictedAgencyPriviliges()) {
       var adminAgencyIds = userAdminService.getAdminUserAgencyIds(authenticatedUser.getUserId());
       if (!adminAgencyIds.contains(validateAgencyDto.getId())) {
-        log.warn("Admin user with id does not have permission to this agency: {}", authenticatedUser.getUserId(), validateAgencyDto.getId());
+        log.warn(
+            "Admin user with id does not have permission to this agency: {}",
+            authenticatedUser.getUserId(),
+            validateAgencyDto.getId());
         throw new AgencyAccessDeniedException();
       }
     }

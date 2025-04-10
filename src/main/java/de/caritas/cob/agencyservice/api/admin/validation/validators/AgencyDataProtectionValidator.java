@@ -20,7 +20,8 @@ public class AgencyDataProtectionValidator implements ConcreteAgencyValidator {
 
   private final @NonNull ApplicationSettingsService applicationSettingsService;
 
-  private final @NonNull AgencyDataProtectionValidationService agencyDataProtectionValidationService;
+  private final @NonNull AgencyDataProtectionValidationService
+      agencyDataProtectionValidationService;
 
   @Value("${feature.multitenancy.with.single.domain.enabled}")
   private boolean multitenancyWithSingleDomain;
@@ -30,17 +31,24 @@ public class AgencyDataProtectionValidator implements ConcreteAgencyValidator {
 
     var tenant = tenantService.getRestrictedTenantDataByTenantId(validateAgencyDto.getTenantId());
 
-    if (Boolean.TRUE.equals(tenant.getSettings().getFeatureCentralDataProtectionTemplateEnabled())) {
-      log.info("Validating agency data protection for agency with id {}.", validateAgencyDto.getId());
+    if (Boolean.TRUE.equals(
+        tenant.getSettings().getFeatureCentralDataProtectionTemplateEnabled())) {
+      log.info(
+          "Validating agency data protection for agency with id {}.", validateAgencyDto.getId());
       agencyDataProtectionValidationService.validate(validateAgencyDto);
     }
 
     if (multitenancyWithSingleDomain) {
-      var mainTenantSubdomainForSingleDomainMultitenancy = applicationSettingsService.getApplicationSettings()
-          .getMainTenantSubdomainForSingleDomainMultitenancy();
-      de.caritas.cob.agencyservice.tenantservice.generated.web.model.RestrictedTenantDTO mainTenant = tenantService.getRestrictedTenantDataBySubdomain(
-          mainTenantSubdomainForSingleDomainMultitenancy.getValue());
-      if (Boolean.TRUE.equals(mainTenant.getSettings().getFeatureCentralDataProtectionTemplateEnabled())) {
+      var mainTenantSubdomainForSingleDomainMultitenancy =
+          applicationSettingsService
+              .getApplicationSettings()
+              .getMainTenantSubdomainForSingleDomainMultitenancy();
+      de.caritas.cob.agencyservice.tenantservice.generated.web.model.RestrictedTenantDTO
+          mainTenant =
+              tenantService.getRestrictedTenantDataBySubdomain(
+                  mainTenantSubdomainForSingleDomainMultitenancy.getValue());
+      if (Boolean.TRUE.equals(
+          mainTenant.getSettings().getFeatureCentralDataProtectionTemplateEnabled())) {
         agencyDataProtectionValidationService.validate(validateAgencyDto);
       }
     }

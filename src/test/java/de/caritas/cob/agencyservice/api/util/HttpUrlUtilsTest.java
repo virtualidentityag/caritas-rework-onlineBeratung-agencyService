@@ -21,9 +21,11 @@ class HttpUrlUtilsTest {
   @Test
   void removeHttpPrefix_Should_GetExceptionIfSiteIsNull() {
     // then
-    assertThrows(NullPointerException.class, () -> {
-      // when
-      removeHttpPrefix(null);
-    });
+    assertThrows(
+        NullPointerException.class,
+        () -> {
+          // when
+          removeHttpPrefix(null);
+        });
   }
 }

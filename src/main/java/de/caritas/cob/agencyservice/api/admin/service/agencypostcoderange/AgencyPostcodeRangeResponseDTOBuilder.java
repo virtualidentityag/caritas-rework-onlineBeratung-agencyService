@@ -21,11 +21,10 @@ public class AgencyPostcodeRangeResponseDTOBuilder implements HalLinkBuilder {
 
   private final Set<AgencyPostcodeRange> agencyPostcodeRanges;
   private final Long agencyId;
-  private final PostcodeRangeTransformer postcodeRangeTransformer =
-      new PostcodeRangeTransformer();
+  private final PostcodeRangeTransformer postcodeRangeTransformer = new PostcodeRangeTransformer();
 
-  private AgencyPostcodeRangeResponseDTOBuilder(Set<AgencyPostcodeRange> agencyPostcodeRanges,
-      Long agencyId) {
+  private AgencyPostcodeRangeResponseDTOBuilder(
+      Set<AgencyPostcodeRange> agencyPostcodeRanges, Long agencyId) {
     this.agencyPostcodeRanges = agencyPostcodeRanges;
     this.agencyId = agencyId;
   }
@@ -67,20 +66,19 @@ public class AgencyPostcodeRangeResponseDTOBuilder implements HalLinkBuilder {
 
   private HalLink buildSelfLink() {
     return buildHalLink(
-        methodOn(AgencyadminApi.class).getAgencyPostcodeRanges(this.agencyId),
-        MethodEnum.GET);
+        methodOn(AgencyadminApi.class).getAgencyPostcodeRanges(this.agencyId), MethodEnum.GET);
   }
 
   private HalLink buildUpdateLink() {
     return buildHalLink(
         methodOn(AgencyadminApi.class)
-            .updateAgencyPostcodeRange(this.agencyId, fromAgencyPostCodeRanges()), MethodEnum.PUT);
+            .updateAgencyPostcodeRange(this.agencyId, fromAgencyPostCodeRanges()),
+        MethodEnum.PUT);
   }
 
   private HalLink buildDeleteLink() {
     return buildHalLink(
-        methodOn(AgencyadminApi.class).deleteAgencyPostcodeRange(this.agencyId),
-        MethodEnum.DELETE);
+        methodOn(AgencyadminApi.class).deleteAgencyPostcodeRange(this.agencyId), MethodEnum.DELETE);
   }
 
   private PostcodeRangeDTO fromAgencyPostCodeRanges() {

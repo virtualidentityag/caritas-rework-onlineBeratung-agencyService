@@ -6,11 +6,10 @@ public class MissingConsultingTypeException extends Exception {
 
   /**
    * Exception, when settings for an requested consulting type are missing
-   * 
+   *
    * @param message
    */
   public MissingConsultingTypeException(String message) {
     super(message);
   }
-
 }

@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-/**
- * Validator registry for an agency.
- */
+/** Validator registry for an agency. */
 @Service
 @RequiredArgsConstructor
 public class AgencyValidator {
@@ -30,10 +28,7 @@ public class AgencyValidator {
    * @param agencyDto (required)
    */
   public void validate(AgencyDTO agencyDto) {
-    this.applicationContext
-        .getBeansOfType(ConcreteAgencyValidator.class)
-        .values()
-        .stream()
+    this.applicationContext.getBeansOfType(ConcreteAgencyValidator.class).values().stream()
         .filter(c -> c.getClass().isAnnotationPresent(CreateAgencyValidator.class))
         .forEach(validator -> validator.validate(fromAgencyDto(agencyDto)));
   }
@@ -44,10 +39,7 @@ public class AgencyValidator {
    * @param updateAgencyDTO (required)
    */
   public void validate(Long agencyId, UpdateAgencyDTO updateAgencyDTO) {
-    this.applicationContext
-        .getBeansOfType(ConcreteAgencyValidator.class)
-        .values()
-        .stream()
+    this.applicationContext.getBeansOfType(ConcreteAgencyValidator.class).values().stream()
         .filter(c -> c.getClass().isAnnotationPresent(UpdateAgencyValidator.class))
         .forEach(validator -> validator.validate(fromUpdateAgencyDto(agencyId, updateAgencyDTO)));
   }
@@ -62,7 +54,11 @@ public class AgencyValidator {
   }
 
   private ValidateAgencyDTO fromUpdateAgencyDto(Long agencyId, UpdateAgencyDTO updateAgencyDTO) {
-    var existingAgency = agencyRepository.findById(agencyId).orElseThrow(() -> new BadRequestException("Agency with id " + agencyId + "not found!"));
+    var existingAgency =
+        agencyRepository
+            .findById(agencyId)
+            .orElseThrow(
+                () -> new BadRequestException("Agency with id " + agencyId + "not found!"));
     return ValidateAgencyDTO.builder()
         .id(agencyId)
         .postcode(updateAgencyDTO.getPostcode())

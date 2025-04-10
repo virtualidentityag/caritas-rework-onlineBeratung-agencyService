@@ -14,10 +14,12 @@ public class DataProtectionConverter {
       agencyBuilder.dataProtectionResponsibleEntity(convertEnums(dataProtectionDTO));
       agencyBuilder.dataProtectionOfficerContactData(
           JsonConverter.convertToJson(dataProtectionDTO.getDataProtectionOfficerContact()));
-      agencyBuilder.dataProtectionAgencyResponsibleContactData(JsonConverter.convertToJson(
-          dataProtectionDTO.getAgencyDataProtectionResponsibleContact()));
-      agencyBuilder.dataProtectionAlternativeContactData(JsonConverter.convertToJson(
-          dataProtectionDTO.getAlternativeDataProtectionRepresentativeContact()));
+      agencyBuilder.dataProtectionAgencyResponsibleContactData(
+          JsonConverter.convertToJson(
+              dataProtectionDTO.getAgencyDataProtectionResponsibleContact()));
+      agencyBuilder.dataProtectionAlternativeContactData(
+          JsonConverter.convertToJson(
+              dataProtectionDTO.getAlternativeDataProtectionRepresentativeContact()));
     } else {
       nullifyDataProtectionAttributes(agencyBuilder);
     }
@@ -30,8 +32,7 @@ public class DataProtectionConverter {
     agencyBuilder.dataProtectionAlternativeContactData(null);
   }
 
-  private static DataProtectionResponsibleEntity convertEnums(
-      DataProtectionDTO dataProtectionDTO) {
+  private static DataProtectionResponsibleEntity convertEnums(DataProtectionDTO dataProtectionDTO) {
     var dataProtectionEntity = dataProtectionDTO.getDataProtectionResponsibleEntity();
     if (dataProtectionEntity == null) {
       return null;
@@ -48,5 +49,4 @@ public class DataProtectionConverter {
             "DataProtectionResponsibleEntity not supported: " + dataProtectionEntity);
     }
   }
-
 }

@@ -3,10 +3,10 @@ package de.caritas.cob.agencyservice.config;
 import com.google.common.collect.Lists;
 import de.caritas.cob.agencyservice.api.exception.KeycloakException;
 import de.caritas.cob.agencyservice.api.util.AuthenticatedUser;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.stream.Collectors;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,9 +18,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-/**
- * Configuration for the {@link AuthenticatedUser}.
- */
+/** Configuration for the {@link AuthenticatedUser}. */
 @Configuration
 public class AuthenticatedUserConfig {
 
@@ -36,17 +34,17 @@ public class AuthenticatedUserConfig {
   @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
   public AuthenticatedUser getAuthenticatedUser() {
 
-    JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) getRequest().getUserPrincipal();
+    JwtAuthenticationToken authenticationToken =
+        (JwtAuthenticationToken) getRequest().getUserPrincipal();
 
     Map<String, Object> claimMap = authenticationToken.getToken().getClaims();
     AuthenticatedUser authenticatedUser = new AuthenticatedUser();
     authenticatedUser.setAccessToken(authenticationToken.getToken().getTokenValue());
     authenticatedUser.setUserId(getUserAttribute(claimMap, CLAIM_NAME_USER_ID));
     authenticatedUser.setUsername(getUserAttribute(claimMap, CLAIM_NAME_USERNAME));
-    authenticatedUser.setRoles(extractRealmRoles(authenticationToken.getToken()).stream().collect(
-        Collectors.toSet()));
+    authenticatedUser.setRoles(
+        extractRealmRoles(authenticationToken.getToken()).stream().collect(Collectors.toSet()));
     return authenticatedUser;
-
   }
 
   public Collection<String> extractRealmRoles(Jwt jwt) {

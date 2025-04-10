@@ -15,7 +15,9 @@ public class ApplicationSettingsApiControllerFactory {
   @Autowired private RestTemplate restTemplate;
 
   public ApplicationsettingsControllerApi createControllerApi() {
-    var apiClient = new ApplicationSettingsApiClient(restTemplate).setBasePath(this.applicationsettingsServiceApiUrl);
+    var apiClient =
+        new ApplicationSettingsApiClient(restTemplate)
+            .setBasePath(this.applicationsettingsServiceApiUrl);
     return new ApplicationsettingsControllerApi(apiClient);
   }
 }

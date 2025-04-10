@@ -1,7 +1,6 @@
 package de.caritas.cob.agencyservice.api.repository.agency;
 
 public enum DataProtectionResponsibleEntity {
-
   AGENCY_RESPONSIBLE("AGENCY_RESPONSIBLE"),
 
   ALTERNATIVE_REPRESENTATIVE("ALTERNATIVE_REPRESENTATIVE"),
@@ -13,6 +12,4 @@ public enum DataProtectionResponsibleEntity {
   DataProtectionResponsibleEntity(String value) {
     this.value = value;
   }
-
-
 }

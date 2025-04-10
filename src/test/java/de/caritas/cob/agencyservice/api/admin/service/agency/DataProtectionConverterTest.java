@@ -1,5 +1,7 @@
 package de.caritas.cob.agencyservice.api.admin.service.agency;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import de.caritas.cob.agencyservice.api.model.DataProtectionContactDTO;
 import de.caritas.cob.agencyservice.api.model.DataProtectionDTO;
 import de.caritas.cob.agencyservice.api.model.DataProtectionDTO.DataProtectionResponsibleEntityEnum;
@@ -7,7 +9,6 @@ import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency.AgencyBuilder;
 import de.caritas.cob.agencyservice.api.repository.agency.DataProtectionResponsibleEntity;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.Assertions.assertThat;
 
 class DataProtectionConverterTest {
 
@@ -51,16 +52,20 @@ class DataProtectionConverterTest {
     // given
     DataProtectionConverter dataProtectionConverter = new DataProtectionConverter();
     AgencyBuilder builder = Agency.builder().name("test").consultingTypeId(1);
-    var dataProtectionDTO = new DataProtectionDTO().dataProtectionResponsibleEntity(DataProtectionDTO.DataProtectionResponsibleEntityEnum.AGENCY_RESPONSIBLE)
-        .agencyDataProtectionResponsibleContact(new DataProtectionContactDTO().nameAndLegalForm("agency data responsible"));
+    var dataProtectionDTO =
+        new DataProtectionDTO()
+            .dataProtectionResponsibleEntity(
+                DataProtectionDTO.DataProtectionResponsibleEntityEnum.AGENCY_RESPONSIBLE)
+            .agencyDataProtectionResponsibleContact(
+                new DataProtectionContactDTO().nameAndLegalForm("agency data responsible"));
 
     // when
     dataProtectionConverter.convertToEntity(dataProtectionDTO, builder);
     Agency agency = builder.build();
 
     // then
-    assertThat(agency.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE);
+    assertThat(agency.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionResponsibleEntity.AGENCY_RESPONSIBLE);
     assertThat(agency.getDataProtectionAlternativeContactData()).isNull();
     assertThat(agency.getDataProtectionOfficerContactData()).isNull();
     assertThat(agency.getDataProtectionAgencyResponsibleContactData()).isNotNull();
@@ -71,17 +76,20 @@ class DataProtectionConverterTest {
     // given
     DataProtectionConverter dataProtectionConverter = new DataProtectionConverter();
     AgencyBuilder builder = Agency.builder().name("test").consultingTypeId(1);
-    var dataProtectionDTO = new DataProtectionDTO().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER)
-        .dataProtectionOfficerContact(new DataProtectionContactDTO().nameAndLegalForm("data protection officer data"));
+    var dataProtectionDTO =
+        new DataProtectionDTO()
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntityEnum.DATA_PROTECTION_OFFICER)
+            .dataProtectionOfficerContact(
+                new DataProtectionContactDTO().nameAndLegalForm("data protection officer data"));
 
     // when
     dataProtectionConverter.convertToEntity(dataProtectionDTO, builder);
     Agency agency = builder.build();
 
     // then
-    assertThat(agency.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER);
+    assertThat(agency.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionResponsibleEntity.DATA_PROTECTION_OFFICER);
     assertThat(agency.getDataProtectionAlternativeContactData()).isNull();
     assertThat(agency.getDataProtectionOfficerContactData()).isNotNull();
     assertThat(agency.getDataProtectionAgencyResponsibleContactData()).isNull();
@@ -92,21 +100,22 @@ class DataProtectionConverterTest {
     // given
     DataProtectionConverter dataProtectionConverter = new DataProtectionConverter();
     AgencyBuilder builder = Agency.builder().name("test").consultingTypeId(1);
-    var dataProtectionDTO = new DataProtectionDTO().dataProtectionResponsibleEntity(
-            DataProtectionResponsibleEntityEnum.ALTERNATIVE_REPRESENTATIVE)
-        .alternativeDataProtectionRepresentativeContact(new DataProtectionContactDTO().nameAndLegalForm("alternative representative data"));
+    var dataProtectionDTO =
+        new DataProtectionDTO()
+            .dataProtectionResponsibleEntity(
+                DataProtectionResponsibleEntityEnum.ALTERNATIVE_REPRESENTATIVE)
+            .alternativeDataProtectionRepresentativeContact(
+                new DataProtectionContactDTO().nameAndLegalForm("alternative representative data"));
 
     // when
     dataProtectionConverter.convertToEntity(dataProtectionDTO, builder);
     Agency agency = builder.build();
 
     // then
-    assertThat(agency.getDataProtectionResponsibleEntity()).isEqualTo(
-        DataProtectionResponsibleEntity.ALTERNATIVE_REPRESENTATIVE);
+    assertThat(agency.getDataProtectionResponsibleEntity())
+        .isEqualTo(DataProtectionResponsibleEntity.ALTERNATIVE_REPRESENTATIVE);
     assertThat(agency.getDataProtectionAlternativeContactData()).isNotNull();
     assertThat(agency.getDataProtectionOfficerContactData()).isNull();
     assertThat(agency.getDataProtectionAgencyResponsibleContactData()).isNull();
   }
-
-
 }

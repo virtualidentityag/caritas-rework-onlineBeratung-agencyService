@@ -5,15 +5,14 @@ import de.caritas.cob.agencyservice.applicationsettingsservice.generated.web.mod
 import de.caritas.cob.agencyservice.config.apiclient.ApplicationSettingsApiControllerFactory;
 import de.caritas.cob.agencyservice.config.apiclient.TenantServiceApiControllerFactory;
 import de.caritas.cob.agencyservice.tenantservice.generated.web.model.RestrictedTenantDTO;
-import java.util.Optional;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.codehaus.plexus.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 
 @Component
 @Slf4j
@@ -26,8 +25,7 @@ public class MultitenancyWithSingleDomainTenantResolver implements TenantResolve
   @Autowired
   private ApplicationSettingsApiControllerFactory applicationSettingsApiControllerFactory;
 
-  @Autowired
-  private TenantServiceApiControllerFactory tenantServiceApiControllerFactory;
+  @Autowired private TenantServiceApiControllerFactory tenantServiceApiControllerFactory;
 
   @Override
   public Optional<Long> resolve(HttpServletRequest request) {
@@ -53,15 +51,17 @@ public class MultitenancyWithSingleDomainTenantResolver implements TenantResolve
   private Optional<Long> resolveFromTenantServiceBasedOnMainTenantSubdomain(
       String rootTenantSubdomain) {
     var tenantControllerApi = tenantServiceApiControllerFactory.createControllerApi();
-    RestrictedTenantDTO rootTenantData = tenantControllerApi.getRestrictedTenantDataBySubdomain(
-        rootTenantSubdomain, null);
+    RestrictedTenantDTO rootTenantData =
+        tenantControllerApi.getRestrictedTenantDataBySubdomain(rootTenantSubdomain, null);
     return Optional.of(rootTenantData.getId());
   }
 
   private Optional<String> getMainTenantSubdomainFromApplicationSettings() {
-    ApplicationSettingsDTO applicationSettings = applicationSettingsApiControllerFactory.createControllerApi()
-        .getApplicationSettings();
-    ApplicationSettingsDTOMainTenantSubdomainForSingleDomainMultitenancy mainTenantSubdomainForSingleDomainMultitenancy = applicationSettings.getMainTenantSubdomainForSingleDomainMultitenancy();
+    ApplicationSettingsDTO applicationSettings =
+        applicationSettingsApiControllerFactory.createControllerApi().getApplicationSettings();
+    ApplicationSettingsDTOMainTenantSubdomainForSingleDomainMultitenancy
+        mainTenantSubdomainForSingleDomainMultitenancy =
+            applicationSettings.getMainTenantSubdomainForSingleDomainMultitenancy();
     if (mainTenantSubdomainForSingleDomainMultitenancy == null) {
       return Optional.empty();
     }

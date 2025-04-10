@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 public class TenantContextProvider {
 
   private static final Long TECHNICAL_TENANT_ID = 0L;
+
   @Value("${multitenancy.enabled}")
   private boolean multiTenancyEnabled;
 

@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
 import de.caritas.cob.agencyservice.AgencyServiceApplication;
-import de.caritas.cob.agencyservice.api.exception.httpresponses.NotFoundException;
 import de.caritas.cob.agencyservice.api.repository.agencypostcoderange.AgencyPostcodeRangeRepository;
 import de.caritas.cob.agencyservice.api.tenant.TenantContext;
 import org.junit.After;
@@ -32,9 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 @TestPropertySource(properties = "multitenancy.enabled=true")
 @Transactional
 @Sql(value = "/setTenants.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-public class AgencyPostcodeRangeAdminServiceTenantAwareIT extends AgencyPostcodeRangeAdminServiceITBase {
+public class AgencyPostcodeRangeAdminServiceTenantAwareIT
+    extends AgencyPostcodeRangeAdminServiceITBase {
 
-  final static long AGENCY_WITH_TENANT_ID_2 = 1734L;
+  static final long AGENCY_WITH_TENANT_ID_2 = 1734L;
 
   @Before
   public void beforeEach() {
@@ -46,11 +46,9 @@ public class AgencyPostcodeRangeAdminServiceTenantAwareIT extends AgencyPostcode
     TenantContext.clear();
   }
 
-  @Autowired
-  private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
+  @Autowired private AgencyPostcodeRangeAdminService agencyPostcodeRangeAdminService;
 
-  @Autowired
-  private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
+  @Autowired private AgencyPostcodeRangeRepository agencyPostcodeRangeRepository;
 
   @Test
   public void findPostcodeRangesForAgency_Should_returnExpectedResult_When_postcodeRangesExists() {
@@ -58,11 +56,13 @@ public class AgencyPostcodeRangeAdminServiceTenantAwareIT extends AgencyPostcode
   }
 
   @Test
-  public void findPostcodeRangesForAgency_Should_returnExpectedResult_When_postcodeRangesExists_ButDifferentTenant() {
+  public void
+      findPostcodeRangesForAgency_Should_returnExpectedResult_When_postcodeRangesExists_ButDifferentTenant() {
 
-    var postcodeRange = this.agencyPostcodeRangeAdminService
-        .findPostcodeRangesForAgency(AGENCY_WITH_TENANT_ID_2)
-        .getEmbedded();
+    var postcodeRange =
+        this.agencyPostcodeRangeAdminService
+            .findPostcodeRangesForAgency(AGENCY_WITH_TENANT_ID_2)
+            .getEmbedded();
     assertThat(postcodeRange, notNullValue());
     assertThat(postcodeRange.getId(), notNullValue());
     Assert.assertEquals("", postcodeRange.getPostcodeRanges());
@@ -83,5 +83,4 @@ public class AgencyPostcodeRangeAdminServiceTenantAwareIT extends AgencyPostcode
   public void deleteAgencyPostcodeRange_Should_accept_When_agencyIdNotExists() {
     super.deleteAgencyPostcodeRange_Should_throwNotFound_When_agencyIdNotExists();
   }
-
 }

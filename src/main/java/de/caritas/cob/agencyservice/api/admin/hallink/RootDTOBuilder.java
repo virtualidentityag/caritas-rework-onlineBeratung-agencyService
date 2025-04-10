@@ -8,9 +8,7 @@ import de.caritas.cob.agencyservice.api.model.RootDTO;
 import de.caritas.cob.agencyservice.api.model.RootLinks;
 import de.caritas.cob.agencyservice.generated.api.admin.controller.AgencyadminApi;
 
-/**
- * Builder to create the root navigation hal DTO.
- */
+/** Builder to create the root navigation hal DTO. */
 public class RootDTOBuilder implements HalLinkBuilder {
 
   public static final Integer DEFAULT_PAGE = 1;
@@ -24,11 +22,12 @@ public class RootDTOBuilder implements HalLinkBuilder {
    */
   public RootDTO buildRootDTO() {
     return new RootDTO()
-        .links(new RootLinks()
-            .self(buildSelfLink())
-            .agencies(buildSearchLink())
-            .agency(buildAgencyLink())
-            .agencypostcodes(buildAgencyPostCodeRangesLink()));
+        .links(
+            new RootLinks()
+                .self(buildSelfLink())
+                .agencies(buildSearchLink())
+                .agency(buildAgencyLink())
+                .agencypostcodes(buildAgencyPostCodeRangesLink()));
   }
 
   private HalLink buildSelfLink() {
@@ -42,9 +41,7 @@ public class RootDTOBuilder implements HalLinkBuilder {
   }
 
   private HalLink buildAgencyLink() {
-    return buildHalLink(
-        methodOn(AgencyadminApi.class).getAgency(null),
-        MethodEnum.GET);
+    return buildHalLink(methodOn(AgencyadminApi.class).getAgency(null), MethodEnum.GET);
   }
 
   private HalLink buildAgencyPostCodeRangesLink() {

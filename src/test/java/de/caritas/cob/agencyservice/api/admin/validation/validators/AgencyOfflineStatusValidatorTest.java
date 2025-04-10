@@ -10,7 +10,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 import de.caritas.cob.agencyservice.api.admin.service.UserAdminService;
 import de.caritas.cob.agencyservice.api.admin.validation.validators.annotation.UpdateAgencyValidator;
@@ -28,8 +27,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 import org.jeasy.random.EasyRandom;
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -43,27 +42,23 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class AgencyOfflineStatusValidatorTest {
 
-  static boolean IS_OFFLINE = true;
-  static boolean IS_NOT_OFFLINE = false;
-  static boolean IS_WHITE_SPOT_AGENCY = true;
-  static boolean IS_NOT_WHITE_SPOT_AGENCY = false;
-  static long NO_POSTCODE_RANGES = 0L;
-  static long WITH_POSTCODE_RANGES = 5L;
-  static List<ConsultantAdminResponseDTO> NO_CONSULTANT = emptyList();
-  static List<ConsultantAdminResponseDTO> ONE_CONSULTANT = singletonList(
-      new ConsultantAdminResponseDTO());
+  static final boolean IS_OFFLINE = true;
+  static final boolean IS_NOT_OFFLINE = false;
+  static final boolean IS_WHITE_SPOT_AGENCY = true;
+  static final boolean IS_NOT_WHITE_SPOT_AGENCY = false;
+  static final long NO_POSTCODE_RANGES = 0L;
+  static final long WITH_POSTCODE_RANGES = 5L;
+  static final List<ConsultantAdminResponseDTO> NO_CONSULTANT = emptyList();
+  static final List<ConsultantAdminResponseDTO> ONE_CONSULTANT =
+      singletonList(new ConsultantAdminResponseDTO());
 
-  @Mock
-  AgencyRepository agencyRepository;
+  @Mock AgencyRepository agencyRepository;
 
-  @Mock
-  AgencyPostcodeRangeRepository agencyPostCodeRangeRepository;
+  @Mock AgencyPostcodeRangeRepository agencyPostCodeRangeRepository;
 
-  @Mock
-  UserAdminService userAdminService;
+  @Mock UserAdminService userAdminService;
 
-  @Mock
-  ConsultingTypeManager consultingTypeManager;
+  @Mock ConsultingTypeManager consultingTypeManager;
 
   ValidateAgencyDTO validateAgencyDto;
 
@@ -71,88 +66,127 @@ class AgencyOfflineStatusValidatorTest {
 
   static Stream<Arguments> validate_Should_ThrowInvalidOfflineStatusException_Arguments() {
     return Stream.of(
-        Arguments.of(IS_NOT_OFFLINE, NO_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, NO_CONSULTANT,
+        Arguments.of(
+            IS_NOT_OFFLINE,
+            NO_POSTCODE_RANGES,
+            IS_NOT_WHITE_SPOT_AGENCY,
+            NO_CONSULTANT,
             AGENCY_SUCHT),
-        Arguments.of(IS_NOT_OFFLINE, WITH_POSTCODE_RANGES, IS_WHITE_SPOT_AGENCY, NO_CONSULTANT,
-            AGENCY_SUCHT)
-    );
+        Arguments.of(
+            IS_NOT_OFFLINE,
+            WITH_POSTCODE_RANGES,
+            IS_WHITE_SPOT_AGENCY,
+            NO_CONSULTANT,
+            AGENCY_SUCHT));
   }
 
   static Stream<Arguments> validate_Should_NotThrowInvalidOfflineStatusException_Arguments() {
     return Stream.of(
         Arguments.of(IS_NOT_OFFLINE, NO_POSTCODE_RANGES, IS_WHITE_SPOT_AGENCY, ONE_CONSULTANT),
         Arguments.of(IS_OFFLINE, NO_POSTCODE_RANGES, IS_WHITE_SPOT_AGENCY, NO_CONSULTANT),
-        Arguments.of(IS_NOT_OFFLINE, WITH_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, ONE_CONSULTANT),
+        Arguments.of(
+            IS_NOT_OFFLINE, WITH_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, ONE_CONSULTANT),
         Arguments.of(IS_OFFLINE, WITH_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, NO_CONSULTANT),
-        Arguments.of(IS_OFFLINE, NO_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, NO_CONSULTANT)
-    );
+        Arguments.of(IS_OFFLINE, NO_POSTCODE_RANGES, IS_NOT_WHITE_SPOT_AGENCY, NO_CONSULTANT));
   }
 
   @BeforeEach
   void init() {
-    initMocks(this);
     EasyRandom easyRandom = new EasyRandom();
     this.validateAgencyDto = easyRandom.nextObject(ValidateAgencyDTO.class);
     this.consultingTypeSettings = easyRandom.nextObject(ExtendedConsultingTypeResponseDTO.class);
-    this.consultingTypeSettings.setWhiteSpot(easyRandom.nextObject(de.caritas.cob.agencyservice.consultingtypeservice.generated.web.model.ExtendedConsultingTypeResponseDTOAllOfWhiteSpot.class));
+    this.consultingTypeSettings.setWhiteSpot(
+        easyRandom.nextObject(
+            de.caritas.cob.agencyservice.consultingtypeservice.generated.web.model
+                .ExtendedConsultingTypeResponseDTOAllOfWhiteSpot.class));
   }
 
   @ParameterizedTest
   @MethodSource("validate_Should_ThrowInvalidOfflineStatusException_Arguments")
-  void validate_Should_ThrowInvalidOfflineStatusException(boolean isOffline,
-      long numberOfAgencyPostcodeRanges, boolean isWhiteSpotAgency,
-      List<ConsultantAdminResponseDTO> assignedConsultants, Agency agency)
+  void validate_Should_ThrowInvalidOfflineStatusException(
+      boolean isOffline,
+      long numberOfAgencyPostcodeRanges,
+      boolean isWhiteSpotAgency,
+      List<ConsultantAdminResponseDTO> assignedConsultants,
+      Agency agency)
       throws MissingConsultingTypeException {
 
     this.validateAgencyDto.setOffline(isOffline);
     this.validateAgencyDto.setId((long) new Random().nextInt());
 
     consultingTypeSettings.getWhiteSpot().setWhiteSpotAgencyAssigned(isWhiteSpotAgency);
-    consultingTypeSettings.getWhiteSpot().setWhiteSpotAgencyId(isWhiteSpotAgency ? validateAgencyDto.getId().intValue() : validateAgencyDto.getId().intValue() + 1);
+    consultingTypeSettings
+        .getWhiteSpot()
+        .setWhiteSpotAgencyId(
+            isWhiteSpotAgency
+                ? validateAgencyDto.getId().intValue()
+                : validateAgencyDto.getId().intValue() + 1);
     consultingTypeSettings.setId(agency.getConsultingTypeId());
 
-    lenient().when(agencyPostCodeRangeRepository.countAllByAgencyId(validateAgencyDto.getId()))
+    lenient()
+        .when(agencyPostCodeRangeRepository.countAllByAgencyId(validateAgencyDto.getId()))
         .thenReturn(numberOfAgencyPostcodeRanges);
-    when(agencyRepository.findById(validateAgencyDto.getId()))
-        .thenReturn(Optional.of(agency));
-    lenient().when(this.userAdminService.getConsultantsOfAgency(anyLong(), anyInt(), anyInt()))
+    when(agencyRepository.findById(validateAgencyDto.getId())).thenReturn(Optional.of(agency));
+    lenient()
+        .when(this.userAdminService.getConsultantsOfAgency(anyLong(), anyInt(), anyInt()))
         .thenReturn(assignedConsultants);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt())).thenReturn(consultingTypeSettings);
+    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
+        .thenReturn(consultingTypeSettings);
 
-    AgencyOfflineStatusValidator agencyOfflineStatusValidator = new AgencyOfflineStatusValidator(
-        agencyRepository, agencyPostCodeRangeRepository, userAdminService, consultingTypeManager);
-    assertThrows(InvalidOfflineStatusException.class,
+    AgencyOfflineStatusValidator agencyOfflineStatusValidator =
+        new AgencyOfflineStatusValidator(
+            agencyRepository,
+            agencyPostCodeRangeRepository,
+            userAdminService,
+            consultingTypeManager);
+    assertThrows(
+        InvalidOfflineStatusException.class,
         () -> agencyOfflineStatusValidator.validate(validateAgencyDto));
   }
 
   @ParameterizedTest
   @MethodSource("validate_Should_NotThrowInvalidOfflineStatusException_Arguments")
   void validate_Should_NotThrowInvalidOfflineStatusException(
-      boolean isOffline, long numberOfAgencyPostcodeRanges, boolean isWhiteSpotAgency,
-      List<ConsultantAdminResponseDTO> assignedConsultants) throws MissingConsultingTypeException {
+      boolean isOffline,
+      long numberOfAgencyPostcodeRanges,
+      boolean isWhiteSpotAgency,
+      List<ConsultantAdminResponseDTO> assignedConsultants)
+      throws MissingConsultingTypeException {
 
     this.validateAgencyDto.setOffline(isOffline);
     this.validateAgencyDto.setId((long) new Random().nextInt());
 
     consultingTypeSettings.getWhiteSpot().setWhiteSpotAgencyAssigned(isWhiteSpotAgency);
-    consultingTypeSettings.getWhiteSpot().setWhiteSpotAgencyId(isWhiteSpotAgency ? validateAgencyDto.getId().intValue() : validateAgencyDto.getId().intValue() + 1);
+    consultingTypeSettings
+        .getWhiteSpot()
+        .setWhiteSpotAgencyId(
+            isWhiteSpotAgency
+                ? validateAgencyDto.getId().intValue()
+                : validateAgencyDto.getId().intValue() + 1);
     consultingTypeSettings.setId(AGENCY_SUCHT.getConsultingTypeId());
-    lenient().when(agencyPostCodeRangeRepository.countAllByAgencyId(validateAgencyDto.getId()))
+    lenient()
+        .when(agencyPostCodeRangeRepository.countAllByAgencyId(validateAgencyDto.getId()))
         .thenReturn(numberOfAgencyPostcodeRanges);
     when(agencyRepository.findById(validateAgencyDto.getId()))
         .thenReturn(Optional.of(AGENCY_SUCHT));
-    lenient().when(this.userAdminService.getConsultantsOfAgency(anyLong(), anyInt(), anyInt()))
+    lenient()
+        .when(this.userAdminService.getConsultantsOfAgency(anyLong(), anyInt(), anyInt()))
         .thenReturn(assignedConsultants);
-    when(consultingTypeManager.getConsultingTypeSettings(anyInt())).thenReturn(consultingTypeSettings);
+    when(consultingTypeManager.getConsultingTypeSettings(anyInt()))
+        .thenReturn(consultingTypeSettings);
 
-    assertDoesNotThrow(() -> new AgencyOfflineStatusValidator(agencyRepository,
-        agencyPostCodeRangeRepository, userAdminService, consultingTypeManager)
-        .validate(validateAgencyDto));
+    assertDoesNotThrow(
+        () ->
+            new AgencyOfflineStatusValidator(
+                    agencyRepository,
+                    agencyPostCodeRangeRepository,
+                    userAdminService,
+                    consultingTypeManager)
+                .validate(validateAgencyDto));
   }
 
   @Test
-  public void agencyOfflineStatusValidator_Should_HaveUpdateAgencyValidatorAnnotation() {
+  void agencyOfflineStatusValidator_Should_HaveUpdateAgencyValidatorAnnotation() {
     assertTrue(AgencyOfflineStatusValidator.class.isAnnotationPresent(UpdateAgencyValidator.class));
   }
-
 }

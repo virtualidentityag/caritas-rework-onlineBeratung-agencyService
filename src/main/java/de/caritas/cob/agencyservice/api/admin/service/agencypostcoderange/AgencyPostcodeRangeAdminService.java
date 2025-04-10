@@ -20,9 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Service class to handle agency postcode range admin requests.
- */
+/** Service class to handle agency postcode range admin requests. */
 @Service
 @RequiredArgsConstructor
 public class AgencyPostcodeRangeAdminService {
@@ -31,9 +29,9 @@ public class AgencyPostcodeRangeAdminService {
   private final @NonNull AgencyService agencyService;
   private final @NonNull AgencyAdminService agencyAdminService;
   private final PostcodeRangeValidator postcodeRangeValidator = new PostcodeRangeValidator();
+
   @Value("${multitenancy.enabled}")
   private boolean multitenancy;
-
 
   /**
    * Returns all post code ranges by given agency id.
@@ -43,8 +41,7 @@ public class AgencyPostcodeRangeAdminService {
    */
   public AgencyPostcodeRangeResponseDTO findPostcodeRangesForAgency(Long agencyId) {
 
-    var agencyPostcodeRanges =
-        this.agencyPostCodeRangeRepository.findAllByAgencyId(agencyId);
+    var agencyPostcodeRanges = this.agencyPostCodeRangeRepository.findAllByAgencyId(agencyId);
 
     return AgencyPostcodeRangeResponseDTOBuilder.getInstance(agencyPostcodeRanges, agencyId)
         .build();
@@ -64,8 +61,7 @@ public class AgencyPostcodeRangeAdminService {
   }
 
   private void markAgencyOffline(Long agencyId) {
-    var agencyPostCodeRanges = this.agencyPostCodeRangeRepository
-        .findAllByAgencyId(agencyId);
+    var agencyPostCodeRanges = this.agencyPostCodeRangeRepository.findAllByAgencyId(agencyId);
 
     if (agencyPostCodeRanges.isEmpty()) {
       throw new NotFoundException();
@@ -77,13 +73,13 @@ public class AgencyPostcodeRangeAdminService {
   /**
    * Saves the given postcode range for the provided agency.
    *
-   * @param agencyId         agency ID to save the postcode range for
+   * @param agencyId agency ID to save the postcode range for
    * @param postcodeRangeDTO {@link PostcodeRangeDTO}
    * @return {@link AgencyPostcodeRangeResponseDTO}
    */
   @Transactional
-  public AgencyPostcodeRangeResponseDTO createPostcodeRanges(Long agencyId,
-      PostcodeRangeDTO postcodeRangeDTO) {
+  public AgencyPostcodeRangeResponseDTO createPostcodeRanges(
+      Long agencyId, PostcodeRangeDTO postcodeRangeDTO) {
     var agency = agencyAdminService.findAgencyById(agencyId);
 
     return validateAndSavePostcodeRanges(postcodeRangeDTO, agency);
@@ -92,24 +88,26 @@ public class AgencyPostcodeRangeAdminService {
   private AgencyPostcodeRangeResponseDTO validateAndSavePostcodeRanges(
       PostcodeRangeDTO postCodeRangeDTO, Agency agency) {
 
-    var newAgencyPostcodeRanges = new PostcodeRangeTransformer()
-        .extractPostcodeRanges(postCodeRangeDTO.getPostcodeRanges());
-    var existingAgencyPostcodeRanges = new ArrayList<>(
-        agencyPostCodeRangeRepository.findAllByAgencyId(agency.getId()));
+    var newAgencyPostcodeRanges =
+        new PostcodeRangeTransformer().extractPostcodeRanges(postCodeRangeDTO.getPostcodeRanges());
+    var existingAgencyPostcodeRanges =
+        new ArrayList<>(agencyPostCodeRangeRepository.findAllByAgencyId(agency.getId()));
 
     this.postcodeRangeValidator.validatePostcodeRanges(newAgencyPostcodeRanges);
 
-    var agencyPostcodeRangesToSave = newAgencyPostcodeRanges.stream()
-        .map(postcodeRange -> enrichPostcodeRangeToSave(postcodeRange, agency))
-        .filter(postcodeRange -> !existingAgencyPostcodeRanges.contains(postcodeRange))
-        .collect(Collectors.toSet());
+    var agencyPostcodeRangesToSave =
+        newAgencyPostcodeRanges.stream()
+            .map(postcodeRange -> enrichPostcodeRangeToSave(postcodeRange, agency))
+            .filter(postcodeRange -> !existingAgencyPostcodeRanges.contains(postcodeRange))
+            .collect(Collectors.toSet());
 
-    this.postcodeRangeValidator.validatePostcodeRangeForIntersection(agencyPostcodeRangesToSave,
-        existingAgencyPostcodeRanges);
+    this.postcodeRangeValidator.validatePostcodeRangeForIntersection(
+        agencyPostcodeRangesToSave, existingAgencyPostcodeRanges);
 
-    var agencyPostcodeRangesToRemove = existingAgencyPostcodeRanges.stream()
-        .filter(postcodeRange -> !newAgencyPostcodeRanges.contains(postcodeRange))
-        .collect(Collectors.toSet());
+    var agencyPostcodeRangesToRemove =
+        existingAgencyPostcodeRanges.stream()
+            .filter(postcodeRange -> !newAgencyPostcodeRanges.contains(postcodeRange))
+            .collect(Collectors.toSet());
 
     agencyPostcodeRangesToSave.forEach(this.agencyPostCodeRangeRepository::save);
     agencyPostcodeRangesToRemove.forEach(this.agencyPostCodeRangeRepository::delete);
@@ -117,13 +115,13 @@ public class AgencyPostcodeRangeAdminService {
     var updatedAgencyPostcodeRanges =
         this.agencyPostCodeRangeRepository.findAllByAgencyId(agency.getId());
 
-    return AgencyPostcodeRangeResponseDTOBuilder
-        .getInstance(updatedAgencyPostcodeRanges, agency.getId())
+    return AgencyPostcodeRangeResponseDTOBuilder.getInstance(
+            updatedAgencyPostcodeRanges, agency.getId())
         .build();
   }
 
-  private AgencyPostcodeRange enrichPostcodeRangeToSave(AgencyPostcodeRange postCodeRange,
-      Agency agency) {
+  private AgencyPostcodeRange enrichPostcodeRangeToSave(
+      AgencyPostcodeRange postCodeRange, Agency agency) {
     postCodeRange.setAgency(agency);
     postCodeRange.setCreateDate(LocalDateTime.now(ZoneOffset.UTC));
     postCodeRange.setUpdateDate(LocalDateTime.now(ZoneOffset.UTC));
@@ -134,20 +132,19 @@ public class AgencyPostcodeRangeAdminService {
   /**
    * Updates the postcode range for the given agency Id.
    *
-   * @param agencyId         agency id
+   * @param agencyId agency id
    * @param postcodeRangeDTO {@link PostcodeRangeDTO}
    * @return {@link AgencyPostcodeRangeResponseDTO}
    */
-  public AgencyPostcodeRangeResponseDTO updatePostcodeRange(Long agencyId,
-      PostcodeRangeDTO postcodeRangeDTO) {
-    var agencyPostcodeRange = agencyPostCodeRangeRepository
-        .findAllByAgencyId(agencyId);
+  public AgencyPostcodeRangeResponseDTO updatePostcodeRange(
+      Long agencyId, PostcodeRangeDTO postcodeRangeDTO) {
+    var agencyPostcodeRange = agencyPostCodeRangeRepository.findAllByAgencyId(agencyId);
 
     if (isEmpty(agencyPostcodeRange)) {
       throw new NotFoundException();
     }
 
-    return validateAndSavePostcodeRanges(postcodeRangeDTO,
-        agencyPostcodeRange.iterator().next().getAgency());
+    return validateAndSavePostcodeRanges(
+        postcodeRangeDTO, agencyPostcodeRange.iterator().next().getAgency());
   }
 }

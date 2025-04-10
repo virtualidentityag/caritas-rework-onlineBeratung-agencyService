@@ -21,25 +21,28 @@ class AgencyLinksBuilderTest {
     var easyRandom = new EasyRandom();
     var agency = easyRandom.nextObject(Agency.class);
 
-    var agencyLinks = AgencyLinksBuilder.getInstance(agency)
-        .buildAgencyLinks();
+    var agencyLinks = AgencyLinksBuilder.getInstance(agency).buildAgencyLinks();
 
     assertThat(agencyLinks, notNullValue());
     assertThat(agencyLinks.getSelf(), notNullValue());
     assertThat(agencyLinks.getSelf().getMethod(), is(MethodEnum.GET));
-    assertThat(agencyLinks.getSelf().getHref(),
+    assertThat(
+        agencyLinks.getSelf().getHref(),
         is(String.format("/agencyadmin/agencies/%s", agency.getId())));
     assertThat(agencyLinks.getDelete(), notNullValue());
     assertThat(agencyLinks.getDelete().getMethod(), is(MethodEnum.DELETE));
-    assertThat(agencyLinks.getDelete().getHref(),
+    assertThat(
+        agencyLinks.getDelete().getHref(),
         is(String.format("/agencyadmin/agencies/%s", agency.getId())));
     assertThat(agencyLinks.getUpdate(), notNullValue());
     assertThat(agencyLinks.getUpdate().getMethod(), is(MethodEnum.PUT));
-    assertThat(agencyLinks.getUpdate().getHref(),
+    assertThat(
+        agencyLinks.getUpdate().getHref(),
         is(String.format("/agencyadmin/agencies/%s", agency.getId())));
     assertThat(agencyLinks.getPostcodeRanges(), notNullValue());
     assertThat(agencyLinks.getPostcodeRanges().getMethod(), is(MethodEnum.GET));
-    assertThat(agencyLinks.getPostcodeRanges().getHref(),
+    assertThat(
+        agencyLinks.getPostcodeRanges().getHref(),
         is(String.format("/agencyadmin/postcoderanges/%s", agency.getId())));
   }
 
@@ -47,5 +50,4 @@ class AgencyLinksBuilderTest {
   void buildAgencyLinks_Should_ThrowNullPointerException_WhenAgencyIsNotSet() {
     assertThrows(NullPointerException.class, () -> AgencyLinksBuilder.getInstance(null));
   }
-
 }

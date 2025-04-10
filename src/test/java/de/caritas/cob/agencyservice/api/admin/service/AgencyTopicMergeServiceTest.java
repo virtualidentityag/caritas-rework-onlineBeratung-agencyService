@@ -16,11 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class AgencyTopicMergeServiceTest {
 
-  @Mock
-  Agency agency;
+  @Mock Agency agency;
 
-  @InjectMocks
-  AgencyTopicMergeService agencyTopicMergeService;
+  @InjectMocks AgencyTopicMergeService agencyTopicMergeService;
 
   @Test
   void getMergedTopics_Should_ReturnEmptyListIfRequestTopicIdsIsNull() {
@@ -35,8 +33,8 @@ class AgencyTopicMergeServiceTest {
   @Test
   void getMergedTopics_Should_ReturnRequestTopicListIfAgencyTopicsIsNull() {
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(1L, 2L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(1L, 2L));
 
     // then
     assertThat(mergedTopics).extracting(topic -> topic.getTopicId()).containsExactly(1L, 2L);
@@ -48,73 +46,77 @@ class AgencyTopicMergeServiceTest {
     when(agency.getAgencyTopics()).thenReturn(Lists.newArrayList());
 
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(1L, 2L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(1L, 2L));
 
     // then
     assertThat(mergedTopics).extracting(topic -> topic.getTopicId()).containsExactly(1L, 2L);
   }
 
   @Test
-  void getMergedTopics_Should_ReturnSameAgencyTopicListIfExistingAgencyTopicsContainsRequestTopicIds() {
+  void
+      getMergedTopics_Should_ReturnSameAgencyTopicListIfExistingAgencyTopicsContainsRequestTopicIds() {
     // given
     AgencyTopic existingAgencyTopic1 = AgencyTopic.builder().id(0L).topicId(1L).build();
     AgencyTopic existingAgencyTopic2 = AgencyTopic.builder().id(1L).topicId(2L).build();
-    when(agency.getAgencyTopics()).thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
+    when(agency.getAgencyTopics())
+        .thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
 
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(1L, 2L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(1L, 2L));
 
     // then
     assertThat(mergedTopics).containsExactly(existingAgencyTopic1, existingAgencyTopic2);
   }
 
   @Test
-  void getMergedTopics_Should_ReturnMergedAgencyTopicListIfExistingAgencyTopicsContainsRequestTopicIdsAndOneAdditionalTopic() {
+  void
+      getMergedTopics_Should_ReturnMergedAgencyTopicListIfExistingAgencyTopicsContainsRequestTopicIdsAndOneAdditionalTopic() {
     // given
     AgencyTopic existingAgencyTopic1 = AgencyTopic.builder().id(0L).topicId(1L).build();
     AgencyTopic existingAgencyTopic2 = AgencyTopic.builder().id(1L).topicId(2L).build();
-    when(agency.getAgencyTopics()).thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
+    when(agency.getAgencyTopics())
+        .thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
 
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(1L, 2L, 3L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(1L, 2L, 3L));
 
     // then
-    assertThat(mergedTopics)
-        .hasSize(3)
-        .contains(existingAgencyTopic1, existingAgencyTopic2);
+    assertThat(mergedTopics).hasSize(3).contains(existingAgencyTopic1, existingAgencyTopic2);
     assertThat(mergedTopics).extracting(topic -> topic.getTopicId()).containsExactly(1L, 2L, 3L);
   }
 
   @Test
-  void getMergedTopics_Should_RemoveExistingAgencyTopicsIfRequestTopicIdDoesNotContainExistingIds() {
+  void
+      getMergedTopics_Should_RemoveExistingAgencyTopicsIfRequestTopicIdDoesNotContainExistingIds() {
     // given
     AgencyTopic existingAgencyTopic1 = AgencyTopic.builder().id(0L).topicId(1L).build();
     AgencyTopic existingAgencyTopic2 = AgencyTopic.builder().id(1L).topicId(2L).build();
-    when(agency.getAgencyTopics()).thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
+    when(agency.getAgencyTopics())
+        .thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
 
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(3L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(3L));
 
     // then
-    assertThat(mergedTopics)
-        .hasSize(1)
-        .extracting(topic -> topic.getTopicId()).containsExactly(3L);
+    assertThat(mergedTopics).hasSize(1).extracting(topic -> topic.getTopicId()).containsExactly(3L);
   }
 
   @Test
-  void getMergedTopics_Should_RemoveSomeOfExistingAgencyTopicsAndAddNewOnesBasedOnRequesTopicIdsValue() {
+  void
+      getMergedTopics_Should_RemoveSomeOfExistingAgencyTopicsAndAddNewOnesBasedOnRequesTopicIdsValue() {
     // given
     AgencyTopic existingAgencyTopic1 = AgencyTopic.builder().id(0L).topicId(1L).build();
     AgencyTopic existingAgencyTopic2 = AgencyTopic.builder().id(1L).topicId(2L).build();
-    when(agency.getAgencyTopics()).thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
+    when(agency.getAgencyTopics())
+        .thenReturn(Lists.newArrayList(existingAgencyTopic1, existingAgencyTopic2));
 
     // when
-    List<AgencyTopic> mergedTopics = agencyTopicMergeService.getMergedTopics(agency,
-        Lists.newArrayList(1L, 3L));
+    List<AgencyTopic> mergedTopics =
+        agencyTopicMergeService.getMergedTopics(agency, Lists.newArrayList(1L, 3L));
 
     // then
     assertThat(mergedTopics).hasSize(2).contains(existingAgencyTopic1);

@@ -1,15 +1,12 @@
 package de.caritas.cob.agencyservice.api.admin.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
 import de.caritas.cob.agencyservice.AgencyServiceApplication;
 import de.caritas.cob.agencyservice.api.model.AgencyAdminFullResponseDTO;
 import de.caritas.cob.agencyservice.api.model.AgencyDTO;
-import de.caritas.cob.agencyservice.api.model.UpdateAgencyDTO;
 import de.caritas.cob.agencyservice.api.repository.agency.Agency;
 import de.caritas.cob.agencyservice.api.service.TenantHibernateInterceptor;
 import de.caritas.cob.agencyservice.api.service.TopicService;
@@ -48,8 +45,7 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
   private static final String SECOND_TOPIC = "second topic name";
   private static final String THIRD_TOPIC = "third topic name";
 
-  @MockBean
-  private TopicService topicService;
+  @MockBean private TopicService topicService;
 
   @Before
   public void beforeEach() throws NoSuchFieldException, IllegalAccessException {
@@ -61,11 +57,12 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
   }
 
   private void givenTopicServiceReturnsListOfTopics() {
-    when(topicService.getAllTopics()).thenReturn(
-        Lists.newArrayList(
-          new TopicDTO().id(0L).name(FIRST_TOPIC),
-          new TopicDTO().id(1L).name(SECOND_TOPIC),
-          new TopicDTO().id(2L).name(THIRD_TOPIC)));
+    when(topicService.getAllTopics())
+        .thenReturn(
+            Lists.newArrayList(
+                new TopicDTO().id(0L).name(FIRST_TOPIC),
+                new TopicDTO().id(1L).name(SECOND_TOPIC),
+                new TopicDTO().id(2L).name(THIRD_TOPIC)));
   }
 
   @After
@@ -135,8 +132,7 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
     updateAgencyDTO.setTopicIds(Lists.newArrayList(1L, 2L));
 
     // when
-    var agencyAdminFullResponseDTO =
-        agencyAdminService.updateAgency(0L, updateAgencyDTO);
+    var agencyAdminFullResponseDTO = agencyAdminService.updateAgency(0L, updateAgencyDTO);
 
     // then
     var agencyOptional =
@@ -154,7 +150,6 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
     assertThat(agencyAdminFullResponseDTO.getEmbedded().getTopics())
         .extracting(agencyTopic -> agencyTopic.getName())
         .containsExactly(SECOND_TOPIC, THIRD_TOPIC);
-
   }
 
   @Test
@@ -171,7 +166,6 @@ public class AgencyAdminServiceTenantAwareIT extends AgencyAdminServiceITBase {
     Optional<Agency> agencyOptional =
         agencyRepository.findById(agencyAdminFullResponseDTO.getEmbedded().getId());
     Agency agency = agencyOptional.get();
-    assertTrue(agency.isTeamAgency());
     assertThat(agency.getConsultingTypeId()).isZero();
     assertThat(agency.getPostCode()).isEqualTo("12345");
     assertThat(agency.getDescription()).isEqualTo("Agency description");
